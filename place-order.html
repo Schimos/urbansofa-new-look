@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UrbanSofa &mdash; Place Order</title>
+<style>
+  :root{
+    --sidebar-bg:#f0ebe3;
+    --sidebar-active-bg:#c6b8a1;
+    --sidebar-border:#e6e1d5;
+    --green:#597671;
+    --green-dark:#46615c;
+    --green-pale-bg:#e4eae9;
+    --tan:#b08a3e;
+    --tan-pale-bg:#f2e9d3;
+    --tan-line:#c9a860;
+    --red:#e2544c;
+    --yellow-badge:#eab445;
+    --border:#e3e0d8;
+    --border-dashed:#d8cba0;
+    --text-dark:#293224;
+    --text-muted:#738297;
+    --text-light-muted:#a1b1c7;
+    --bg-page:#ffffff;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.04);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text-dark);
+    background:var(--bg-page);
+    font-size:14px;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;}
+  .app{
+    display:flex;
+    height:100vh;
+    width:100%;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* ---------------- Sidebar ---------------- */
+  .sidebar{
+    width:250px;
+    flex:0 0 250px;
+    background:var(--sidebar-bg);
+    border-right:1px solid var(--sidebar-border);
+    padding:26px 18px 18px;
+    display:flex;
+    flex-direction:column;
+    transition:width .2s ease, flex-basis .2s ease, padding .2s ease;
+    overflow:hidden;
+  }
+  .sidebar.collapsed{
+    width:78px;
+    flex:0 0 78px;
+    padding:26px 14px;
+  }
+  .logo{
+    padding:0 6px 26px;
+  }
+  .sidebar.collapsed .logo{padding:0 0 22px;}
+  .logo-full .brand{
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-weight:700;
+    font-size:22px;
+    color:var(--green);
+    letter-spacing:.2px;
+    white-space:nowrap;
+  }
+  .logo-full .brand sup{
+    font-size:10px;
+    font-weight:400;
+  }
+  .logo-full .tagline{
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-size:13px;
+    color:#9a8a63;
+    margin-top:-2px;
+    white-space:nowrap;
+  }
+  .logo-mini{
+    display:none;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:var(--green);
+    color:#fff;
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-weight:700;
+    font-size:14px;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto;
+  }
+  .sidebar.collapsed .logo-full{display:none;}
+  .sidebar.collapsed .logo-mini{display:flex;}
+  nav.nav-list{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    margin-top:6px;
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 12px;
+    border-radius:8px;
+    color:#585544;
+    text-decoration:none;
+    font-size:14.5px;
+    position:relative;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .nav-item:hover{
+    background:#e9e4d6;
+  }
+  .nav-item.active{
+    background:var(--sidebar-active-bg);
+    color:#3d3624;
+    font-weight:600;
+  }
+  .nav-item .icon{
+    width:19px;
+    height:19px;
+    flex:0 0 19px;
+    color:inherit;
+  }
+  .nav-item .label{
+    flex:1;
+  }
+  .badge{
+    min-width:18px;
+    height:18px;
+    padding:0 5px;
+    border-radius:9px;
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .badge.yellow{background:var(--yellow-badge);}
+  .badge.red{background:var(--red);}
+  .badge.green{background:var(--green);}
+
+  .sidebar.collapsed .nav-item{justify-content:center;padding:11px 0;}
+  .sidebar.collapsed .nav-item .label,
+  .sidebar.collapsed .nav-item .badge{display:none;}
+  .sidebar.collapsed .nav-item.has-badge::after{
+    content:'';
+    position:absolute;
+    top:8px;
+    right:16px;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--yellow-badge);
+  }
+  .sidebar.collapsed .nav-item.has-badge.badge-red::after{background:var(--red);}
+  .sidebar.collapsed .nav-item.has-badge.badge-green::after{background:var(--green);}
+
+  /* ---------------- Main / Topbar ---------------- */
+  .main-wrap{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
+  .topbar{
+    height:64px;
+    flex:0 0 64px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    border-bottom:1px solid var(--border);
+  }
+  .breadcrumb{
+    font-size:15px;
+  }
+  .breadcrumb .muted{
+    color:var(--text-muted);
+  }
+  .breadcrumb .current{
+    color:var(--text-dark);
+    font-weight:700;
+    margin-left:6px;
+  }
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+  }
+  .bell-wrap{
+    position:relative;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#f4f2ec;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#6b6a5f;
+    border:none;
+    cursor:pointer;
+  }
+  .bell-wrap .icon{width:17px;height:17px;}
+  .bell-badge{
+    position:absolute;
+    top:-5px;
+    right:-8px;
+    background:var(--red);
+    color:#fff;
+    font-size:9.5px;
+    font-weight:700;
+    padding:2px 4px;
+    border-radius:9px;
+    line-height:1;
+  }
+  .divider-v{
+    width:1px;
+    height:28px;
+    background:var(--border);
+  }
+  .user-chip{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    background:none;
+    border:none;
+  }
+  .avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#e3b6a4,#c98b7b);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:700;
+  }
+  .user-chip .name{
+    font-weight:600;
+    font-size:14.5px;
+    color:var(--text-dark);
+  }
+  .user-chip .icon{width:14px;height:14px;color:#8c8878;}
+
+  /* ---------------- Content area ---------------- */
+  .content-area{
+    flex:1;
+    display:flex;
+    min-height:0;
+  }
+  .order-form{
+    flex:1;
+    min-width:0;
+    padding:26px 34px 60px;
+    overflow-y:auto;
+  }
+
+  /* Stepper */
+  .step-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:26px;
+  }
+  .step-circle{
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    flex:0 0 26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+  }
+  .step-circle.done{background:var(--green);}
+  .step-circle.progress{background:var(--tan);}
+  .step-circle .icon{width:14px;height:14px;}
+  .pill{
+    padding:4px 12px;
+    border-radius:14px;
+    font-size:12.5px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .pill.done{background:var(--green-pale-bg);color:var(--green);}
+  .pill.progress{background:var(--tan-pale-bg);color:var(--tan);}
+  .step-label{
+    color:var(--text-muted);
+    font-size:13.5px;
+    white-space:nowrap;
+  }
+  .step-line{
+    flex:1;
+    height:2px;
+    border-radius:2px;
+    background:var(--green);
+  }
+  .step-line.split{
+    background:linear-gradient(to right, var(--tan-line) 0 38%, #ece7d9 38% 100%);
+  }
+
+  /* Field grid */
+  .field-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+    margin-bottom:22px;
+  }
+  .field label.field-label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:13.5px;
+    font-weight:600;
+    color:#3a3830;
+    margin-bottom:8px;
+  }
+  .field label.field-label .req{color:var(--red);}
+  .field label.field-label .icon{width:14px;height:14px;color:#b7b3a4;}
+  .input, .select{
+    width:100%;
+    height:42px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:0 14px;
+    font-size:14px;
+    color:#4a473c;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:var(--shadow-sm);
+    position:relative;
+  }
+  .input.disabled, .select.disabled{
+    color:#b9b6ab;
+    background:#fbfaf7;
+  }
+  .select .chevron{width:14px;height:14px;color:#8c8878;flex:0 0 14px;pointer-events:none;}
+  .select select.field-select{
+    appearance:none;
+    -webkit-appearance:none;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:14px;
+    color:#4a473c;
+    width:100%;
+    height:100%;
+    font-family:inherit;
+    cursor:pointer;
+    padding-right:8px;
+  }
+  .select.disabled select.field-select{color:#b9b6ab;cursor:not-allowed;}
+  input.text-input{
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:14px;
+    color:#4a473c;
+    width:100%;
+    height:100%;
+    font-family:inherit;
+  }
+  input.text-input::placeholder{color:#4a473c;}
+  input.text-input:disabled{color:#b9b6ab;}
+  input[type="number"].text-input::-webkit-inner-spin-button,
+  input[type="number"].text-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+  input[type="number"].text-input{-moz-appearance:textfield;}
+
+  .amount-field{
+    position:relative;
+  }
+  .stepper-btns{
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    color:#a9a599;
+  }
+  .stepper-btns .icon{width:10px;height:10px;cursor:pointer;}
+  .stepper-btns .icon:hover{color:var(--green);}
+  .input.disabled .stepper-btns .icon{cursor:not-allowed;}
+  .input.disabled .stepper-btns .icon:hover{color:#a9a599;}
+
+  /* Section headers (Article / Element) */
+  .section-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:15px;
+    font-weight:700;
+    color:#28271f;
+    margin-bottom:16px;
+  }
+  .section-title.sub{
+    font-size:14px;
+    margin-bottom:14px;
+  }
+  .icon-btn{
+    width:20px;
+    height:20px;
+    border-radius:5px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    flex:0 0 20px;
+    border:none;
+    cursor:pointer;
+    padding:0;
+  }
+  .icon-btn .icon{width:12px;height:12px;}
+  .icon-btn.remove{background:var(--red);}
+  .icon-btn.add{background:var(--green);}
+  @keyframes shake{
+    10%,90%{transform:translateX(-1px);}
+    20%,80%{transform:translateX(2px);}
+    30%,50%,70%{transform:translateX(-3px);}
+    40%,60%{transform:translateX(3px);}
+  }
+  .icon-btn.shake{animation:shake .4s;}
+
+  .element-box{
+    border:1.5px dashed var(--border-dashed);
+    border-radius:10px;
+    padding:20px;
+    margin-bottom:26px;
+    transition:border-color .15s ease;
+  }
+  .element-box.disabled{
+    border-color:#e6e2d5;
+  }
+  .stock-note{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:12.5px;
+    color:#8c8878;
+    font-style:italic;
+    margin:-10px 0 18px;
+  }
+  .dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#5fae6a;
+    flex:0 0 7px;
+  }
+  .element-box .field-row{margin-bottom:18px;}
+  .element-box .field-row:last-child,
+  .element-box .field:last-child{margin-bottom:0;}
+
+  .article-block{
+    margin-bottom:8px;
+  }
+
+  .add-custom-row{
+    width:100%;
+    border:1.5px dashed var(--border-dashed);
+    border-radius:10px;
+    padding:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    color:var(--green);
+    font-weight:600;
+    font-size:14px;
+    background:transparent;
+    cursor:pointer;
+    margin-bottom:34px;
+  }
+  .add-custom-row:hover{background:#f7f5ef;}
+  .add-custom-row .icon{width:15px;height:15px;}
+
+  .delivery-row{
+    display:flex;
+    align-items:center;
+    gap:40px;
+    margin-bottom:60px;
+  }
+  .delivery-row .field{width:320px;}
+  .requested-date{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:26px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text-light-muted);
+    transition:color .15s ease;
+  }
+  .requested-date.checked{color:#28271f;}
+  .requested-date .check-circle{
+    width:19px;
+    height:19px;
+    border-radius:50%;
+    background:#d8d4c6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    flex:0 0 19px;
+    transition:background .15s ease;
+  }
+  .requested-date.checked .check-circle{background:var(--green);}
+  .requested-date .check-circle .icon{width:11px;height:11px;}
+
+  /* ---------------- Summary panel ---------------- */
+  .summary-panel{
+    width:230px;
+    flex:0 0 230px;
+    background:#faf9f6;
+    border-left:1px solid var(--border);
+    padding:26px 22px;
+    display:flex;
+    flex-direction:column;
+    transition:width .22s ease, flex-basis .22s ease;
+    overflow-y:auto;
+  }
+  .summary-panel.expanded{
+    width:500px;
+    flex:0 0 500px;
+  }
+  .summary-header-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .summary-title{
+    font-size:16px;
+    font-weight:700;
+  }
+  .price-toggle{
+    display:none;
+    align-items:center;
+    gap:8px;
+    font-size:11.5px;
+    color:#8c8878;
+  }
+  .summary-panel.expanded .price-toggle{display:flex;}
+  .price-toggle .lbl{cursor:pointer;user-select:none;}
+  .price-toggle .lbl.active{color:#28271f;font-weight:700;}
+  .price-toggle .switch{
+    width:32px;
+    height:18px;
+    border-radius:10px;
+    background:#ddd8c8;
+    position:relative;
+    cursor:pointer;
+    flex:0 0 32px;
+    border:none;
+    padding:0;
+    transition:background .2s ease;
+  }
+  .price-toggle .switch::after{
+    content:'';
+    position:absolute;
+    top:2px;
+    left:2px;
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:#fff;
+    transition:transform .2s ease;
+    box-shadow:0 1px 2px rgba(0,0,0,.2);
+  }
+  .price-toggle .switch.on{background:var(--green);}
+  .price-toggle .switch.on::after{transform:translateX(14px);}
+
+  .summary-line{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:13.5px;
+    color:#3a3830;
+    margin-bottom:12px;
+  }
+  .summary-line .icon{width:15px;height:15px;color:#8c8878;flex:0 0 15px;}
+  .summary-divider{
+    height:1px;
+    background:var(--border);
+    margin:14px 0 16px;
+  }
+  .summary-cols{
+    display:flex;
+    justify-content:space-between;
+    font-size:12.5px;
+    font-weight:700;
+    color:#28271f;
+    margin-bottom:12px;
+  }
+  .summary-cols-exp{
+    display:none;
+    grid-template-columns:1fr 80px 90px;
+    font-size:12.5px;
+    font-weight:700;
+    color:#28271f;
+    margin-bottom:12px;
+    gap:6px;
+  }
+  .summary-cols-exp span:not(:first-child){text-align:right;}
+  .summary-panel.expanded .summary-cols{display:none;}
+  .summary-panel.expanded .summary-cols-exp{display:grid;}
+
+  .summary-category{
+    font-size:12.5px;
+    color:#8c8878;
+    margin-bottom:8px;
+    font-weight:600;
+  }
+  .summary-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:4px;
+  }
+  .summary-item .name-qty{
+    font-size:13.5px;
+    font-weight:600;
+    color:#28271f;
+  }
+  .summary-item .name-qty .qty{
+    font-weight:400;
+    color:#8c8878;
+  }
+  .summary-item .price{
+    font-size:13.5px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .summary-sub{
+    font-size:11.5px;
+    color:#a9a599;
+    max-width:150px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    margin-bottom:16px;
+  }
+
+  #summaryItemsExpanded{display:none;}
+  .summary-panel.expanded #summaryItemsSimple{display:none;}
+  .summary-panel.expanded #summaryItemsExpanded{display:block;}
+  .summary-item-exp{
+    display:grid;
+    grid-template-columns:1fr 80px 90px;
+    gap:6px;
+    align-items:baseline;
+    margin-bottom:4px;
+    font-size:13px;
+  }
+  .summary-item-exp span:not(:first-child){text-align:right;white-space:nowrap;}
+  .summary-item-exp .name-qty{font-weight:600;color:#28271f;}
+  .summary-item-exp .name-qty .qty{font-weight:400;color:#8c8878;}
+  .summary-item-exp.sub-leg{color:#a9a599;font-size:12px;margin-bottom:14px;}
+  .summary-item-exp.sub-leg .name-qty{font-weight:400;color:#a9a599;}
+
+  .summary-total-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+  }
+  .summary-total-label{
+    font-size:14px;
+    font-weight:700;
+  }
+  .summary-total-label .vat{
+    display:block;
+    font-size:11px;
+    font-weight:400;
+    color:#a9a599;
+  }
+  .summary-total-price{
+    font-size:16px;
+    font-weight:700;
+  }
+  .summary-spacer{flex:1;}
+  .summary-actions{
+    display:flex;
+    gap:10px;
+    margin-top:24px;
+  }
+  .order-pdf-btn{
+    display:none;
+    flex:0 0 42%;
+    height:44px;
+    border-radius:8px;
+    border:none;
+    background:var(--sidebar-active-bg);
+    color:#3d3624;
+    font-size:13.5px;
+    font-weight:700;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    cursor:pointer;
+  }
+  .order-pdf-btn:hover{background:#d3c497;}
+  .order-pdf-btn .icon{width:15px;height:15px;}
+  .summary-panel.expanded .order-pdf-btn{display:flex;}
+  .place-order-btn{
+    width:100%;
+    flex:1;
+    height:44px;
+    border-radius:8px;
+    border:none;
+    background:var(--green);
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    cursor:pointer;
+  }
+  .place-order-btn:hover{background:var(--green-dark);}
+  .place-order-btn:disabled{background:#d8d4c6;color:#fff;cursor:not-allowed;}
+  .place-order-btn:disabled:hover{background:#d8d4c6;}
+  .place-order-btn .icon{width:16px;height:16px;}
+
+  /* Collapse chevrons */
+  .collapse-btn{
+    position:absolute;
+    bottom:70px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:0 1px 3px rgba(0,0,0,.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#8c8878;
+    cursor:pointer;
+    transition:left .22s ease, right .22s ease;
+    z-index:5;
+  }
+  .collapse-btn:hover{color:var(--green);}
+  .collapse-btn.left{left:238px;}
+  .collapse-btn.right{right:222px;}
+  .collapse-btn .icon{width:13px;height:13px;transition:transform .2s ease;}
+  .collapse-btn.flipped .icon{transform:rotate(180deg);}
+  .app.sidebar-collapsed .collapse-btn.left{left:66px;}
+  .app.summary-expanded .collapse-btn.right{right:492px;}
+
+  /* ---------------- Order Placed modal ---------------- */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(40,39,31,.35);
+    backdrop-filter:blur(3px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+  }
+  .modal-overlay[hidden]{display:none;}
+  .modal-card{
+    background:#fff;
+    border-radius:16px;
+    width:100%;
+    max-width:560px;
+    padding:36px 40px 32px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.2);
+    max-height:90vh;
+    overflow-y:auto;
+  }
+  .modal-icon{
+    width:96px;
+    height:96px;
+    border-radius:50%;
+    background:var(--tan-pale-bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 20px;
+    color:var(--green);
+  }
+  .modal-icon .icon{width:38px;height:38px;}
+  .modal-card h2{
+    margin:0 0 8px;
+    font-size:24px;
+  }
+  .modal-card p.subtext{
+    margin:0 0 26px;
+    color:var(--text-muted);
+    font-size:14.5px;
+  }
+  .modal-summary{
+    text-align:left;
+    border-top:1px solid var(--border);
+    padding-top:20px;
+  }
+  .modal-parties{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:18px;
+    font-size:14px;
+    font-weight:600;
+  }
+  .modal-parties span{display:flex;align-items:center;gap:8px;}
+  .modal-parties .icon{width:15px;height:15px;color:#8c8878;}
+  .modal-cols{
+    display:grid;
+    grid-template-columns:1fr 90px 100px;
+    font-weight:700;
+    font-size:13px;
+    margin-bottom:10px;
+    color:#28271f;
+  }
+  .modal-cols span:not(:first-child){text-align:right;}
+  .modal-item-name{
+    font-weight:700;
+    font-size:13.5px;
+    margin-bottom:4px;
+  }
+  .modal-item-line{
+    display:grid;
+    grid-template-columns:1fr 90px 100px;
+    font-size:13.5px;
+    margin-bottom:2px;
+  }
+  .modal-item-line span:not(:first-child){text-align:right;}
+  .modal-item-line.sub{color:var(--text-muted);font-size:12.5px;margin-bottom:14px;}
+  .modal-divider{height:1px;background:var(--border);margin:14px 0;}
+  .modal-total-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:26px;
+  }
+  .done-btn{
+    background:var(--green);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:12px 34px;
+    font-size:14.5px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+  }
+  .done-btn:hover{background:var(--green-dark);}
+  .done-btn .icon{width:15px;height:15px;}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <div class="logo-full">
+        <div class="brand">UrbanSofa<sup>&reg;</sup></div>
+        <div class="tagline">by Ira Ness</div>
+      </div>
+      <div class="logo-mini">US</div>
+    </div>
+    <nav class="nav-list">
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span class="label">Dashboard</span>
+      </a>
+      <a class="nav-item active">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="label">Orders</span>
+      </a>
+      <a class="nav-item has-badge">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+        <span class="label">Collections</span>
+        <span class="badge yellow">5</span>
+      </a>
+      <a class="nav-item has-badge badge-red">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+        <span class="label">CRM</span>
+        <span class="badge red">2</span>
+      </a>
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="label">Downloads</span>
+      </a>
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M9 12h6M9 16h6M9 8h2"/></svg>
+        <span class="label">Reports</span>
+      </a>
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1Z"/></svg>
+        <span class="label">Settings</span>
+      </a>
+      <a class="nav-item has-badge badge-green">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="label">System Users</span>
+        <span class="badge green">5</span>
+      </a>
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/></svg>
+        <span class="label">Export</span>
+      </a>
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5l-8-3Z"/><path d="M12 8v5M12 16h.01"/></svg>
+        <span class="label">Report Bug</span>
+      </a>
+      <a class="nav-item has-badge">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+        <span class="label">Exact Management</span>
+        <span class="badge yellow">5</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span class="muted">Orders</span>
+        <span class="current">Place Order</span>
+      </div>
+      <div class="topbar-right">
+        <button class="bell-wrap" type="button" aria-label="Notifications">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="bell-badge">10+</span>
+        </button>
+        <div class="divider-v"></div>
+        <button class="user-chip" type="button">
+          <div class="avatar">MA</div>
+          <span class="name">Mahsa Amiri</span>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <main class="order-form">
+
+        <!-- Step 1 -->
+        <div class="step-row">
+          <div class="step-circle done">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <span class="pill done">Completed</span>
+          <span class="step-label">Order Details</span>
+          <div class="step-line"></div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Dealer <span class="req">*</span>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+            </label>
+            <div class="select">
+              <select class="field-select" id="dealerSelect">
+                <option>Wooden Planet</option>
+                <option>Tiger Touch</option>
+                <option>Xander Home</option>
+                <option>Firenca Living</option>
+              </select>
+              <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Reference <span class="req">*</span>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+            </label>
+            <div class="input">
+              <input class="text-input" type="text" id="referenceInput" value="Daniel Korti">
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-row">
+          <div class="step-circle done">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <span class="pill done">Completed</span>
+          <span class="step-label">Add Articles</span>
+          <div class="step-line"></div>
+        </div>
+
+        <!-- Article 1 -->
+        <div class="article-block" id="article1" data-removable="false" data-state="active">
+          <div class="section-title">
+            Article 1
+            <button type="button" class="icon-btn remove" id="article1TrashBtn" aria-label="Remove article 1">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 6"/></svg>
+            </button>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label">Collection <span class="req">*</span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+              </label>
+              <div class="select">
+                <select class="field-select" data-role="collection">
+                  <option>Sofa</option>
+                  <option>Tables</option>
+                  <option>Beds</option>
+                  <option>Shelving</option>
+                </select>
+                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label">Model <span class="req">*</span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+              </label>
+              <div class="select">
+                <select class="field-select" data-role="model">
+                  <option>Sofia</option>
+                  <option>Lodge</option>
+                  <option>Mononoke</option>
+                  <option>Xander</option>
+                </select>
+                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Element 1 -->
+          <div class="element-unit" data-removable="false" data-state="active">
+            <div class="section-title sub">
+              Element 1
+              <button type="button" class="icon-btn remove" id="element1TrashBtn" aria-label="Remove element 1">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 6"/></svg>
+              </button>
+            </div>
+            <div class="element-box">
+              <div class="field-row">
+                <div class="field">
+                  <label class="field-label">Product <span class="req">*</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+                  </label>
+                  <div class="select">
+                    <select class="field-select" data-role="product">
+                      <option data-price="598">MT6102 Dining table black 240x100cm</option>
+                      <option data-price="500">MS6102 Shelf 240x300cm</option>
+                      <option data-price="1100">MT6102 Sofa 240x300cm</option>
+                    </select>
+                    <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field-label">Amount <span class="req">*</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+                  </label>
+                  <div class="input amount-field">
+                    <input class="text-input" type="number" min="1" value="1" data-role="qty">
+                    <div class="stepper-btns">
+                      <svg class="icon step-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg>
+                      <svg class="icon step-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="stock-note">
+                <span class="dot"></span> Out of stock (est. delivery time 12 weeks)
+              </div>
+              <div class="field-row" style="grid-template-columns:1fr;">
+                <div class="field">
+                  <label class="field-label">Leg <span class="req">*</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+                  </label>
+                  <div class="select">
+                    <select class="field-select" data-role="leg">
+                      <option data-price="58">MT6109 Leg Lodge table, black</option>
+                      <option data-price="0">No leg</option>
+                      <option data-price="72">MT6110 Leg Round, oak</option>
+                    </select>
+                    <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Element 2 (ghost / toggle) -->
+          <div class="element-unit" id="element2" data-removable="true" data-state="ghost">
+            <div class="section-title sub">
+              Element 2
+              <button type="button" class="icon-btn add" id="element2ToggleBtn" aria-label="Add element 2">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </div>
+            <div class="element-box disabled">
+              <div class="field-row">
+                <div class="field">
+                  <label class="field-label">Product <span class="req">*</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+                  </label>
+                  <div class="select disabled">
+                    <select class="field-select" data-role="product" disabled>
+                      <option data-price="598">MT6102 Dining table black 240x100cm</option>
+                      <option data-price="500">MS6102 Shelf 240x300cm</option>
+                      <option data-price="1100">MT6102 Sofa 240x300cm</option>
+                    </select>
+                    <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field-label">Amount <span class="req">*</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+                  </label>
+                  <div class="input disabled amount-field">
+                    <input class="text-input" type="number" min="1" value="1" data-role="qty" disabled>
+                    <div class="stepper-btns">
+                      <svg class="icon step-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg>
+                      <svg class="icon step-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="field-row leg-row" style="grid-template-columns:1fr;margin-top:18px;margin-bottom:0;display:none;">
+                <div class="field">
+                  <label class="field-label">Leg <span class="req">*</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+                  </label>
+                  <div class="select">
+                    <select class="field-select" data-role="leg">
+                      <option data-price="58">MT6109 Leg Lodge table, black</option>
+                      <option data-price="0">No leg</option>
+                      <option data-price="72">MT6110 Leg Round, oak</option>
+                    </select>
+                    <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Article 2 (ghost / toggle) -->
+        <div class="article-block" id="article2" data-removable="true" data-state="ghost">
+          <div class="section-title">
+            Article 2
+            <button type="button" class="icon-btn add" id="article2ToggleBtn" aria-label="Add article 2">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+          </div>
+          <div class="field-row article2-fields">
+            <div class="field">
+              <label class="field-label" style="color:#b9b6ab;">Collection <span class="req">*</span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+              </label>
+              <div class="select disabled">
+                <select class="field-select" data-role="collection" disabled>
+                  <option>Tables</option>
+                  <option>Sofa</option>
+                  <option>Beds</option>
+                  <option>Shelving</option>
+                </select>
+                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label" style="color:#b9b6ab;">Model <span class="req">*</span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+              </label>
+              <div class="select disabled">
+                <select class="field-select" data-role="model" disabled>
+                  <option>Lodge</option>
+                  <option>Sofia</option>
+                  <option>Mononoke</option>
+                  <option>Xander</option>
+                </select>
+                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="element-unit article2-element" data-removable="false" data-state="active" hidden>
+            <div class="section-title sub">
+              Element 1
+              <button type="button" class="icon-btn remove" aria-label="Remove element" data-guarded="true">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 6"/></svg>
+              </button>
+            </div>
+            <div class="element-box">
+              <div class="field-row">
+                <div class="field">
+                  <label class="field-label">Product <span class="req">*</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+                  </label>
+                  <div class="select">
+                    <select class="field-select" data-role="product">
+                      <option data-price="500" selected>MS6102 Shelf 240x300cm</option>
+                      <option data-price="598">MT6102 Dining table black 240x100cm</option>
+                      <option data-price="1100">MT6102 Sofa 240x300cm</option>
+                    </select>
+                    <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field-label">Amount <span class="req">*</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+                  </label>
+                  <div class="input amount-field">
+                    <input class="text-input" type="number" min="1" value="1" data-role="qty">
+                    <div class="stepper-btns">
+                      <svg class="icon step-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg>
+                      <svg class="icon step-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="field-row" style="grid-template-columns:1fr;">
+                <div class="field">
+                  <label class="field-label">Leg <span class="req">*</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+                  </label>
+                  <div class="select">
+                    <select class="field-select" data-role="leg">
+                      <option data-price="58">MT6109 Leg Lodge table, black</option>
+                      <option data-price="0">No leg</option>
+                      <option data-price="72">MT6110 Leg Round, oak</option>
+                    </select>
+                    <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="add-custom-row" id="addCustomRowBtn">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          Add Custom Row
+        </button>
+
+        <!-- Step 3 -->
+        <div class="step-row">
+          <div class="step-circle progress">3</div>
+          <span class="pill progress">In Progress</span>
+          <span class="step-label">Delivery Options</span>
+          <div class="step-line split"></div>
+        </div>
+
+        <div class="delivery-row">
+          <div class="field">
+            <label class="field-label">Delivery Week <span class="req">*</span>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+            </label>
+            <div class="select">
+              <select class="field-select" id="deliveryWeekSelect">
+                <option value="" selected>Select delivery week</option>
+                <option value="2023-11-11">11/11/2023</option>
+                <option value="2023-11-18">18/11/2023</option>
+                <option value="2023-11-25">25/11/2023</option>
+              </select>
+              <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="requested-date" id="requestedDateCheck">
+            <div class="check-circle">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            Requested Date
+          </div>
+        </div>
+
+      </main>
+
+      <!-- Summary Panel -->
+      <aside class="summary-panel" id="summaryPanel">
+        <div class="summary-header-row">
+          <div class="summary-title">Summary</div>
+          <div class="price-toggle" id="priceToggle">
+            <span class="lbl active" id="labelCustomer">Customer Price</span>
+            <button type="button" class="switch" id="priceSwitch" aria-label="Toggle dealer price"></button>
+            <span class="lbl" id="labelDealer">Dealer Price</span>
+          </div>
+        </div>
+
+        <div class="summary-line">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/></svg>
+          <span id="summaryDealer">Wooden Planet</span>
+        </div>
+        <div class="summary-line">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <span id="summaryReference">Daniel Korti</span>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-cols">
+          <span>Articles</span>
+          <span>Price</span>
+        </div>
+        <div class="summary-cols-exp">
+          <span>Articles</span>
+          <span>Price</span>
+          <span>Order Total</span>
+        </div>
+
+        <div id="summaryItemsSimple"></div>
+        <div id="summaryItemsExpanded"></div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total-row">
+          <span class="summary-total-label">Order total<span class="vat">(incl.VAT)</span></span>
+          <span class="summary-total-price" id="summaryTotalPrice">&euro; 0,00</span>
+        </div>
+
+        <div class="summary-spacer"></div>
+
+        <div class="summary-actions">
+          <button type="button" class="order-pdf-btn" id="orderPdfBtn">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            Order PDF
+          </button>
+          <button type="button" class="place-order-btn" id="placeOrderBtn">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+            Place Order
+          </button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="collapse-btn left" id="sidebarCollapseBtn">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+  </div>
+  <div class="collapse-btn right" id="summaryCollapseBtn">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+  </div>
+
+</div>
+
+<!-- Order Placed modal -->
+<div class="modal-overlay" id="orderPlacedOverlay" hidden>
+  <div class="modal-card">
+    <div class="modal-icon">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 14 2 2 4-4"/></svg>
+    </div>
+    <h2>Order Placed</h2>
+    <p class="subtext">Your order has been successfully placed</p>
+    <div class="modal-summary">
+      <div class="modal-parties">
+        <span>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/></svg>
+          <span id="modalDealer">Wooden Planet</span>
+        </span>
+        <span>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <span id="modalReference">Daniel Korti</span>
+        </span>
+      </div>
+      <div class="modal-cols">
+        <span>Articles</span>
+        <span>Price</span>
+        <span>Order Total</span>
+      </div>
+      <div id="modalItems"></div>
+      <div class="modal-divider"></div>
+      <div class="modal-total-row">
+        <span>Order total (incl.VAT)</span>
+        <span id="modalTotal">&euro; 0,00</span>
+      </div>
+    </div>
+    <button type="button" class="done-btn" id="modalDoneBtn">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      Done
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var PLUS_SVG = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>';
+  var TRASH_SVG = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 6"/></svg>';
+
+  function fmt(n){
+    var v = Math.max(0, n || 0);
+    return '€ ' + v.toFixed(2).replace('.', ',');
+  }
+
+  function shake(btn){
+    btn.classList.remove('shake');
+    void btn.offsetWidth;
+    btn.classList.add('shake');
+  }
+
+  function setDisabled(container, disabled){
+    container.querySelectorAll('select, input').forEach(function(el){ el.disabled = disabled; });
+    container.querySelectorAll('.select, .input').forEach(function(el){ el.classList.toggle('disabled', disabled); });
+  }
+
+  function setIconBtn(btn, mode){
+    btn.classList.remove('add', 'remove');
+    btn.classList.add(mode);
+    btn.innerHTML = mode === 'add' ? PLUS_SVG : TRASH_SVG;
+  }
+
+  /* ---------------- Sidebar / Summary collapse ---------------- */
+  var app = document.getElementById('app');
+  var sidebar = document.getElementById('sidebar');
+  var summaryPanel = document.getElementById('summaryPanel');
+
+  document.getElementById('sidebarCollapseBtn').addEventListener('click', function(){
+    sidebar.classList.toggle('collapsed');
+    app.classList.toggle('sidebar-collapsed');
+    this.classList.toggle('flipped');
+  });
+
+  document.getElementById('summaryCollapseBtn').addEventListener('click', function(){
+    summaryPanel.classList.toggle('expanded');
+    app.classList.toggle('summary-expanded');
+    this.classList.toggle('flipped');
+  });
+
+  /* ---------------- Customer / Dealer price toggle ---------------- */
+  var dealerMode = false;
+  document.getElementById('priceSwitch').addEventListener('click', function(){
+    dealerMode = !dealerMode;
+    this.classList.toggle('on', dealerMode);
+    document.getElementById('labelCustomer').classList.toggle('active', !dealerMode);
+    document.getElementById('labelDealer').classList.toggle('active', dealerMode);
+    recalcSummary();
+  });
+  function priceFor(base){
+    return dealerMode ? base * 0.85 : base;
+  }
+
+  /* ---------------- Element 1 / Article 1 guarded trash ---------------- */
+  document.getElementById('article1TrashBtn').addEventListener('click', function(){ shake(this); });
+  document.getElementById('element1TrashBtn').addEventListener('click', function(){ shake(this); });
+
+  /* ---------------- Element 2 toggle ---------------- */
+  document.getElementById('element2ToggleBtn').addEventListener('click', function(){
+    var unit = document.getElementById('element2');
+    var active = unit.dataset.state === 'active';
+    unit.dataset.state = active ? 'ghost' : 'active';
+    var box = unit.querySelector('.element-box');
+    box.classList.toggle('disabled', active);
+    setDisabled(box, active);
+    var legRow = unit.querySelector('.leg-row');
+    legRow.style.display = active ? 'none' : 'grid';
+    setIconBtn(this, active ? 'add' : 'remove');
+    this.setAttribute('aria-label', active ? 'Add element 2' : 'Remove element 2');
+    recalcSummary();
+  });
+
+  /* ---------------- Article 2 toggle ---------------- */
+  document.getElementById('article2ToggleBtn').addEventListener('click', function(){
+    var article = document.getElementById('article2');
+    var active = article.dataset.state === 'active';
+    article.dataset.state = active ? 'ghost' : 'active';
+    var fields = article.querySelector('.article2-fields');
+    setDisabled(fields, active);
+    fields.querySelectorAll('.field-label').forEach(function(l){ l.style.color = active ? '#b9b6ab' : ''; });
+    var nested = article.querySelector('.article2-element');
+    nested.hidden = active;
+    setIconBtn(this, active ? 'add' : 'remove');
+    this.setAttribute('aria-label', active ? 'Add article 2' : 'Remove article 2');
+    recalcSummary();
+  });
+
+  /* Guarded nested element inside Article 2 */
+  document.querySelectorAll('[data-guarded="true"]').forEach(function(btn){
+    btn.addEventListener('click', function(){ shake(this); });
+  });
+
+  /* ---------------- Add Custom Row ---------------- */
+  var customIndex = 2;
+  document.getElementById('addCustomRowBtn').addEventListener('click', function(){
+    customIndex++;
+    var wrapper = document.createElement('div');
+    wrapper.className = 'article-block';
+    wrapper.dataset.removable = 'true';
+    wrapper.dataset.state = 'active';
+    wrapper.dataset.custom = 'true';
+    wrapper.innerHTML =
+      '<div class="section-title">Article ' + customIndex + '' +
+        '<button type="button" class="icon-btn remove custom-remove-article" aria-label="Remove article">' + TRASH_SVG + '</button>' +
+      '</div>' +
+      '<div class="field-row">' +
+        '<div class="field"><label class="field-label">Collection <span class="req">*</span></label>' +
+          '<div class="select"><select class="field-select" data-role="collection">' +
+            '<option>Sofa</option><option>Tables</option><option>Beds</option><option>Shelving</option>' +
+          '</select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>' +
+        '</div>' +
+        '<div class="field"><label class="field-label">Model <span class="req">*</span></label>' +
+          '<div class="select"><select class="field-select" data-role="model">' +
+            '<option>Sofia</option><option>Lodge</option><option>Mononoke</option><option>Xander</option>' +
+          '</select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="element-unit" data-removable="false" data-state="active">' +
+        '<div class="section-title sub">Element 1' +
+          '<button type="button" class="icon-btn remove" data-guarded="true" aria-label="Remove element">' + TRASH_SVG + '</button>' +
+        '</div>' +
+        '<div class="element-box">' +
+          '<div class="field-row">' +
+            '<div class="field"><label class="field-label">Product <span class="req">*</span></label>' +
+              '<div class="select"><select class="field-select" data-role="product">' +
+                '<option data-price="598">MT6102 Dining table black 240x100cm</option>' +
+                '<option data-price="500">MS6102 Shelf 240x300cm</option>' +
+                '<option data-price="1100">MT6102 Sofa 240x300cm</option>' +
+              '</select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>' +
+            '</div>' +
+            '<div class="field"><label class="field-label">Amount <span class="req">*</span></label>' +
+              '<div class="input amount-field"><input class="text-input" type="number" min="1" value="1" data-role="qty">' +
+                '<div class="stepper-btns">' +
+                  '<svg class="icon step-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg>' +
+                  '<svg class="icon step-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="field-row" style="grid-template-columns:1fr;">' +
+            '<div class="field"><label class="field-label">Leg <span class="req">*</span></label>' +
+              '<div class="select"><select class="field-select" data-role="leg">' +
+                '<option data-price="58">MT6109 Leg Lodge table, black</option>' +
+                '<option data-price="0">No leg</option>' +
+                '<option data-price="72">MT6110 Leg Round, oak</option>' +
+              '</select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    this.parentNode.insertBefore(wrapper, this);
+
+    wrapper.querySelector('.custom-remove-article').addEventListener('click', function(){
+      wrapper.remove();
+      recalcSummary();
+    });
+    wrapper.querySelectorAll('[data-guarded="true"]').forEach(function(btn){
+      btn.addEventListener('click', function(){ shake(this); });
+    });
+
+    recalcSummary();
+  });
+
+  /* ---------------- Delegated: amount steppers + field changes ---------------- */
+  document.addEventListener('click', function(e){
+    var up = e.target.closest('.step-up');
+    var down = e.target.closest('.step-down');
+    if(up || down){
+      var wrap = e.target.closest('.amount-field');
+      var input = wrap.querySelector('[data-role="qty"]');
+      if(input.disabled) return;
+      var v = parseInt(input.value, 10) || 1;
+      v = up ? v + 1 : Math.max(1, v - 1);
+      input.value = v;
+      recalcSummary();
+    }
+  });
+
+  document.addEventListener('change', function(e){
+    if(e.target.matches('[data-role="product"], [data-role="leg"], [data-role="collection"], [data-role="model"], [data-role="qty"]')){
+      recalcSummary();
+    }
+  });
+  document.addEventListener('input', function(e){
+    if(e.target.matches('[data-role="qty"]')){
+      recalcSummary();
+    }
+  });
+
+  /* ---------------- Order data model / summary recalculation ---------------- */
+  function getArticleData(article){
+    var collectionSel = article.querySelector(':scope > .field-row [data-role="collection"], :scope > .article2-fields [data-role="collection"]');
+    var modelSel = article.querySelector(':scope > .field-row [data-role="model"], :scope > .article2-fields [data-role="model"]');
+    var collection = collectionSel ? collectionSel.selectedOptions[0].textContent : '';
+    var model = modelSel ? modelSel.selectedOptions[0].textContent : '';
+
+    var qty = 0, unitPrice = 0, legPrice = 0, productName = '', legName = '';
+    var activeElements = article.querySelectorAll('.element-unit[data-state="active"]');
+    if(activeElements.length === 0){
+      activeElements = article.querySelectorAll(':scope > .element-box, :scope > .element-unit:not([data-state]) .element-box');
+    }
+    activeElements.forEach(function(unit){
+      var el = unit.classList.contains('element-box') ? unit : unit.querySelector('.element-box');
+      if(!el) return;
+      var qtyInput = el.querySelector('[data-role="qty"]');
+      var q = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+      var productSel = el.querySelector('[data-role="product"]');
+      var legSel = el.querySelector('[data-role="leg"]');
+      var up = productSel ? parseFloat(productSel.selectedOptions[0].dataset.price || 0) : 0;
+      var lp = legSel ? parseFloat(legSel.selectedOptions[0].dataset.price || 0) : 0;
+      qty += q;
+      unitPrice = up;
+      legPrice += lp;
+      productName = productSel ? productSel.selectedOptions[0].textContent : productName;
+      legName = legSel ? legSel.selectedOptions[0].textContent : legName;
+    });
+
+    var lineTotal = qty * unitPrice + legPrice;
+    return {
+      collection: collection, model: model, qty: qty, unitPrice: unitPrice,
+      legPrice: legPrice, productName: productName, legName: legName,
+      lineTotal: lineTotal, hasItems: activeElements.length > 0 && qty > 0
+    };
+  }
+
+  function recalcSummary(){
+    var articles = Array.prototype.slice.call(document.querySelectorAll('.article-block'))
+      .filter(function(a){ return a.dataset.state === 'active'; });
+
+    var items = articles.map(getArticleData).filter(function(d){ return d.hasItems; });
+
+    var simpleWrap = document.getElementById('summaryItemsSimple');
+    var expandedWrap = document.getElementById('summaryItemsExpanded');
+    simpleWrap.innerHTML = '';
+    expandedWrap.innerHTML = '';
+
+    var orderTotal = 0;
+
+    items.forEach(function(d){
+      var productPrice = priceFor(d.qty * d.unitPrice);
+      var legPrice = priceFor(d.legPrice);
+      var lineTotal = productPrice + legPrice;
+      orderTotal += lineTotal;
+
+      simpleWrap.insertAdjacentHTML('beforeend',
+        '<div class="summary-category">' + d.collection + '</div>' +
+        '<div class="summary-item">' +
+          '<span class="name-qty">' + d.model + ' <span class="qty">&times; ' + d.qty + '</span></span>' +
+          '<span class="price">' + fmt(lineTotal) + '</span>' +
+        '</div>' +
+        '<div class="summary-sub">' + d.productName + '</div>'
+      );
+
+      var expHtml =
+        '<div class="summary-category">' + d.collection + ' <span style="color:#c9c4b3;">|</span> ' + d.model + '</div>' +
+        '<div class="summary-item-exp">' +
+          '<span class="name-qty">' + d.productName + ' <span class="qty">&times; ' + d.qty + '</span></span>' +
+          '<span>' + fmt(productPrice) + '</span>' +
+          '<span>' + fmt(productPrice) + '</span>' +
+        '</div>';
+      if(d.legPrice > 0){
+        expHtml +=
+          '<div class="summary-item-exp sub-leg">' +
+            '<span class="name-qty">Leg: ' + d.legName + '</span>' +
+            '<span>' + fmt(legPrice) + '</span>' +
+            '<span>' + fmt(legPrice) + '</span>' +
+          '</div>';
+      } else {
+        expHtml += '<div style="margin-bottom:10px;"></div>';
+      }
+      expandedWrap.insertAdjacentHTML('beforeend', expHtml);
+    });
+
+    if(!items.length){
+      simpleWrap.innerHTML = '<div class="summary-sub" style="margin-top:6px;">No articles added yet.</div>';
+      expandedWrap.innerHTML = '<div class="summary-sub" style="margin-top:6px;">No articles added yet.</div>';
+    }
+
+    document.getElementById('summaryTotalPrice').textContent = fmt(orderTotal);
+    document.getElementById('summaryDealer').textContent = document.getElementById('dealerSelect').selectedOptions[0].textContent;
+    document.getElementById('summaryReference').textContent = document.getElementById('referenceInput').value || 'Reference';
+
+    window.__orderTotal = orderTotal;
+    window.__orderItems = items;
+  }
+
+  document.getElementById('dealerSelect').addEventListener('change', recalcSummary);
+  document.getElementById('referenceInput').addEventListener('input', recalcSummary);
+
+  /* ---------------- Delivery week gating ---------------- */
+  var deliverySelect = document.getElementById('deliveryWeekSelect');
+  var placeOrderBtn = document.getElementById('placeOrderBtn');
+  var requestedDateCheck = document.getElementById('requestedDateCheck');
+
+  function updateDeliveryState(){
+    var has = !!deliverySelect.value;
+    placeOrderBtn.disabled = !has;
+    requestedDateCheck.classList.toggle('checked', has);
+  }
+  deliverySelect.addEventListener('change', updateDeliveryState);
+
+  /* ---------------- Order Placed modal ---------------- */
+  var overlay = document.getElementById('orderPlacedOverlay');
+
+  function openOrderModal(){
+    document.getElementById('modalDealer').textContent = document.getElementById('summaryDealer').textContent;
+    document.getElementById('modalReference').textContent = document.getElementById('summaryReference').textContent;
+
+    var items = window.__orderItems || [];
+    var html = items.map(function(d){
+      var productPrice = priceFor(d.qty * d.unitPrice);
+      var legPrice = priceFor(d.legPrice);
+      var row =
+        '<div class="modal-item-name">' + d.collection + ' | ' + d.model + '</div>' +
+        '<div class="modal-item-line">' +
+          '<span>' + d.productName + ' &times; ' + d.qty + '</span>' +
+          '<span>' + fmt(productPrice) + '</span>' +
+          '<span>' + fmt(productPrice) + '</span>' +
+        '</div>';
+      if(d.legPrice > 0){
+        row +=
+          '<div class="modal-item-line sub">' +
+            '<span>Leg: ' + d.legName + '</span>' +
+            '<span>' + fmt(legPrice) + '</span>' +
+            '<span>' + fmt(legPrice) + '</span>' +
+          '</div>';
+      }
+      return row;
+    }).join('');
+
+    document.getElementById('modalItems').innerHTML = html || '<div class="modal-item-line"><span>No articles added</span><span></span><span></span></div>';
+    document.getElementById('modalTotal').textContent = fmt(window.__orderTotal || 0);
+    overlay.hidden = false;
+  }
+
+  placeOrderBtn.addEventListener('click', function(){
+    if(this.disabled) return;
+    openOrderModal();
+  });
+
+  document.getElementById('modalDoneBtn').addEventListener('click', function(){
+    overlay.hidden = true;
+  });
+  overlay.addEventListener('click', function(e){
+    if(e.target === overlay) overlay.hidden = true;
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && !overlay.hidden) overlay.hidden = true;
+  });
+
+  /* ---------------- Init ---------------- */
+  updateDeliveryState();
+  recalcSummary();
+})();
+</script>
+</body>
+</html>
