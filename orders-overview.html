@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UrbanSofa &mdash; Orders Overview</title>
+<style>
+  :root{
+    --sidebar-bg:#f0ebe3;
+    --sidebar-active-bg:#c6b8a1;
+    --sidebar-border:#e6e1d5;
+    --green:#597671;
+    --green-dark:#46615c;
+    --green-pale-bg:#e4eae9;
+    --tan:#b08a3e;
+    --tan-pale-bg:#f2e9d3;
+    --tan-line:#c9a860;
+    --red:#e2544c;
+    --yellow-badge:#eab445;
+    --border:#e3e0d8;
+    --border-dashed:#d8cba0;
+    --text-dark:#293224;
+    --text-muted:#738297;
+    --text-light-muted:#a1b1c7;
+    --bg-page:#ffffff;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.04);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text-dark);
+    background:var(--bg-page);
+    font-size:14px;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;}
+  .app{
+    display:flex;
+    height:100vh;
+    width:100%;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* ---------------- Sidebar ---------------- */
+  .sidebar{
+    width:250px;
+    flex:0 0 250px;
+    background:var(--sidebar-bg);
+    border-right:1px solid var(--sidebar-border);
+    padding:26px 18px 18px;
+    display:flex;
+    flex-direction:column;
+    transition:width .2s ease, flex-basis .2s ease, padding .2s ease;
+    overflow:hidden;
+  }
+  .sidebar.collapsed{
+    width:78px;
+    flex:0 0 78px;
+    padding:26px 14px;
+  }
+  .logo{
+    padding:0 6px 26px;
+  }
+  .sidebar.collapsed .logo{padding:0 0 22px;}
+  .logo-full .brand{
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-weight:700;
+    font-size:22px;
+    color:var(--green);
+    letter-spacing:.2px;
+    white-space:nowrap;
+  }
+  .logo-full .brand sup{
+    font-size:10px;
+    font-weight:400;
+  }
+  .logo-full .tagline{
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-size:13px;
+    color:#9a8a63;
+    margin-top:-2px;
+    white-space:nowrap;
+  }
+  .logo-mini{
+    display:none;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:var(--green);
+    color:#fff;
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-weight:700;
+    font-size:14px;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto;
+  }
+  .sidebar.collapsed .logo-full{display:none;}
+  .sidebar.collapsed .logo-mini{display:flex;}
+  nav.nav-list{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    margin-top:6px;
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 12px;
+    border-radius:8px;
+    color:#585544;
+    text-decoration:none;
+    font-size:14.5px;
+    position:relative;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .nav-item:hover{
+    background:#e9e4d6;
+  }
+  .nav-item.active{
+    background:var(--sidebar-active-bg);
+    color:#3d3624;
+    font-weight:600;
+  }
+  .nav-item .icon{
+    width:19px;
+    height:19px;
+    flex:0 0 19px;
+    color:inherit;
+  }
+  .nav-item .label{
+    flex:1;
+  }
+  .badge{
+    min-width:18px;
+    height:18px;
+    padding:0 5px;
+    border-radius:9px;
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .badge.yellow{background:var(--yellow-badge);}
+  .badge.red{background:var(--red);}
+  .badge.green{background:var(--green);}
+
+  .sidebar.collapsed .nav-item{justify-content:center;padding:11px 0;}
+  .sidebar.collapsed .nav-item .label,
+  .sidebar.collapsed .nav-item .badge{display:none;}
+  .sidebar.collapsed .nav-item.has-badge::after{
+    content:'';
+    position:absolute;
+    top:8px;
+    right:16px;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--yellow-badge);
+  }
+  .sidebar.collapsed .nav-item.has-badge.badge-red::after{background:var(--red);}
+  .sidebar.collapsed .nav-item.has-badge.badge-green::after{background:var(--green);}
+
+  /* ---------------- Main / Topbar ---------------- */
+  .main-wrap{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
+  .topbar{
+    height:64px;
+    flex:0 0 64px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    border-bottom:1px solid var(--border);
+    gap:16px;
+  }
+  .breadcrumb{
+    font-size:15px;
+    white-space:nowrap;
+  }
+  .breadcrumb .muted{
+    color:var(--text-muted);
+  }
+  .breadcrumb .current{
+    color:var(--text-dark);
+    font-weight:700;
+    margin-left:6px;
+  }
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    min-width:0;
+  }
+  .exact-status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12.5px;
+    color:var(--text-muted);
+    white-space:nowrap;
+  }
+  .exact-status .exact-check{
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:var(--green);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 16px;
+  }
+  .exact-status .exact-check .icon{width:9px;height:9px;}
+  .exact-status strong{color:var(--text-dark);font-weight:700;}
+  .exact-status .exact-sub{color:var(--text-light-muted);}
+  .bell-wrap{
+    position:relative;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#f4f2ec;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#6b6a5f;
+    border:none;
+    cursor:pointer;
+    flex:0 0 34px;
+  }
+  .bell-wrap .icon{width:17px;height:17px;}
+  .bell-badge{
+    position:absolute;
+    top:-5px;
+    right:-8px;
+    background:var(--red);
+    color:#fff;
+    font-size:9.5px;
+    font-weight:700;
+    padding:2px 4px;
+    border-radius:9px;
+    line-height:1;
+  }
+  .divider-v{
+    width:1px;
+    height:28px;
+    background:var(--border);
+    flex:0 0 1px;
+  }
+  .user-menu-wrap{position:relative;}
+  .user-chip{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    background:none;
+    border:none;
+    white-space:nowrap;
+  }
+  .avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#e3b6a4,#c98b7b);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:700;
+    flex:0 0 34px;
+  }
+  .user-chip .name{
+    font-weight:600;
+    font-size:14.5px;
+    color:var(--text-dark);
+  }
+  .user-chip .icon{width:14px;height:14px;color:#8c8878;transition:transform .15s ease;}
+  .user-chip[aria-expanded="true"] .icon{transform:rotate(180deg);}
+  .dropdown-menu{
+    position:absolute;
+    top:calc(100% + 12px);
+    right:0;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.14);
+    padding:6px;
+    min-width:170px;
+    z-index:30;
+  }
+  .dropdown-menu[hidden]{display:none;}
+  .dropdown-menu button{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 10px;
+    border:none;
+    background:none;
+    border-radius:7px;
+    font-size:13.5px;
+    color:var(--text-dark);
+    cursor:pointer;
+    text-align:left;
+  }
+  .dropdown-menu button:hover{background:var(--sidebar-bg);}
+  .dropdown-menu .icon{width:15px;height:15px;color:var(--text-muted);flex:0 0 15px;}
+
+  /* ---------------- Content area ---------------- */
+  .content-area{
+    flex:1;
+    display:flex;
+    min-height:0;
+  }
+  .order-form{
+    flex:1;
+    min-width:0;
+    padding:26px 34px 60px;
+    overflow-y:auto;
+  }
+
+  /* Stepper */
+  .step-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:26px;
+  }
+  .step-circle{
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    flex:0 0 26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+  }
+  .step-circle.done{background:var(--green);}
+  .step-circle.progress{background:var(--tan);}
+  .step-circle .icon{width:14px;height:14px;}
+  .pill{
+    padding:4px 12px;
+    border-radius:14px;
+    font-size:12.5px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .pill.done{background:var(--green-pale-bg);color:var(--green);}
+  .pill.progress{background:var(--tan-pale-bg);color:var(--tan);}
+  .step-label{
+    color:var(--text-muted);
+    font-size:13.5px;
+    white-space:nowrap;
+  }
+  .step-line{
+    flex:1;
+    height:2px;
+    border-radius:2px;
+    background:var(--green);
+  }
+  .step-line.split{
+    background:linear-gradient(to right, var(--tan-line) 0 38%, #ece7d9 38% 100%);
+  }
+
+  /* Field grid */
+  .field-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+    margin-bottom:22px;
+  }
+  .field label.field-label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:13.5px;
+    font-weight:600;
+    color:#3a3830;
+    margin-bottom:8px;
+  }
+  .field label.field-label .req{color:var(--red);}
+  .field label.field-label .icon{width:14px;height:14px;color:#b7b3a4;}
+  .input, .select{
+    width:100%;
+    height:42px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:0 10px 0 14px;
+    font-size:14px;
+    color:#4a473c;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:var(--shadow-sm);
+    position:relative;
+    gap:6px;
+  }
+  .input.disabled, .select.disabled{
+    color:#b9b6ab;
+    background:#fbfaf7;
+  }
+  .select .chevron{width:14px;height:14px;color:#8c8878;flex:0 0 14px;pointer-events:none;}
+  .select select.field-select{
+    appearance:none;
+    -webkit-appearance:none;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:14px;
+    color:#4a473c;
+    width:100%;
+    height:100%;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .select.disabled select.field-select{color:#b9b6ab;cursor:not-allowed;}
+  .select-clear{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    border:none;
+    background:#ece7db;
+    color:#8c8878;
+    cursor:pointer;
+    flex:0 0 16px;
+    padding:0;
+    font-size:11px;
+    line-height:1;
+  }
+  .select-clear:hover{background:var(--red);color:#fff;}
+  .select.has-value .select-clear{display:flex;}
+  .select.disabled .select-clear{display:none !important;}
+  input.text-input{
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:14px;
+    color:#4a473c;
+    width:100%;
+    height:100%;
+    font-family:inherit;
+  }
+  input.text-input::placeholder{color:#9a978c;}
+  input.text-input:disabled{color:#b9b6ab;}
+  input[type="number"].text-input::-webkit-inner-spin-button,
+  input[type="number"].text-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+  input[type="number"].text-input{-moz-appearance:textfield;}
+
+  .amount-field{
+    position:relative;
+  }
+  .stepper-btns{
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    color:#a9a599;
+  }
+  .stepper-btns .icon{width:10px;height:10px;cursor:pointer;}
+  .stepper-btns .icon:hover{color:var(--green);}
+  .input.disabled .stepper-btns .icon{cursor:not-allowed;}
+  .input.disabled .stepper-btns .icon:hover{color:#a9a599;}
+
+  /* Remark */
+  .remark-row{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin:-6px 0 20px;
+    font-size:13.5px;
+    color:var(--text-dark);
+    cursor:pointer;
+    user-select:none;
+  }
+  .remark-row input[type="checkbox"]{
+    width:16px;height:16px;accent-color:var(--green);cursor:pointer;
+  }
+  .remark-textarea-wrap{display:none;margin:-4px 0 22px;}
+  .remark-textarea-wrap.open{display:block;}
+  .remark-textarea{
+    width:100%;
+    min-height:64px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:10px 14px;
+    font-size:14px;
+    font-family:inherit;
+    color:#4a473c;
+    resize:vertical;
+    box-shadow:var(--shadow-sm);
+  }
+
+  /* Section headers (Article / Element) */
+  .section-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:15px;
+    font-weight:700;
+    color:#28271f;
+    margin-bottom:16px;
+  }
+  .section-title.sub{
+    font-size:14px;
+    margin-bottom:14px;
+  }
+  .article-total-badge{
+    margin-left:auto;
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--text-dark);
+  }
+  .icon-btn{
+    width:20px;
+    height:20px;
+    border-radius:5px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    flex:0 0 20px;
+    border:none;
+    cursor:pointer;
+    padding:0;
+  }
+  .icon-btn .icon{width:12px;height:12px;}
+  .icon-btn.remove{background:var(--red);}
+  .icon-btn.add{background:var(--green);}
+  @keyframes shake{
+    10%,90%{transform:translateX(-1px);}
+    20%,80%{transform:translateX(2px);}
+    30%,50%,70%{transform:translateX(-3px);}
+    40%,60%{transform:translateX(3px);}
+  }
+  .icon-btn.shake{animation:shake .4s;}
+
+  .element-box{
+    border:1.5px dashed var(--border-dashed);
+    border-radius:10px;
+    padding:20px;
+    margin-bottom:26px;
+    transition:border-color .15s ease;
+  }
+  .element-box.disabled{
+    border-color:#e6e2d5;
+  }
+  .stock-note{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:12.5px;
+    color:#8c8878;
+    font-style:italic;
+    margin:-10px 0 18px;
+  }
+  .dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#5fae6a;
+    flex:0 0 7px;
+  }
+  .element-box .field-row{margin-bottom:18px;}
+  .element-box .field-row:last-child,
+  .element-box .field:last-child{margin-bottom:0;}
+
+  /* Model pair (two selects under one "Model" label) */
+  .model-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+  /* Product + thumbnail row */
+  .product-amount-row{display:grid;grid-template-columns:1fr 1fr 64px;gap:16px;margin-bottom:18px;}
+  .product-thumb-box{
+    width:64px;
+    height:42px;
+    border:1.5px dashed var(--border-dashed);
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--text-light-muted);
+    background:#fbfaf7;
+  }
+  .product-thumb-box .icon{width:20px;height:20px;}
+
+  /* Fabric cascade row */
+  .fabric-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+  .fabric-row .field-label.hidden-label{visibility:hidden;}
+
+  /* Options panel */
+  .options-panel{
+    border:1.5px solid var(--border-dashed);
+    border-radius:10px;
+    padding:20px 20px 6px;
+    margin-bottom:26px;
+  }
+  .options-panel-title{font-size:14px;font-weight:700;margin-bottom:16px;}
+  .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 28px;}
+  .option-row{margin-bottom:16px;}
+  .option-row label.field-label{font-weight:500;font-size:13px;color:#575344;}
+  .option-row .select{height:38px;}
+
+  .article-block{
+    margin-bottom:8px;
+  }
+
+  /* Action row trio */
+  .action-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:24px;}
+  .add-custom-row{
+    width:100%;
+    border:1.5px dashed var(--border-dashed);
+    border-radius:10px;
+    padding:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    color:var(--green);
+    font-weight:600;
+    font-size:14px;
+    background:transparent;
+    cursor:pointer;
+    margin-bottom:0;
+  }
+  .add-custom-row:hover{background:#f7f5ef;}
+  .add-custom-row .icon{width:15px;height:15px;}
+
+  /* Custom line + discount line */
+  .custom-line, .discount-line{
+    display:flex;
+    align-items:flex-end;
+    gap:14px;
+    border:1.5px dashed var(--border-dashed);
+    border-radius:10px;
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .discount-line{border-color:#eccfc9;background:#fdf7f6;}
+  .custom-line .field{flex:1;margin-bottom:0;}
+  .discount-line .field{flex:1;margin-bottom:0;}
+  .custom-line .field.narrow, .discount-line .field.narrow{flex:0 0 130px;}
+  .custom-line .field label.field-label, .discount-line .field label.field-label{margin-bottom:6px;}
+  .custom-line .icon-btn, .discount-line .icon-btn{flex:0 0 20px;margin-bottom:11px;}
+  #customLinesContainer, #discountLinesContainer{margin-bottom:0;}
+  #customLinesContainer:not(:empty), #discountLinesContainer:not(:empty){margin-bottom:20px;}
+
+  .delivery-row{
+    display:flex;
+    align-items:center;
+    gap:40px;
+    flex-wrap:wrap;
+  }
+  .delivery-row .field{width:320px;}
+  .requested-date{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:26px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text-light-muted);
+    transition:color .15s ease;
+  }
+  .requested-date.checked{color:#28271f;}
+  .requested-date .check-circle{
+    width:19px;
+    height:19px;
+    border-radius:50%;
+    background:#d8d4c6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    flex:0 0 19px;
+    transition:background .15s ease;
+  }
+  .requested-date.checked .check-circle{background:var(--green);}
+  .requested-date .check-circle .icon{width:11px;height:11px;}
+  .partial-order-row{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    width:100%;
+    margin-top:22px;
+    margin-bottom:40px;
+    font-size:13.5px;
+    color:var(--text-dark);
+    cursor:pointer;
+    user-select:none;
+  }
+  .partial-order-row input[type="checkbox"]{width:16px;height:16px;accent-color:var(--green);cursor:pointer;}
+
+  /* ---------------- Summary panel ---------------- */
+  .summary-panel{
+    width:250px;
+    flex:0 0 250px;
+    background:#faf9f6;
+    border-left:1px solid var(--border);
+    padding:26px 22px;
+    display:flex;
+    flex-direction:column;
+    transition:width .22s ease, flex-basis .22s ease;
+    overflow-y:auto;
+  }
+  .summary-panel.expanded{
+    width:520px;
+    flex:0 0 520px;
+  }
+  .summary-title{
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:14px;
+  }
+  .price-radio-group{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    font-size:12px;
+    color:var(--text-muted);
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .price-radio-group label{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;}
+  .price-radio-group input[type="radio"]{accent-color:var(--green);width:14px;height:14px;cursor:pointer;}
+  .price-radio-group .lbl-active{color:var(--text-dark);font-weight:700;}
+
+  .summary-line{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:13.5px;
+    color:#3a3830;
+    margin-bottom:12px;
+  }
+  .summary-line .icon{width:15px;height:15px;color:#8c8878;flex:0 0 15px;}
+  .summary-divider{
+    height:1px;
+    background:var(--border);
+    margin:14px 0 16px;
+  }
+  .summary-cols{
+    display:flex;
+    justify-content:space-between;
+    font-size:12.5px;
+    font-weight:700;
+    color:#28271f;
+    margin-bottom:12px;
+  }
+  .summary-cols-exp{
+    display:none;
+    grid-template-columns:1fr 40px 74px 86px;
+    font-size:11.5px;
+    font-weight:700;
+    color:#28271f;
+    margin-bottom:12px;
+    gap:6px;
+  }
+  .summary-cols-exp span:not(:first-child){text-align:right;}
+  .summary-panel.expanded .summary-cols{display:none;}
+  .summary-panel.expanded .summary-cols-exp{display:grid;}
+
+  .summary-category{
+    font-size:12.5px;
+    color:#8c8878;
+    margin-bottom:8px;
+    font-weight:600;
+  }
+  .summary-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:4px;
+  }
+  .summary-item .name-qty{
+    font-size:13.5px;
+    font-weight:600;
+    color:#28271f;
+  }
+  .summary-item .name-qty .qty{
+    font-weight:400;
+    color:#8c8878;
+  }
+  .summary-item .price{
+    font-size:13.5px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .summary-item.discount .price{color:var(--red);}
+  .summary-sub{
+    font-size:11.5px;
+    color:#a9a599;
+    max-width:190px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    margin-bottom:16px;
+  }
+
+  #summaryItemsExpanded{display:none;}
+  .summary-panel.expanded #summaryItemsSimple{display:none;}
+  .summary-panel.expanded #summaryItemsExpanded{display:block;}
+  .summary-item-exp{
+    display:grid;
+    grid-template-columns:1fr 40px 74px 86px;
+    gap:6px;
+    align-items:baseline;
+    margin-bottom:4px;
+    font-size:12.5px;
+  }
+  .summary-item-exp span:not(:first-child){text-align:right;white-space:nowrap;}
+  .summary-item-exp .name-qty{font-weight:600;color:#28271f;}
+  .summary-item-exp .name-qty .qty{font-weight:400;color:#8c8878;}
+  .summary-item-exp.sub-leg{color:#a9a599;font-size:11.5px;margin-bottom:14px;}
+  .summary-item-exp.sub-leg .name-qty{font-weight:400;color:#a9a599;}
+  .summary-item-exp.discount{color:var(--red);margin-bottom:14px;}
+  .summary-item-exp.discount .name-qty{color:var(--red);font-weight:600;}
+
+  .summary-total-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+  }
+  .summary-total-label{
+    font-size:14px;
+    font-weight:700;
+  }
+  .summary-total-label .vat{
+    display:block;
+    font-size:11px;
+    font-weight:400;
+    color:#a9a599;
+  }
+  .summary-total-price{
+    font-size:16px;
+    font-weight:700;
+  }
+  .summary-spacer{flex:1;}
+  .summary-actions{
+    display:flex;
+    gap:10px;
+    margin-top:24px;
+  }
+  .order-pdf-btn{
+    flex:0 0 46%;
+    height:44px;
+    border-radius:8px;
+    border:none;
+    background:var(--sidebar-active-bg);
+    color:#3d3624;
+    font-size:12.5px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    cursor:pointer;
+    padding:0 6px;
+    text-align:center;
+  }
+  .order-pdf-btn:hover{background:#d3c497;}
+  .order-pdf-btn .icon{width:15px;height:15px;flex:0 0 15px;}
+  .place-order-btn{
+    width:100%;
+    flex:1;
+    height:44px;
+    border-radius:8px;
+    border:none;
+    background:var(--green);
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    cursor:pointer;
+  }
+  .place-order-btn:hover{background:var(--green-dark);}
+  .place-order-btn:disabled{background:#d8d4c6;color:#fff;cursor:not-allowed;}
+  .place-order-btn:disabled:hover{background:#d8d4c6;}
+  .place-order-btn .icon{width:16px;height:16px;}
+
+  /* Collapse chevrons */
+  .collapse-btn{
+    position:absolute;
+    bottom:70px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:0 1px 3px rgba(0,0,0,.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#8c8878;
+    cursor:pointer;
+    transition:left .22s ease, right .22s ease;
+    z-index:5;
+  }
+  .collapse-btn:hover{color:var(--green);}
+  .collapse-btn.left{left:238px;}
+  .collapse-btn.right{right:242px;}
+  .collapse-btn .icon{width:13px;height:13px;transition:transform .2s ease;}
+  .collapse-btn.flipped .icon{transform:rotate(180deg);}
+  .app.sidebar-collapsed .collapse-btn.left{left:66px;}
+  .app.summary-expanded .collapse-btn.right{right:512px;}
+
+  /* ---------------- Order Placed modal ---------------- */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(40,39,31,.35);
+    backdrop-filter:blur(3px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+  }
+  .modal-overlay[hidden]{display:none;}
+  .modal-card{
+    background:#fff;
+    border-radius:16px;
+    width:100%;
+    max-width:560px;
+    padding:36px 40px 32px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.2);
+    max-height:90vh;
+    overflow-y:auto;
+  }
+  .modal-icon{
+    width:96px;
+    height:96px;
+    border-radius:50%;
+    background:var(--tan-pale-bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 20px;
+    color:var(--green);
+  }
+  .modal-icon .icon{width:38px;height:38px;}
+  .modal-card h2{
+    margin:0 0 8px;
+    font-size:24px;
+  }
+  .modal-card p.subtext{
+    margin:0 0 26px;
+    color:var(--text-muted);
+    font-size:14.5px;
+  }
+  .modal-summary{
+    text-align:left;
+    border-top:1px solid var(--border);
+    padding-top:20px;
+  }
+  .modal-parties{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:18px;
+    font-size:14px;
+    font-weight:600;
+  }
+  .modal-parties span{display:flex;align-items:center;gap:8px;}
+  .modal-parties .icon{width:15px;height:15px;color:#8c8878;}
+  .modal-cols{
+    display:grid;
+    grid-template-columns:1fr 90px 100px;
+    font-weight:700;
+    font-size:13px;
+    margin-bottom:10px;
+    color:#28271f;
+  }
+  .modal-cols span:not(:first-child){text-align:right;}
+  .modal-item-name{
+    font-weight:700;
+    font-size:13.5px;
+    margin-bottom:4px;
+  }
+  .modal-item-line{
+    display:grid;
+    grid-template-columns:1fr 90px 100px;
+    font-size:13.5px;
+    margin-bottom:2px;
+  }
+  .modal-item-line span:not(:first-child){text-align:right;}
+  .modal-item-line.sub{color:var(--text-muted);font-size:12.5px;margin-bottom:14px;}
+  .modal-divider{height:1px;background:var(--border);margin:14px 0;}
+  .modal-total-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:26px;
+  }
+  .done-btn{
+    background:var(--green);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:12px 34px;
+    font-size:14.5px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+  }
+  .done-btn:hover{background:var(--green-dark);}
+  .done-btn .icon{width:15px;height:15px;}
+
+  /* ---------------- Orders overview page ---------------- */
+  .overview-main{padding:26px 34px 60px;overflow-y:auto;flex:1;min-width:0;}
+  .overview-header-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:22px;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .overview-title{font-size:22px;font-weight:700;color:var(--text-dark);}
+  .add-new-order-btn{
+    background:var(--green);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    height:40px;
+    padding:0 18px;
+    font-size:13.5px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    text-decoration:none;
+  }
+  .add-new-order-btn:hover{background:var(--green-dark);}
+  .add-new-order-btn .icon{width:15px;height:15px;}
+
+  .overview-toolbar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+  }
+  .bulk-select-wrap{display:flex;align-items:center;gap:8px;}
+  .bulk-select-wrap select{
+    height:38px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:0 12px;
+    font-size:13px;
+    color:var(--text-dark);
+    background:#fff;
+    font-family:inherit;
+  }
+  .apply-btn{
+    height:38px;
+    padding:0 16px;
+    border:none;
+    border-radius:8px;
+    background:var(--sidebar-active-bg);
+    color:#3d3624;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+  }
+  .apply-btn:hover{background:#d3c497;}
+
+  .search-box{
+    position:relative;
+    flex:1;
+    min-width:180px;
+    max-width:280px;
+  }
+  .search-box input{
+    width:100%;
+    height:38px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:0 14px 0 36px;
+    font-size:13px;
+    font-family:inherit;
+    color:var(--text-dark);
+  }
+  .search-box .icon{
+    position:absolute;
+    left:11px;
+    top:50%;
+    transform:translateY(-50%);
+    width:15px;
+    height:15px;
+    color:var(--text-muted);
+    pointer-events:none;
+  }
+
+  .filters-wrap{position:relative;}
+  .filters-btn{
+    height:38px;
+    padding:0 16px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text-dark);
+    font-weight:600;
+    font-size:13px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .filters-btn:hover{background:#faf8f2;}
+  .filters-btn .icon{width:14px;height:14px;}
+  .filters-panel{
+    position:absolute;
+    top:calc(100% + 8px);
+    left:0;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:0 14px 34px rgba(0,0,0,.14);
+    padding:18px;
+    width:460px;
+    z-index:25;
+  }
+  .filters-panel[hidden]{display:none;}
+  .filters-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;margin-bottom:14px;}
+  .filters-grid .field label.field-label{font-size:12.5px;margin-bottom:5px;}
+  .filters-grid .input, .filters-grid .select{height:36px;}
+  .filters-check-row{
+    grid-column:1 / -1;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    color:var(--text-dark);
+    cursor:pointer;
+    user-select:none;
+  }
+  .filters-check-row input{width:15px;height:15px;accent-color:var(--green);cursor:pointer;}
+  .filters-actions{display:flex;justify-content:flex-end;gap:10px;}
+  .filters-actions button{
+    height:36px;
+    padding:0 16px;
+    border-radius:7px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    border:none;
+  }
+  .filters-actions .clear-btn{background:none;color:var(--text-muted);}
+  .filters-actions .clear-btn:hover{color:var(--red);}
+  .filters-actions .apply-filters-btn{background:var(--green);color:#fff;}
+  .filters-actions .apply-filters-btn:hover{background:var(--green-dark);}
+
+  .toolbar-spacer{flex:1;}
+  .icon-only-btn{
+    width:38px;
+    height:38px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text-muted);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    flex:0 0 38px;
+  }
+  .icon-only-btn:hover{background:#faf8f2;color:var(--green);}
+  .icon-only-btn .icon{width:16px;height:16px;}
+
+  .table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:10px;}
+  table.orders-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+    min-width:1100px;
+  }
+  table.orders-table thead th{
+    text-align:left;
+    background:var(--sidebar-bg);
+    color:var(--text-dark);
+    font-weight:700;
+    font-size:12px;
+    padding:12px 14px;
+    white-space:nowrap;
+    cursor:pointer;
+    user-select:none;
+    border-bottom:1px solid var(--border);
+  }
+  table.orders-table thead th:hover{color:var(--green);}
+  table.orders-table thead th .sort-icon{width:10px;height:10px;margin-left:5px;opacity:.5;display:inline-block;vertical-align:middle;}
+  table.orders-table thead th.sorted .sort-icon{opacity:1;color:var(--green);}
+  table.orders-table thead th.checkbox-col{width:36px;cursor:default;}
+  table.orders-table tbody td{
+    padding:11px 14px;
+    border-bottom:1px solid var(--border);
+    color:var(--text-dark);
+    white-space:nowrap;
+  }
+  table.orders-table tbody tr:hover{background:#faf9f5;}
+  table.orders-table tbody tr:last-child td{border-bottom:none;}
+  table.orders-table a.ref-link{color:var(--green);text-decoration:none;font-weight:600;}
+  table.orders-table a.ref-link:hover{text-decoration:underline;}
+  .dealer-cell{display:flex;align-items:center;gap:8px;}
+  .dealer-dot{width:7px;height:7px;border-radius:50%;flex:0 0 7px;}
+  .pl-icon, .invoice-icon{width:15px;height:15px;}
+  .pl-icon.yes, .invoice-icon.yes{color:var(--green);}
+  .pl-icon.no, .invoice-icon.no{color:var(--red);}
+
+  .status-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 10px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .status-badge .icon{width:11px;height:11px;}
+  .status-badge.status-new{background:#eef2f7;color:#5d6481;}
+  .status-badge.status-delivery{background:var(--tan-pale-bg);color:var(--tan);}
+  .status-badge.status-cancelled{background:#fbe7e5;color:var(--red);}
+  .status-badge.status-completed{background:var(--green-pale-bg);color:var(--green);}
+  .status-badge.status-changed{background:#f3e8f7;color:#8a5fae;}
+
+  .row-actions{display:flex;align-items:center;gap:8px;}
+  .row-action-btn{
+    width:26px;
+    height:26px;
+    border-radius:6px;
+    border:none;
+    background:none;
+    color:var(--text-muted);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+  }
+  .row-action-btn:hover{background:var(--sidebar-bg);color:var(--green);}
+  .row-action-btn .icon{width:14px;height:14px;}
+  .row-action-btn.spinning .icon{animation:spin .7s linear;}
+  @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+  .pagination-bar{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:16px;
+    margin-top:18px;
+    font-size:13px;
+    color:var(--text-muted);
+  }
+  .pagination-bar select{
+    height:32px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:0 8px;
+    font-family:inherit;
+    font-size:13px;
+  }
+  .page-nav{display:flex;align-items:center;gap:8px;}
+  .page-nav button{
+    width:28px;
+    height:28px;
+    border-radius:6px;
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text-dark);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .page-nav button:hover{background:var(--sidebar-bg);}
+  .page-nav button:disabled{opacity:.4;cursor:not-allowed;}
+  .page-nav button .icon{width:12px;height:12px;}
+  .no-results-row td{text-align:center;color:var(--text-muted);padding:30px !important;}
+
+  /* View order modal (reuse Order Placed modal look) */
+  .view-modal-card{max-width:480px;text-align:left;}
+  .view-modal-card h2{font-size:19px;margin-bottom:18px;}
+  .view-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px;}
+  .view-row:last-child{border-bottom:none;}
+  .view-row .lbl{color:var(--text-muted);}
+  .view-row .val{font-weight:600;color:var(--text-dark);}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <div class="logo-full">
+        <div class="brand">UrbanSofa<sup>&reg;</sup></div>
+        <div class="tagline">by Ira Ness</div>
+      </div>
+      <div class="logo-mini">US</div>
+    </div>
+    <nav class="nav-list">
+      <a class="nav-item" href="index.html">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span class="label">Dashboard</span>
+      </a>
+      <a class="nav-item active" href="orders-overview.html">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="label">Orders</span>
+      </a>
+      <a class="nav-item has-badge">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+        <span class="label">Collections</span>
+        <span class="badge yellow">5</span>
+      </a>
+      <a class="nav-item has-badge badge-red">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+        <span class="label">CRM</span>
+        <span class="badge red">2</span>
+      </a>
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="label">Downloads</span>
+      </a>
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M9 12h6M9 16h6M9 8h2"/></svg>
+        <span class="label">Reports</span>
+      </a>
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1Z"/></svg>
+        <span class="label">Settings</span>
+      </a>
+      <a class="nav-item has-badge badge-green">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="label">System Users</span>
+        <span class="badge green">5</span>
+      </a>
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/></svg>
+        <span class="label">Export</span>
+      </a>
+      <a class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5l-8-3Z"/><path d="M12 8v5M12 16h.01"/></svg>
+        <span class="label">Report Bug</span>
+      </a>
+      <a class="nav-item has-badge">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+        <span class="label">Exact Management</span>
+        <span class="badge yellow">5</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span class="muted">Orders</span>
+        <span class="current">Overview</span>
+      </div>
+      <div class="topbar-right">
+        <div class="exact-status">
+          <span class="exact-check">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </span>
+          <span>Exact Online Connection: <strong>Connected</strong></span>
+          <span class="exact-sub">&middot; re-auth in 2 days</span>
+        </div>
+        <div class="divider-v"></div>
+        <button class="bell-wrap" type="button" aria-label="Notifications">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="bell-badge">10+</span>
+        </button>
+        <div class="divider-v"></div>
+        <div class="user-menu-wrap">
+          <button class="user-chip" type="button" id="userMenuBtn" aria-haspopup="true" aria-expanded="false">
+            <div class="avatar">MA</div>
+            <span class="name">Mahsa Amiri</span>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="dropdown-menu" id="userMenu" hidden>
+            <button type="button" data-action="lock">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              Lock
+            </button>
+            <button type="button" data-action="logout">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <main class="overview-main">
+
+        <div class="overview-header-row">
+          <div class="overview-title">Orders Overview</div>
+          <a class="add-new-order-btn" href="select-template.html">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            Add new order
+          </a>
+        </div>
+
+        <div class="overview-toolbar">
+          <div class="bulk-select-wrap">
+            <select id="bulkStatusSelect">
+              <option value="">Bulk action: Status&hellip;</option>
+              <option value="New">New</option>
+              <option value="Delivery">Delivery</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+            <button type="button" class="apply-btn" id="bulkApplyBtn">Apply</button>
+          </div>
+
+          <div class="search-box">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="searchInput" placeholder="Search orders&hellip;">
+          </div>
+
+          <div class="filters-wrap">
+            <button type="button" class="filters-btn" id="filtersBtn">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+              Filters
+            </button>
+            <div class="filters-panel" id="filtersPanel" hidden>
+              <div class="filters-grid">
+                <div class="field"><label class="field-label">Invoice NO.</label><div class="input"><input class="text-input" type="text" placeholder="e.g. INV-2026-001"></div></div>
+                <div class="field"><label class="field-label">Packing list NO.</label><div class="input"><input class="text-input" type="text" placeholder="e.g. PL-2026-001"></div></div>
+                <div class="field"><label class="field-label">Total Amount (incl.VAT)</label><div class="input"><input class="text-input" type="number" placeholder="0.00"></div></div>
+                <div class="field"><label class="field-label">Total Amount (ex.VAT)</label><div class="input"><input class="text-input" type="number" placeholder="0.00"></div></div>
+                <div class="field"><label class="field-label">Exact No.</label><div class="input"><input class="text-input" type="text" placeholder="Exact Online reference"></div></div>
+                <div class="field"><label class="field-label">Collection(s)</label>
+                  <div class="select"><select class="field-select"><option>Any collection</option><option>Sofa's</option><option>Tables</option><option>Beds</option></select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+                </div>
+                <div class="field"><label class="field-label">Requested delivery week</label><div class="input"><input class="text-input" type="text" placeholder="Week, year"></div></div>
+                <div class="field"><label class="field-label">Delivery week</label><div class="input"><input class="text-input" type="text" placeholder="Week, year"></div></div>
+                <label class="filters-check-row">
+                  <input type="checkbox" id="partialOrderFilter">
+                  Partial order
+                </label>
+              </div>
+              <div class="filters-actions">
+                <button type="button" class="clear-btn" id="filtersClearBtn">Clear</button>
+                <button type="button" class="apply-filters-btn" id="filtersApplyBtn">Apply filters</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="toolbar-spacer"></div>
+
+          <button type="button" class="icon-only-btn" id="importWeeksBtn" title="Import delivery weeks">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+          </button>
+          <button type="button" class="icon-only-btn" id="sendEmailBtn" title="Send email">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          </button>
+          <button type="button" class="icon-only-btn" id="exportBtn" title="Export">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+
+        <div class="table-scroll">
+          <table class="orders-table" id="ordersTable">
+            <thead>
+              <tr>
+                <th class="checkbox-col"><input type="checkbox" id="selectAllCheckbox"></th>
+                <th data-sort="date">Order date <svg class="icon sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                <th data-sort="number">Order number <svg class="icon sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                <th data-sort="reference">Reference <svg class="icon sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                <th data-sort="dealer">Dealer <svg class="icon sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                <th data-sort="supplier">Supplier <svg class="icon sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                <th data-sort="deliveryWeek">Delivery week <svg class="icon sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                <th>PL</th>
+                <th>Invoice</th>
+                <th data-sort="status">Status <svg class="icon sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination-bar">
+          <span>Rows per page</span>
+          <select id="pageSizeSelect">
+            <option value="10">10</option>
+            <option value="25" selected>25</option>
+            <option value="50">50</option>
+          </select>
+          <span id="pageInfo">Page 1 of 1</span>
+          <div class="page-nav">
+            <button type="button" id="prevPageBtn" aria-label="Previous page">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <button type="button" id="nextPageBtn" aria-label="Next page">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <div class="collapse-btn left" id="sidebarCollapseBtn">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+  </div>
+
+</div>
+
+<!-- View order modal -->
+<div class="modal-overlay" id="viewModalOverlay" hidden>
+  <div class="modal-card view-modal-card">
+    <h2>Order details</h2>
+    <div id="viewModalBody"></div>
+    <button type="button" class="done-btn" id="viewModalCloseBtn" style="margin-top:20px;">Close</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var app = document.getElementById('app');
+  var sidebar = document.getElementById('sidebar');
+
+  document.getElementById('sidebarCollapseBtn').addEventListener('click', function(){
+    sidebar.classList.toggle('collapsed');
+    app.classList.toggle('sidebar-collapsed');
+    this.classList.toggle('flipped');
+  });
+
+  /* User account dropdown */
+  var userMenuBtn = document.getElementById('userMenuBtn');
+  var userMenu = document.getElementById('userMenu');
+  userMenuBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var willOpen = userMenu.hidden;
+    userMenu.hidden = !willOpen;
+    userMenuBtn.setAttribute('aria-expanded', String(willOpen));
+  });
+  document.addEventListener('click', function(){
+    userMenu.hidden = true;
+    userMenuBtn.setAttribute('aria-expanded', 'false');
+  });
+  userMenu.addEventListener('click', function(e){ e.stopPropagation(); });
+
+  /* Filters panel toggle */
+  var filtersBtn = document.getElementById('filtersBtn');
+  var filtersPanel = document.getElementById('filtersPanel');
+  filtersBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    filtersPanel.hidden = !filtersPanel.hidden;
+  });
+  filtersPanel.addEventListener('click', function(e){ e.stopPropagation(); });
+  document.addEventListener('click', function(){ filtersPanel.hidden = true; });
+  document.getElementById('filtersClearBtn').addEventListener('click', function(){
+    filtersPanel.querySelectorAll('input[type="text"], input[type="number"]').forEach(function(i){ i.value = ''; });
+    filtersPanel.querySelectorAll('select').forEach(function(s){ s.selectedIndex = 0; });
+    document.getElementById('partialOrderFilter').checked = false;
+  });
+  document.getElementById('filtersApplyBtn').addEventListener('click', function(){
+    filtersPanel.hidden = true;
+  });
+
+  /* ---------------- Sample order data ---------------- */
+  var STATUS_META = {
+    'New': { cls: 'status-new', icon: '<path d="m12 2 2.9 6.6L22 9.3l-5 4.9 1.2 7-6.2-3.4L5.8 21.2 7 14.2l-5-4.9 7.1-1.1z"/>' },
+    'Delivery': { cls: 'status-delivery', icon: '<path d="M3 16V6a1 1 0 0 1 1-1h9v11"/><path d="M13 9h4l3 4v3h-2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/>' },
+    'Cancelled': { cls: 'status-cancelled', icon: '<circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/>' },
+    'Completed': { cls: 'status-completed', icon: '<path d="M9 12.5 11 15l4-5"/><path d="M14 3h-4a1 1 0 0 0-1 1v1H8a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-1V4a1 1 0 0 0-1-1Z"/>' },
+    'Changed': { cls: 'status-changed', icon: '<circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/>' }
+  };
+  var DEALER_COLORS = ['#597671', '#c6b8a1', '#a1b1c7', '#8a5fae', '#b08a3e'];
+
+  var ORDERS = [
+    { date: '07-07-2026', number: '001.26.07.299', reference: 'D: without discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '07-07-2026', number: '001.26.07.929', reference: 'C: without discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '07-07-2026', number: '001.26.07.854', reference: 'B: with discount 20%', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '07-07-2026', number: '001.26.07.857', reference: 'A: with discount 10%', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '06-07-2026', number: '001.26.07.214', reference: 'Second without discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: 'Week 33, 2026', pl: false, invoice: true, status: 'Changed' },
+    { date: '06-07-2026', number: '001.26.07.214A', reference: '(edited) Second without discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: 'Week 33, 2026', pl: false, invoice: true, status: 'New' },
+    { date: '06-07-2026', number: '001.26.07.960', reference: 'First without discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '06-07-2026', number: '001.26.07.127', reference: 'Second with discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '05-07-2026', number: '001.26.07.986', reference: 'First with discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '05-07-2026', number: '001.26.07.508', reference: 'Second order with discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '05-07-2026', number: '001.26.07.461', reference: 'First order without discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '04-07-2026', number: '001.26.07.683', reference: 'Second order without discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '04-07-2026', number: '001.26.07.130', reference: 'First order without discount', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '03-07-2026', number: '001.26.07.480', reference: 'Bastella pa egen fabric', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: 'Week 30, 2026', pl: false, invoice: true, status: 'Changed' },
+    { date: '03-07-2026', number: '001.26.07.480A', reference: 'Bastella pa egen fabric', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: 'Week 30, 2026', pl: false, invoice: false, status: 'New' },
+    { date: '02-07-2026', number: '001.26.07.309', reference: 'Bastella pa egen fabric', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: false, status: 'New' },
+    { date: '02-07-2026', number: '001.26.07.932', reference: 'Dhr. Maassen', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: true, invoice: true, status: 'Completed' },
+    { date: '01-07-2026', number: '001.26.07.902', reference: 'Dhr en Mevr. C. Huigen', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: true, invoice: true, status: 'Completed' },
+    { date: '01-07-2026', number: '001.26.07.486', reference: 'Fam. S. Holkenborg', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: 'Week 29, 2026', pl: true, invoice: true, status: 'Delivery' },
+    { date: '30-06-2026', number: '001.26.07.879', reference: 'Com: Dhr A. Broeksteeg', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: true, invoice: true, status: 'Completed' },
+    { date: '30-06-2026', number: '001.26.07.171', reference: 'US-445: order 4', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: false, status: 'Changed' },
+    { date: '29-06-2026', number: '001.26.07.171A', reference: 'US-445: order 4 (edited)', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '29-06-2026', number: '001.26.07.796', reference: 'US-445: order 3 (10% discount)', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'Changed' },
+    { date: '28-06-2026', number: '001.26.07.796A', reference: '(Edited) US-445: order 3 (10% di...', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: true, status: 'New' },
+    { date: '28-06-2026', number: '001.26.07.868', reference: 'US-445: order 2', dealer: 'WoontrendsXL', supplier: 'Andpol Furniture', deliveryWeek: 'Week 28, 2026', pl: false, invoice: true, status: 'Changed' },
+    { date: '27-06-2026', number: '001.26.06.712', reference: 'Fam. Vermeulen', dealer: 'Wooden Planet', supplier: 'Andpol Furniture', deliveryWeek: 'Week 27, 2026', pl: true, invoice: true, status: 'Delivery' },
+    { date: '26-06-2026', number: '001.26.06.611', reference: 'Cancelled test order', dealer: 'Tiger Touch', supplier: 'Andpol Furniture', deliveryWeek: '', pl: false, invoice: false, status: 'Cancelled' },
+    { date: '25-06-2026', number: '001.26.06.588', reference: 'Xander Home restock', dealer: 'Xander Home', supplier: 'Andpol Furniture', deliveryWeek: 'Week 26, 2026', pl: true, invoice: true, status: 'Completed' }
+  ];
+
+  var dealerColorMap = {};
+  function colorForDealer(name){
+    if(!dealerColorMap[name]){
+      var idx = Object.keys(dealerColorMap).length % DEALER_COLORS.length;
+      dealerColorMap[name] = DEALER_COLORS[idx];
+    }
+    return dealerColorMap[name];
+  }
+
+  var state = {
+    search: '',
+    sortKey: 'date',
+    sortDir: 'desc',
+    page: 1,
+    pageSize: 25
+  };
+
+  function parseDate(d){
+    var parts = d.split('-');
+    return new Date(parts[2], parts[1] - 1, parts[0]);
+  }
+
+  function getFilteredSorted(){
+    var rows = ORDERS.slice();
+    if(state.search){
+      var q = state.search.toLowerCase();
+      rows = rows.filter(function(o){
+        return Object.keys(o).some(function(k){
+          return String(o[k]).toLowerCase().indexOf(q) !== -1;
+        });
+      });
+    }
+    rows.sort(function(a, b){
+      var av = state.sortKey === 'date' ? parseDate(a.date) : a[state.sortKey];
+      var bv = state.sortKey === 'date' ? parseDate(b.date) : b[state.sortKey];
+      if(av < bv) return state.sortDir === 'asc' ? -1 : 1;
+      if(av > bv) return state.sortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+    return rows;
+  }
+
+  function iconSvg(pathHtml, extraClass){
+    return '<svg class="icon ' + (extraClass || '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + pathHtml + '</svg>';
+  }
+
+  function render(){
+    var rows = getFilteredSorted();
+    var totalPages = Math.max(1, Math.ceil(rows.length / state.pageSize));
+    state.page = Math.min(state.page, totalPages);
+    var start = (state.page - 1) * state.pageSize;
+    var pageRows = rows.slice(start, start + state.pageSize);
+
+    var tbody = document.getElementById('ordersTableBody');
+    if(!pageRows.length){
+      tbody.innerHTML = '<tr class="no-results-row"><td colspan="11">No orders match your search/filters.</td></tr>';
+    } else {
+      tbody.innerHTML = pageRows.map(function(o){
+        var meta = STATUS_META[o.status];
+        var dotColor = colorForDealer(o.dealer);
+        return '<tr>' +
+          '<td><input type="checkbox" class="row-checkbox"></td>' +
+          '<td>' + o.date + '</td>' +
+          '<td><a class="ref-link" href="place-order.html?order=' + encodeURIComponent(o.number) + '">' + o.number + '</a></td>' +
+          '<td>' + o.reference + '</td>' +
+          '<td><span class="dealer-cell"><span class="dealer-dot" style="background:' + dotColor + ';"></span>' + o.dealer + '</span></td>' +
+          '<td>' + o.supplier + '</td>' +
+          '<td>' + (o.deliveryWeek || '&mdash;') + '</td>' +
+          '<td>' + iconSvg(o.pl ? '<path d="M20 6 9 17l-5-5"/>' : '<path d="m6 6 12 12M18 6 6 18"/>', 'pl-icon ' + (o.pl ? 'yes' : 'no')) + '</td>' +
+          '<td>' + iconSvg(o.invoice ? '<path d="M20 6 9 17l-5-5"/>' : '<path d="m6 6 12 12M18 6 6 18"/>', 'invoice-icon ' + (o.invoice ? 'yes' : 'no')) + '</td>' +
+          '<td><span class="status-badge ' + meta.cls + '">' + iconSvg(meta.icon) + o.status + '</span></td>' +
+          '<td><div class="row-actions">' +
+            '<button type="button" class="row-action-btn" data-action="view" data-number="' + o.number + '" title="View">' + iconSvg('<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/>') + '</button>' +
+            '<button type="button" class="row-action-btn" data-action="edit" title="Edit">' + iconSvg('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>') + '</button>' +
+            '<button type="button" class="row-action-btn" data-action="sync" title="Sync with Exact">' + iconSvg('<path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/>') + '</button>' +
+          '</div></td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    document.getElementById('pageInfo').textContent = 'Page ' + state.page + ' of ' + totalPages;
+    document.getElementById('prevPageBtn').disabled = state.page <= 1;
+    document.getElementById('nextPageBtn').disabled = state.page >= totalPages;
+
+    document.querySelectorAll('#ordersTable thead th[data-sort]').forEach(function(th){
+      th.classList.toggle('sorted', th.dataset.sort === state.sortKey);
+    });
+  }
+
+  document.querySelectorAll('#ordersTable thead th[data-sort]').forEach(function(th){
+    th.addEventListener('click', function(){
+      var key = th.dataset.sort;
+      if(state.sortKey === key){
+        state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        state.sortKey = key;
+        state.sortDir = 'asc';
+      }
+      render();
+    });
+  });
+
+  document.getElementById('searchInput').addEventListener('input', function(){
+    state.search = this.value.trim();
+    state.page = 1;
+    render();
+  });
+
+  document.getElementById('pageSizeSelect').addEventListener('change', function(){
+    state.pageSize = parseInt(this.value, 10);
+    state.page = 1;
+    render();
+  });
+  document.getElementById('prevPageBtn').addEventListener('click', function(){ state.page--; render(); });
+  document.getElementById('nextPageBtn').addEventListener('click', function(){ state.page++; render(); });
+
+  document.getElementById('selectAllCheckbox').addEventListener('change', function(){
+    var checked = this.checked;
+    document.querySelectorAll('.row-checkbox').forEach(function(cb){ cb.checked = checked; });
+  });
+
+  document.getElementById('bulkApplyBtn').addEventListener('click', function(){
+    var checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
+    var status = document.getElementById('bulkStatusSelect').value;
+    if(!status || !checkedCount){
+      alert('Select a status and at least one order first.');
+      return;
+    }
+    alert('Would set ' + checkedCount + ' order(s) to "' + status + '".');
+  });
+
+  ['importWeeksBtn', 'sendEmailBtn', 'exportBtn'].forEach(function(id){
+    document.getElementById(id).addEventListener('click', function(){
+      var labels = { importWeeksBtn: 'Import delivery weeks', sendEmailBtn: 'Send email', exportBtn: 'Export' };
+      alert(labels[id] + ' — not wired to a backend in this prototype.');
+    });
+  });
+
+  /* Row actions */
+  var viewOverlay = document.getElementById('viewModalOverlay');
+  document.getElementById('ordersTableBody').addEventListener('click', function(e){
+    var btn = e.target.closest('.row-action-btn');
+    if(!btn) return;
+    var action = btn.dataset.action;
+    if(action === 'view'){
+      var number = btn.dataset.number;
+      var order = ORDERS.filter(function(o){ return o.number === number; })[0];
+      if(!order) return;
+      document.getElementById('viewModalBody').innerHTML =
+        '<div class="view-row"><span class="lbl">Order number</span><span class="val">' + order.number + '</span></div>' +
+        '<div class="view-row"><span class="lbl">Reference</span><span class="val">' + order.reference + '</span></div>' +
+        '<div class="view-row"><span class="lbl">Dealer</span><span class="val">' + order.dealer + '</span></div>' +
+        '<div class="view-row"><span class="lbl">Supplier</span><span class="val">' + order.supplier + '</span></div>' +
+        '<div class="view-row"><span class="lbl">Delivery week</span><span class="val">' + (order.deliveryWeek || '&mdash;') + '</span></div>' +
+        '<div class="view-row"><span class="lbl">Status</span><span class="val">' + order.status + '</span></div>';
+      viewOverlay.hidden = false;
+    } else if(action === 'edit'){
+      window.location.href = 'place-order.html';
+    } else if(action === 'sync'){
+      btn.classList.add('spinning');
+      window.setTimeout(function(){ btn.classList.remove('spinning'); }, 700);
+    }
+  });
+  document.getElementById('viewModalCloseBtn').addEventListener('click', function(){ viewOverlay.hidden = true; });
+  viewOverlay.addEventListener('click', function(e){ if(e.target === viewOverlay) viewOverlay.hidden = true; });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && !viewOverlay.hidden) viewOverlay.hidden = true;
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UrbanSofa &mdash; Order PDF Preview</title>
+<style>
+  :root{
+    --beige-text:#272218;
+    --neutral-200:#f6f8fc;
+    --neutral-600:#868da6;
+    --neutral-700:#5d6481;
+    --neutral-800:#19213d;
+    --lighter-beige:#f0ebe3;
+    --primary-beige:#c6b8a1;
+    --green:#597671;
+    --green-dark:#46615c;
+    --border:#e3e0d8;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    padding:0;
+    font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+    background:#e9e6de;
+    color:var(--beige-text);
+  }
+  .page-shell{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:32px 16px 60px;
+  }
+  .toolbar{
+    width:100%;
+    max-width:700px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .toolbar-note{
+    font-size:12.5px;
+    color:#6b6a5f;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:8px 14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .toolbar-note .icon{width:15px;height:15px;color:var(--green);flex:0 0 15px;}
+  .toolbar-actions{display:flex;gap:10px;}
+  .toolbar-btn{
+    border:none;
+    border-radius:8px;
+    padding:9px 16px;
+    font-size:13.5px;
+    font-weight:700;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-family:inherit;
+  }
+  .toolbar-btn.primary{background:var(--green);color:#fff;}
+  .toolbar-btn.primary:hover{background:var(--green-dark);}
+  .toolbar-btn.secondary{background:#fff;border:1px solid var(--border);color:var(--beige-text);}
+  .toolbar-btn.secondary:hover{background:#f4f2ec;}
+  .toolbar-btn .icon{width:14px;height:14px;}
+
+  .pdf-page{
+    width:100%;
+    max-width:700px;
+    background:#fff;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    border-radius:4px;
+    overflow:hidden;
+    position:relative;
+  }
+
+  .pdf-header{
+    position:relative;
+    background:linear-gradient(120deg,#faf7f0 0%,#f0ebe3 55%,#e3d9c8 100%);
+    padding:44px 44px 30px;
+    min-height:150px;
+  }
+  .pdf-logo-badge{
+    position:absolute;
+    left:44px;
+    top:24px;
+    width:88px;
+    height:88px;
+    border-radius:20px;
+    background:var(--primary-beige);
+    border:1px solid var(--lighter-beige);
+    box-shadow:0 2px 19px rgba(48,95,151,.07);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    text-align:center;
+    font-family:Georgia,'Times New Roman',serif;
+    font-style:italic;
+    line-height:1.15;
+  }
+  .pdf-logo-badge .brand{font-weight:700;font-size:15px;}
+  .pdf-logo-badge .tagline{font-size:8.5px;}
+  .pdf-header-info{
+    display:flex;
+    justify-content:flex-end;
+    gap:34px;
+    flex-wrap:wrap;
+    margin-top:4px;
+  }
+  .info-block{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    max-width:160px;
+  }
+  .info-badge{
+    display:inline-flex;
+    align-self:flex-start;
+    background:var(--lighter-beige);
+    color:var(--beige-text);
+    font-size:9px;
+    padding:3px 6px;
+    border-radius:4px;
+    white-space:nowrap;
+  }
+  .info-value{font-size:12px;font-weight:700;color:var(--beige-text);}
+  .info-sub{font-size:9.5px;color:var(--neutral-700);line-height:1.5;}
+
+  .pdf-body{padding:0 44px 20px;}
+  .pdf-table-head{
+    display:grid;
+    grid-template-columns:1fr 90px 74px 90px;
+    background:var(--neutral-200);
+    border-radius:8px;
+    padding:11px 12px;
+    font-size:11px;
+    font-weight:700;
+    color:var(--beige-text);
+    margin-bottom:4px;
+  }
+  .pdf-table-head span:not(:first-child){text-align:right;}
+
+  .pdf-article-group{border-bottom:0.6px solid var(--neutral-200);padding:10px 4px;}
+  .pdf-row{
+    display:grid;
+    grid-template-columns:1fr 90px 74px 90px;
+    font-size:11px;
+    padding:2px 8px;
+    align-items:baseline;
+  }
+  .pdf-row span:not(:first-child){text-align:right;color:var(--neutral-700);}
+  .pdf-row.main{font-weight:600;color:var(--beige-text);}
+  .pdf-row.main span:last-child{font-weight:700;color:var(--beige-text);}
+  .pdf-row.sub{color:var(--beige-text);}
+  .pdf-row.sub span:first-child{color:var(--beige-text);}
+  .pdf-subtotal-row{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 8px 4px;
+    font-size:11px;
+    font-weight:700;
+    color:var(--beige-text);
+  }
+
+  .pdf-totals{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:4px;
+    padding-top:14px;
+  }
+  .pdf-totals-inner{width:220px;}
+  .pdf-total-row{display:flex;justify-content:space-between;padding:3px 8px;font-size:11px;}
+  .pdf-total-row .lbl{font-weight:600;color:var(--beige-text);}
+  .pdf-total-row .val{color:var(--neutral-600);}
+  .pdf-total-row.discount .val{color:#8c7b61;}
+  .pdf-total-hr{height:1px;background:#e5e5e5;margin:6px 8px;}
+  .pdf-invoice-total{
+    display:flex;
+    justify-content:space-between;
+    background:var(--neutral-200);
+    border-radius:8px;
+    padding:10px 8px;
+    font-size:11px;
+    font-weight:700;
+    color:var(--beige-text);
+    width:220px;
+  }
+
+  .pdf-footer{
+    background:var(--neutral-200);
+    padding:20px 44px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .pdf-footer-left strong{font-size:9.5px;color:var(--neutral-800);display:block;margin-bottom:2px;}
+  .pdf-footer-left div{font-size:9px;color:var(--neutral-700);}
+  .pdf-footer-logo{
+    font-family:Georgia,'Times New Roman',serif;
+    font-style:italic;
+    color:var(--green);
+    text-align:right;
+    line-height:1.2;
+  }
+  .pdf-footer-logo .brand{font-weight:700;font-size:14px;}
+  .pdf-footer-logo .tagline{font-size:9px;color:#9a8a63;}
+
+  @media print{
+    body{background:#fff;}
+    .toolbar{display:none;}
+    .page-shell{padding:0;}
+    .pdf-page{box-shadow:none;border-radius:0;max-width:100%;}
+  }
+</style>
+</head>
+<body>
+<div class="page-shell">
+  <div class="toolbar">
+    <div class="toolbar-note">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+      Preview only &mdash; a generated PDF file will be served by the backend later.
+    </div>
+    <div class="toolbar-actions">
+      <button type="button" class="toolbar-btn secondary" id="closeTabBtn">Close</button>
+      <button type="button" class="toolbar-btn primary" id="printBtn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print / Save as PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="pdf-page" id="pdfPage">
+    <div class="pdf-header">
+      <div class="pdf-logo-badge">
+        <div>
+          <div class="brand">UrbanSofa<sup>&reg;</sup></div>
+          <div class="tagline">by Ira Ness</div>
+        </div>
+      </div>
+      <div class="pdf-header-info">
+        <div class="info-block">
+          <span class="info-badge">Order Confirmation:</span>
+          <span class="info-value" id="pdfDealerName">Wooden Planet</span>
+          <span class="info-sub" id="pdfOrderNumber">Order number: 002.20.05.172A</span>
+          <span class="info-sub" id="pdfOrderDate">Order date: 08-07-2026</span>
+        </div>
+        <div class="info-block">
+          <span class="info-badge">Invoice to:</span>
+          <span class="info-value" id="pdfCustomerName">Daniel Korti</span>
+          <span class="info-sub" id="pdfCustomerAddress">Dorpsstraat 150a 7468CR Enter Nederland</span>
+        </div>
+        <div class="info-block">
+          <span class="info-badge">Requested Delivery Week:</span>
+          <span class="info-value" id="pdfDeliveryWeek">Second week, June, 2025</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-body">
+      <div class="pdf-table-head">
+        <span>Article</span>
+        <span>Price</span>
+        <span>Amount</span>
+        <span>Total</span>
+      </div>
+      <div id="pdfItemsContainer"></div>
+
+      <div class="pdf-totals">
+        <div class="pdf-totals-inner">
+          <div class="pdf-total-row"><span class="lbl">Subtotal</span><span class="val" id="pdfSubtotal">$ 0.00</span></div>
+          <div class="pdf-total-row discount" id="pdfDiscountRow" style="display:none;"><span class="lbl">Discount <span style="font-weight:400;color:#868da6;">(Special Offer)</span></span><span class="val" id="pdfDiscountValue">$ 0.00</span></div>
+          <div class="pdf-total-row"><span class="lbl">VAT:</span><span class="val" id="pdfVat">$ 0.00</span></div>
+          <div class="pdf-total-hr"></div>
+          <div class="pdf-invoice-total"><span>Invoice total</span><span id="pdfInvoiceTotal">$ 0.00</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-footer">
+      <div class="pdf-footer-left">
+        <strong>UrbanSofa</strong>
+        <div>Markt 27-29 6701 CX Wageningen</div>
+        <div>www.urbansofa.nl | info@urbansofa.nl</div>
+        <div>Tel: 0317-421796</div>
+      </div>
+      <div class="pdf-footer-logo">
+        <div class="brand">UrbanSofa<sup>&reg;</sup></div>
+        <div class="tagline">by Ira Ness</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  function fmt(n){
+    var v = Math.max(0, n || 0);
+    return '€ ' + v.toFixed(2).replace('.', ',');
+  }
+
+  var SAMPLE = {
+    dealer: 'Kuipers',
+    reference: 'Ambiance Wonen',
+    address: 'Dorpsstraat 150a 7468CR Enter Nederland',
+    deliveryWeek: 'Second week, June, 2025',
+    priceMode: 'customer',
+    discount: 52,
+    items: [
+      { collection: 'Sofa', model: 'Casia', productName: 'Merano Casia Island, left (ISL-)', qty: 1, unitPrice: 525000/100, addonPrice: 0, addonLabel: 'Fabric : Specials collection, Divine, Desert', addonUnitPrice: 5250 },
+      { collection: 'Sofa', model: 'Casia', productName: 'Merano Casia Corner (H)', qty: 1, unitPrice: 2750, addonPrice: 0, addonLabel: 'Fabric : Specials collection, Divine, Desert', addonUnitPrice: 5250 }
+    ]
+  };
+
+  function getData(){
+    try{
+      var raw = sessionStorage.getItem('urbansofaOrderPdfData');
+      if(raw){
+        var parsed = JSON.parse(raw);
+        if(parsed && parsed.items && parsed.items.length) return parsed;
+      }
+    }catch(err){ /* ignore, fall through to sample */ }
+    return null;
+  }
+
+  var data = getData();
+  var usingSample = !data;
+  if(!data) data = SAMPLE;
+
+  document.getElementById('pdfDealerName').textContent = data.dealer || 'Dealer';
+  document.getElementById('pdfCustomerName').textContent = data.reference || 'Customer';
+  var addressEl = document.getElementById('pdfCustomerAddress');
+  if(data.address){
+    addressEl.textContent = data.address;
+  } else {
+    addressEl.style.display = 'none';
+  }
+  document.getElementById('pdfDeliveryWeek').textContent = data.deliveryWeek || 'To be confirmed';
+  document.getElementById('pdfOrderDate').textContent = 'Order date: ' + new Date().toLocaleDateString('en-GB').replace(/\//g,'-');
+
+  var container = document.getElementById('pdfItemsContainer');
+  var itemsSubtotal = 0;
+
+  (data.items || []).forEach(function(item){
+    var group = document.createElement('div');
+    group.className = 'pdf-article-group';
+
+    var mainRow = document.createElement('div');
+    mainRow.className = 'pdf-row main';
+    var lineTotal = usingSample ? (item.unitPrice * item.qty) : (item.unitPrice * item.qty);
+    mainRow.innerHTML =
+      '<span>' + item.productName + '</span>' +
+      '<span>' + fmt(item.unitPrice) + '</span>' +
+      '<span>' + item.qty + '</span>' +
+      '<span>' + fmt(lineTotal) + '</span>';
+    group.appendChild(mainRow);
+
+    var groupTotal = lineTotal;
+
+    if(item.addonLabel){
+      var addonUnit = usingSample ? item.addonUnitPrice : item.addonPrice;
+      var subRow = document.createElement('div');
+      subRow.className = 'pdf-row sub';
+      subRow.innerHTML =
+        '<span>' + item.addonLabel + '</span>' +
+        '<span>' + fmt(addonUnit) + '</span>' +
+        '<span>' + (usingSample ? 1 : item.qty) + '</span>' +
+        '<span>' + fmt(addonUnit) + '</span>';
+      group.appendChild(subRow);
+      groupTotal += addonUnit;
+    }
+
+    var subtotalRow = document.createElement('div');
+    subtotalRow.className = 'pdf-subtotal-row';
+    subtotalRow.innerHTML = '<span>Article Subtotal:</span><span>' + fmt(groupTotal) + '</span>';
+    group.appendChild(subtotalRow);
+
+    container.appendChild(group);
+    itemsSubtotal += groupTotal;
+  });
+
+  var discount = data.discount || 0;
+  var netAfterDiscount = usingSample ? (itemsSubtotal - discount) : (typeof data.orderTotal === 'number' ? data.orderTotal : (itemsSubtotal - discount));
+  var exVat = netAfterDiscount / 1.21;
+  var vatAmount = netAfterDiscount - exVat;
+
+  document.getElementById('pdfSubtotal').textContent = fmt(itemsSubtotal);
+  if(discount > 0){
+    document.getElementById('pdfDiscountRow').style.display = 'flex';
+    document.getElementById('pdfDiscountValue').textContent = fmt(discount);
+  }
+  document.getElementById('pdfVat').textContent = fmt(vatAmount);
+  document.getElementById('pdfInvoiceTotal').textContent = fmt(netAfterDiscount);
+
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+  document.getElementById('closeTabBtn').addEventListener('click', function(){ window.close(); });
+})();
+</script>
+</body>
+</html>
