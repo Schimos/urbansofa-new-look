@@ -172,6 +172,82 @@
   .sidebar.collapsed .nav-item.has-badge.badge-red::after{background:var(--red);}
   .sidebar.collapsed .nav-item.has-badge.badge-green::after{background:var(--green);}
 
+  /* ---- Nav groups / accordion / flyout ---- */
+  .nav-item .chevron-mini{
+    width:15px;
+    height:15px;
+    flex:0 0 15px;
+    color:#93876c;
+    transition:transform .15s ease;
+  }
+  .nav-group.open > .nav-item .chevron-mini{transform:rotate(180deg);}
+  .nav-sublist{
+    display:flex;
+    flex-direction:column;
+    gap:1px;
+    max-height:0;
+    overflow:hidden;
+  }
+  .nav-group.open > .nav-sublist{
+    max-height:none;
+    padding:2px 0 4px;
+  }
+  .nav-item.sub{
+    padding:7px 12px 7px 38px;
+    font-size:13.3px;
+    border-radius:6px;
+  }
+  .nav-item.subsub{padding-left:50px;}
+  .nav-subgroup-label{
+    padding:7px 12px 3px 38px;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--text-light-muted);
+    cursor:default;
+    user-select:none;
+  }
+  .badge.small{
+    min-width:15px;
+    height:15px;
+    padding:0 4px;
+    font-size:9.5px;
+    margin-left:6px;
+    flex:0 0 auto;
+  }
+  .sidebar.collapsed .nav-sublist,
+  .sidebar.collapsed .nav-subgroup-label,
+  .sidebar.collapsed .chevron-mini{display:none !important;}
+
+  #sidebarFlyout{
+    position:fixed;
+    z-index:300;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:0 10px 28px rgba(41,50,36,.16);
+    padding:8px;
+    min-width:216px;
+    max-width:290px;
+    max-height:76vh;
+    overflow-y:auto;
+    display:none;
+  }
+  #sidebarFlyout.show{display:block;}
+  .flyout-header{
+    padding:6px 10px 8px;
+    font-size:13.5px;
+    font-weight:700;
+    color:var(--text-dark);
+    border-bottom:1px solid var(--border);
+    margin-bottom:4px;
+    white-space:nowrap;
+  }
+  #sidebarFlyout .nav-item.sub{padding-left:12px;}
+  #sidebarFlyout .nav-item.subsub{padding-left:24px;}
+  #sidebarFlyout .nav-subgroup-label{padding-left:12px;}
+
   /* ---------------- Main / Topbar ---------------- */
   .main-wrap{
     flex:1;
@@ -1110,57 +1186,9 @@
       </div>
       <div class="logo-mini">US</div>
     </div>
-    <nav class="nav-list">
-      <a class="nav-item">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-        <span class="label">Dashboard</span>
-      </a>
-      <a class="nav-item active">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
-        <span class="label">Orders</span>
-      </a>
-      <a class="nav-item has-badge">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
-        <span class="label">Collections</span>
-        <span class="badge yellow">5</span>
-      </a>
-      <a class="nav-item has-badge badge-red">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
-        <span class="label">CRM</span>
-        <span class="badge red">2</span>
-      </a>
-      <a class="nav-item">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-        <span class="label">Downloads</span>
-      </a>
-      <a class="nav-item">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M9 12h6M9 16h6M9 8h2"/></svg>
-        <span class="label">Reports</span>
-      </a>
-      <a class="nav-item">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1Z"/></svg>
-        <span class="label">Settings</span>
-      </a>
-      <a class="nav-item has-badge badge-green">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <span class="label">System Users</span>
-        <span class="badge green">5</span>
-      </a>
-      <a class="nav-item">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/></svg>
-        <span class="label">Export</span>
-      </a>
-      <a class="nav-item">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5l-8-3Z"/><path d="M12 8v5M12 16h.01"/></svg>
-        <span class="label">Report Bug</span>
-      </a>
-      <a class="nav-item has-badge">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
-        <span class="label">Exact Management</span>
-        <span class="badge yellow">5</span>
-      </a>
-    </nav>
+    <nav class="nav-list" id="navList"></nav>
   </aside>
+  <div id="sidebarFlyout"></div>
 
   <!-- Main -->
   <div class="main-wrap">
@@ -1362,6 +1390,224 @@
 (function(){
   'use strict';
 
+  /* ---------------- Sidebar navigation (data-driven: accordion when expanded, flyout when collapsed) ---------------- */
+  var NAV_ICONS = {
+    dashboard:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+    orders:'<circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/>',
+    collections:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>',
+    crm:'<path d="M4 20V10M12 20V4M20 20v-7"/>',
+    invoices:'<path d="M6 3h12v16l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3V3Z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+    downloads:'<path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
+    services:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/>',
+    reports:'<path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M9 12h6M9 16h6M9 8h2"/>',
+    users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+    settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1Z"/>',
+    export:'<path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/>',
+    bug:'<path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5l-8-3Z"/><path d="M12 8v5M12 16h.01"/>',
+    chevron:'<path d="m6 9 6 6 6-6"/>'
+  };
+
+  var NAV_DATA = [
+    { label:'Dashboard', icon:'dashboard', href:'index.html' },
+    { label:'Orders', icon:'orders', open:true, children:[
+      { label:'Orders', href:'orders-overview.html', active:true },
+      { label:'Quotes', href:'#' },
+      { label:'Packaging label', href:'#' },
+      { label:'Internal packaging label', href:'#' }
+    ]},
+    { label:'Collections', icon:'collections', badge:{text:'5', color:'green'}, children:[
+      { label:'Collection overview', href:'#' },
+      { label:'Collection archive', href:'#' },
+      { label:'Add new collection', href:'#' },
+      { group:'Models', children:[
+        { label:'Model overview', href:'#' }, { label:'Model archive', href:'#' }, { label:'Add new model', href:'#' }
+      ]},
+      { group:'Styles', children:[
+        { label:'Style overview', href:'#' }, { label:'Style archive', href:'#' }, { label:'Add new Style', href:'#' }
+      ]},
+      { group:'Products', children:[
+        { label:'Product overview', href:'#' }, { label:'Inventory', href:'#' }, { label:'Product archive', href:'#' }, { label:'Add new product', href:'#' }
+      ]},
+      { group:'Parts', children:[
+        { label:'Parts overview', href:'#' }, { label:'Parts archive', href:'#' }, { label:'Add new part', href:'#' }
+      ]},
+      { group:'Fabrics', children:[
+        { label:'Fabric collection overview', href:'#' }, { label:'Fabric collection archive', href:'#' }, { label:'Add fabric collection', href:'#' }
+      ]},
+      { group:'Options', children:[
+        { label:'Options overview', href:'#' }, { label:'Options archive', href:'#' }, { label:'Add options', href:'#' }
+      ]},
+      { group:'Properties', children:[
+        { label:'Property overview', href:'#' }, { label:'Property archive', href:'#' }, { label:'Add new property', href:'#' }
+      ]}
+    ]},
+    { label:'CRM & Exact', icon:'crm', badge:{dot:true, color:'green'}, children:[
+      { label:'Dealers', href:'#' },
+      { label:'Dealer points', href:'#' },
+      { label:'Dealer dashboard', href:'#' },
+      { label:'Dealer profile', href:'#' },
+      { label:'Billing Accounts', href:'#' },
+      { group:'Suppliers', children:[
+        { label:'Supplier overview', href:'#' }, { label:'Supplier archive', href:'#' }, { label:'Add new supplier', href:'#' }
+      ]},
+      { label:'Exact Logs', href:'#' },
+      { label:'Exact Retries', href:'#', badge:{text:'117', color:'green'} },
+      { label:'Exact CRM updates', href:'#', badge:{text:'1', color:'green'} }
+    ]},
+    { label:'Invoices', icon:'invoices', badge:{text:'8', color:'green'}, children:[
+      { label:'Invoices', href:'#' },
+      { label:'Draft Invoices', href:'#' },
+      { label:'Invoice layout', href:'#' },
+      { label:'Draft Invoice Logs', href:'#' }
+    ]},
+    { label:'Downloads', icon:'downloads', children:[
+      { label:'Downloads overview', href:'#' },
+      { label:'Add new category', href:'#' }
+    ]},
+    { label:'Services', icon:'services', children:[
+      { label:'Service requests', href:'#' },
+      { label:'Subjects', href:'#' },
+      { label:'Solutions', href:'#' },
+      { label:'Exchange', href:'#' },
+      { label:'Exchange Logs', href:'#' }
+    ]},
+    { label:'Reports', icon:'reports', href:'#' },
+    { label:'System Users', icon:'users', href:'#', badge:{text:'5', color:'green'} },
+    { label:'Settings', icon:'settings', badge:{dot:true, color:'green'}, children:[
+      { label:'Account Setting', href:'#' },
+      { group:'Emails', children:[
+        { label:'Email overview', href:'#' }, { label:'Email logs', href:'#' }
+      ]},
+      { group:'Countries', children:[
+        { label:'Countries', href:'#' }, { label:'Add new country', href:'#' }
+      ]},
+      { group:'Languages', children:[
+        { label:'Localization overview', href:'#' }, { label:'Language overview', href:'#' }, { label:'Localization label', href:'#' }, { label:'Add new language', href:'#' }
+      ]},
+      { label:'Terms', href:'#' },
+      { label:'Disclaimer', href:'#' },
+      { label:'Work form item', href:'#' }
+    ]},
+    { label:'Exports', icon:'export', href:'#' },
+    { label:'Report Bug', icon:'bug', href:'#' }
+  ];
+
+  function svgIcon(name, cls){
+    return '<svg class="' + (cls || 'icon') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + NAV_ICONS[name] + '</svg>';
+  }
+
+  function badgeHTML(badge, small){
+    if(!badge) return '';
+    var cls = 'badge ' + (badge.color || 'yellow') + (small ? ' small' : '');
+    if(badge.dot) return '<span class="' + cls + '" style="width:9px;height:9px;min-width:0;padding:0;"></span>';
+    return '<span class="' + cls + '">' + badge.text + '</span>';
+  }
+
+  function leafHTML(item, depth){
+    var cls = 'nav-item ' + (depth === 2 ? 'subsub' : 'sub') + (item.active ? ' active' : '');
+    return '<a class="' + cls + '" href="' + item.href + '" data-nav-leaf="1">' +
+      '<span class="label">' + item.label + '</span>' + badgeHTML(item.badge, true) +
+      '</a>';
+  }
+
+  function childrenHTML(children, depth){
+    return children.map(function(c){
+      if(c.group){
+        return '<div class="nav-subgroup-label">' + c.group + '</div>' + childrenHTML(c.children, 2);
+      }
+      return leafHTML(c, depth);
+    }).join('');
+  }
+
+  function itemHTML(item, idx){
+    var badgeCls = item.badge ? (' has-badge badge-' + (item.badge.color || 'yellow')) : '';
+    if(!item.children){
+      var cls = 'nav-item' + badgeCls;
+      return '<a class="' + cls + '" href="' + item.href + '" data-nav-idx="' + idx + '" title="' + item.label + '">' +
+        svgIcon(item.icon) + '<span class="label">' + item.label + '</span>' + badgeHTML(item.badge) +
+        '</a>';
+    }
+    return '<div class="nav-group' + (item.open ? ' open' : '') + '" data-nav-idx="' + idx + '">' +
+      '<a class="nav-item group-header' + badgeCls + '" href="#" data-nav-idx="' + idx + '" title="' + item.label + '">' +
+        svgIcon(item.icon) + '<span class="label">' + item.label + '</span>' + badgeHTML(item.badge) +
+        svgIcon('chevron', 'chevron-mini') +
+      '</a>' +
+      '<div class="nav-sublist">' + childrenHTML(item.children, 1) + '</div>' +
+    '</div>';
+  }
+
+  function renderNav(){
+    var html = NAV_DATA.map(itemHTML).join('');
+    document.getElementById('navList').innerHTML = html;
+  }
+
+  var flyout = document.getElementById('sidebarFlyout');
+  var flyoutCloseTimer = null;
+
+  function hideFlyout(){
+    flyout.classList.remove('show');
+  }
+
+  function showFlyoutFor(navItemEl, idx){
+    clearTimeout(flyoutCloseTimer);
+    var item = NAV_DATA[idx];
+    var html = '<div class="flyout-header">' + item.label + '</div>';
+    if(item.children) html += '<div class="flyout-list">' + childrenHTML(item.children, 1) + '</div>';
+    flyout.innerHTML = html;
+    var rect = navItemEl.getBoundingClientRect();
+    flyout.style.left = (rect.right + 8) + 'px';
+    flyout.style.top = Math.max(8, Math.min(rect.top, window.innerHeight - 60)) + 'px';
+    flyout.classList.add('show');
+  }
+
+  function scheduleHideFlyout(){
+    clearTimeout(flyoutCloseTimer);
+    flyoutCloseTimer = setTimeout(hideFlyout, 150);
+  }
+
+  renderNav();
+
+  var navList = document.getElementById('navList');
+  navList.addEventListener('click', function(e){
+    var header = e.target.closest('.group-header');
+    if(header){
+      e.preventDefault();
+      if(sidebar.classList.contains('collapsed')){
+        var idx = Number(header.getAttribute('data-nav-idx'));
+        if(flyout.classList.contains('show') && flyout.dataset.forIdx === String(idx)){ hideFlyout(); }
+        else { flyout.dataset.forIdx = String(idx); showFlyoutFor(header, idx); }
+      } else {
+        header.closest('.nav-group').classList.toggle('open');
+      }
+      return;
+    }
+    if(e.target.closest('[data-nav-leaf]')){
+      e.preventDefault(); /* prototype: no destination page yet */
+    }
+  });
+  navList.addEventListener('mouseover', function(e){
+    if(!sidebar.classList.contains('collapsed')) return;
+    var el = e.target.closest('[data-nav-idx]');
+    if(!el) return;
+    var idx = Number(el.getAttribute('data-nav-idx'));
+    if(!NAV_DATA[idx].children) return;
+    flyout.dataset.forIdx = String(idx);
+    showFlyoutFor(el, idx);
+  });
+  navList.addEventListener('mouseout', function(e){
+    if(!sidebar.classList.contains('collapsed')) return;
+    if(e.relatedTarget && flyout.contains(e.relatedTarget)) return;
+    scheduleHideFlyout();
+  });
+  flyout.addEventListener('mouseover', function(){ clearTimeout(flyoutCloseTimer); });
+  flyout.addEventListener('mouseout', function(e){
+    if(e.relatedTarget && navList.contains(e.relatedTarget)) return;
+    scheduleHideFlyout();
+  });
+  flyout.addEventListener('click', function(e){
+    if(e.target.closest('[data-nav-leaf]')) e.preventDefault();
+  });
+
   var app = document.getElementById('app');
   var sidebar = document.getElementById('sidebar');
   var summaryPanel = document.getElementById('summaryPanel');
@@ -1370,6 +1616,10 @@
     sidebar.classList.toggle('collapsed');
     app.classList.toggle('sidebar-collapsed');
     this.classList.toggle('flipped');
+    if(sidebar.classList.contains('collapsed')){
+      sidebar.querySelectorAll('.nav-group.open').forEach(function(g){ g.classList.remove('open'); });
+      hideFlyout();
+    }
   });
 
   document.getElementById('summaryCollapseBtn').addEventListener('click', function(){
