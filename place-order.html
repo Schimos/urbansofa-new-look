@@ -1893,7 +1893,7 @@
   };
 
   var NAV_DATA = [
-    { label:'Dashboard', icon:'dashboard', href:'index.html' },
+    { label:'Dashboard', icon:'dashboard', href:'dashboard.html' },
     { label:'Orders', icon:'orders', open:true, children:[
       { label:'Orders', href:'orders-overview.html', active:true },
       { label:'Quotes', href:'#' },
@@ -2007,7 +2007,7 @@
   function itemHTML(item, idx){
     var badgeCls = item.badge ? (' has-badge badge-' + (item.badge.color || 'yellow')) : '';
     if(!item.children){
-      var cls = 'nav-item' + badgeCls;
+      var cls = 'nav-item' + badgeCls + (item.active ? ' active' : '');
       return '<a class="' + cls + '" href="' + item.href + '" data-nav-idx="' + idx + '" title="' + item.label + '">' +
         svgIcon(item.icon) + '<span class="label">' + item.label + '</span>' + badgeHTML(item.badge) +
         '</a>';

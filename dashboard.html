@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<title>UrbanSofa &mdash; Dashboard</title>
+<style>
+  :root{
+    --sidebar-bg:#f0ebe3;
+    --sidebar-active-bg:#c6b8a1;
+    --sidebar-border:#e6e1d5;
+    --green:#597671;
+    --green-dark:#46615c;
+    --green-pale-bg:#e4eae9;
+    --tan:#b08a3e;
+    --tan-pale-bg:#f2e9d3;
+    --tan-line:#c9a860;
+    --red:#e2544c;
+    --yellow-badge:#eab445;
+    --border:#e3e0d8;
+    --border-dashed:#d8cba0;
+    --text-dark:#293224;
+    --text-muted:#738297;
+    --text-light-muted:#a1b1c7;
+    --bg-page:#ffffff;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.04);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    font-family:'Source Sans Pro',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text-dark);
+    background:var(--bg-page);
+    font-size:14px;
+    line-height:1.43;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;}
+  .app{
+    display:flex;
+    height:100vh;
+    width:100%;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* ---------------- Sidebar ---------------- */
+  .sidebar{
+    width:250px;
+    flex:0 0 250px;
+    background:var(--sidebar-bg);
+    border-right:1px solid var(--sidebar-border);
+    padding:26px 18px 18px;
+    display:flex;
+    flex-direction:column;
+    transition:width .2s ease, flex-basis .2s ease, padding .2s ease;
+    overflow:hidden;
+  }
+  .sidebar.collapsed{
+    width:78px;
+    flex:0 0 78px;
+    padding:26px 14px;
+  }
+  .logo{
+    padding:0 6px 26px;
+  }
+  .sidebar.collapsed .logo{padding:0 0 22px;}
+  .logo-full .brand{
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-weight:700;
+    font-size:22px;
+    color:var(--green);
+    letter-spacing:.2px;
+    white-space:nowrap;
+  }
+  .logo-full .brand sup{
+    font-size:10px;
+    font-weight:400;
+  }
+  .logo-full .tagline{
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-size:13px;
+    color:#9a8a63;
+    margin-top:-2px;
+    white-space:nowrap;
+  }
+  .logo-mini{
+    display:none;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:var(--green);
+    color:#fff;
+    font-family:Georgia,"Times New Roman",serif;
+    font-style:italic;
+    font-weight:700;
+    font-size:14px;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto;
+  }
+  .sidebar.collapsed .logo-full{display:none;}
+  .sidebar.collapsed .logo-mini{display:flex;}
+  nav.nav-list{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    margin-top:6px;
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 12px;
+    border-radius:8px;
+    color:#585544;
+    text-decoration:none;
+    font-size:14.5px;
+    position:relative;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .nav-item:hover{
+    background:#e9e4d6;
+  }
+  .nav-item.active{
+    background:var(--sidebar-active-bg);
+    color:#3d3624;
+    font-weight:600;
+  }
+  .nav-item .icon{
+    width:19px;
+    height:19px;
+    flex:0 0 19px;
+    color:inherit;
+  }
+  .nav-item .label{
+    flex:1;
+  }
+  .badge{
+    min-width:18px;
+    height:18px;
+    padding:0 5px;
+    border-radius:9px;
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .badge.yellow{background:var(--yellow-badge);}
+  .badge.red{background:var(--red);}
+  .badge.green{background:var(--green);}
+
+  .sidebar.collapsed .nav-item{justify-content:center;padding:11px 0;}
+  .sidebar.collapsed .nav-item .label,
+  .sidebar.collapsed .nav-item .badge{display:none;}
+  .sidebar.collapsed .nav-item.has-badge::after{
+    content:'';
+    position:absolute;
+    top:8px;
+    right:16px;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--yellow-badge);
+  }
+  .sidebar.collapsed .nav-item.has-badge.badge-red::after{background:var(--red);}
+  .sidebar.collapsed .nav-item.has-badge.badge-green::after{background:var(--green);}
+
+  /* ---- Nav groups / accordion / flyout ---- */
+  .nav-item .chevron-mini{
+    width:15px;
+    height:15px;
+    flex:0 0 15px;
+    color:#93876c;
+    transition:transform .15s ease;
+  }
+  .nav-group.open > .nav-item .chevron-mini{transform:rotate(180deg);}
+  .nav-sublist{
+    display:flex;
+    flex-direction:column;
+    gap:1px;
+    max-height:0;
+    overflow:hidden;
+  }
+  .nav-group.open > .nav-sublist{
+    max-height:none;
+    padding:2px 0 4px;
+  }
+  .nav-item.sub{
+    padding:7px 12px 7px 38px;
+    font-size:13.3px;
+    border-radius:6px;
+  }
+  .nav-item.subsub{padding-left:50px;}
+  .nav-subgroup-label{
+    padding:7px 12px 3px 38px;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--text-light-muted);
+    cursor:default;
+    user-select:none;
+  }
+  .badge.small{
+    min-width:15px;
+    height:15px;
+    padding:0 4px;
+    font-size:9.5px;
+    margin-left:6px;
+    flex:0 0 auto;
+  }
+  .sidebar.collapsed .nav-sublist,
+  .sidebar.collapsed .nav-subgroup-label,
+  .sidebar.collapsed .chevron-mini{display:none !important;}
+
+  #sidebarFlyout{
+    position:fixed;
+    z-index:300;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:0 10px 28px rgba(41,50,36,.16);
+    padding:8px;
+    min-width:216px;
+    max-width:290px;
+    max-height:76vh;
+    overflow-y:auto;
+    display:none;
+  }
+  #sidebarFlyout.show{display:block;}
+  .flyout-header{
+    padding:6px 10px 8px;
+    font-size:13.5px;
+    font-weight:700;
+    color:var(--text-dark);
+    border-bottom:1px solid var(--border);
+    margin-bottom:4px;
+    white-space:nowrap;
+  }
+  #sidebarFlyout .nav-item.sub{padding-left:12px;}
+  #sidebarFlyout .nav-item.subsub{padding-left:24px;}
+  #sidebarFlyout .nav-subgroup-label{padding-left:12px;}
+
+  /* ---------------- Main / Topbar ---------------- */
+  .main-wrap{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
+  .topbar{
+    height:64px;
+    flex:0 0 64px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    border-bottom:1px solid var(--border);
+    gap:16px;
+  }
+  .breadcrumb{
+    font-size:15px;
+    white-space:nowrap;
+  }
+  .breadcrumb .muted{
+    color:var(--text-muted);
+  }
+  .breadcrumb .current{
+    color:var(--text-dark);
+    font-weight:700;
+    margin-left:6px;
+  }
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    min-width:0;
+  }
+  .exact-status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12.5px;
+    color:var(--text-muted);
+    white-space:nowrap;
+  }
+  .exact-status .exact-check{
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:var(--green);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 16px;
+  }
+  .exact-status .exact-check .icon{width:9px;height:9px;}
+  .exact-status strong{color:var(--text-dark);font-weight:700;}
+  .exact-status .exact-sub{color:var(--text-light-muted);}
+  .bell-wrap{
+    position:relative;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#f4f2ec;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#6b6a5f;
+    border:none;
+    cursor:pointer;
+    flex:0 0 34px;
+  }
+  .bell-wrap .icon{width:17px;height:17px;}
+  .bell-badge{
+    position:absolute;
+    top:-5px;
+    right:-8px;
+    background:var(--red);
+    color:#fff;
+    font-size:9.5px;
+    font-weight:700;
+    padding:2px 4px;
+    border-radius:9px;
+    line-height:1;
+  }
+  .divider-v{
+    width:1px;
+    height:28px;
+    background:var(--border);
+    flex:0 0 1px;
+  }
+  .user-menu-wrap{position:relative;}
+  .user-chip{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    background:none;
+    border:none;
+    white-space:nowrap;
+  }
+  .avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#e3b6a4,#c98b7b);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:700;
+    flex:0 0 34px;
+  }
+  .user-chip .name{
+    font-weight:600;
+    font-size:14.5px;
+    color:var(--text-dark);
+  }
+  .user-chip .icon{width:14px;height:14px;color:#8c8878;transition:transform .15s ease;}
+  .user-chip[aria-expanded="true"] .icon{transform:rotate(180deg);}
+  .dropdown-menu{
+    position:absolute;
+    top:calc(100% + 12px);
+    right:0;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.14);
+    padding:6px;
+    min-width:170px;
+    z-index:30;
+  }
+  .dropdown-menu[hidden]{display:none;}
+  .dropdown-menu button{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 10px;
+    border:none;
+    background:none;
+    border-radius:7px;
+    font-size:13.5px;
+    color:var(--text-dark);
+    cursor:pointer;
+    text-align:left;
+  }
+  .dropdown-menu button:hover{background:var(--sidebar-bg);}
+  .dropdown-menu .icon{width:15px;height:15px;color:var(--text-muted);flex:0 0 15px;}
+
+  .collapse-btn{
+    position:absolute;
+    bottom:70px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:0 1px 3px rgba(0,0,0,.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#8c8878;
+    cursor:pointer;
+    transition:left .22s ease;
+    z-index:5;
+  }
+  .collapse-btn:hover{color:var(--green);}
+  .collapse-btn.left{left:238px;}
+  .collapse-btn .icon{width:13px;height:13px;transition:transform .2s ease;}
+  .collapse-btn.flipped .icon{transform:rotate(180deg);}
+  .app.sidebar-collapsed .collapse-btn.left{left:66px;}
+
+  /* ---------------- Dashboard content ---------------- */
+  .dash-main{
+    flex:1;
+    min-width:0;
+    padding:26px 34px 40px;
+    overflow-y:auto;
+  }
+  .dash-welcome{
+    font-size:18px;
+    font-weight:700;
+    color:var(--text-dark);
+    margin:0 0 20px;
+  }
+  .kpi-row{
+    display:flex;
+    gap:20px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+  }
+  .kpi-card{
+    background:var(--sidebar-bg);
+    border-radius:20px;
+    padding:20px;
+    flex:1;
+    min-width:230px;
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+  }
+  .kpi-icon{
+    width:56px;
+    height:56px;
+    border-radius:16px;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 56px;
+  }
+  .kpi-icon .icon{width:26px;height:26px;color:var(--green);}
+  .kpi-body{flex:1;min-width:0;}
+  .kpi-label{font-size:13px;color:var(--text-muted);margin:0 0 6px;}
+  .kpi-value{font-size:24px;font-weight:700;color:var(--green);margin:0 0 6px;letter-spacing:-.02em;}
+  .kpi-delta{font-size:12px;}
+  .kpi-delta .up{color:#05cd99;font-weight:700;}
+  .kpi-delta .since{color:var(--text-muted);margin-left:4px;}
+
+  .dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:20px;align-items:start;}
+  .dash-grid.reverse{grid-template-columns:1fr 2fr;}
+  .chart-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:20px 24px 24px;
+  }
+  .chart-card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:8px;
+  }
+  .chart-card-title{font-size:14px;color:var(--text-muted);font-weight:400;white-space:nowrap;}
+  .chart-pill{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#f4f7fe;
+    border-radius:7px;
+    padding:8px 14px;
+    font-size:13px;
+    color:#a3aed0;
+    white-space:nowrap;
+  }
+  .chart-pill .icon{width:16px;height:16px;flex:0 0 16px;}
+  .chart-canvas-wrap{position:relative;height:230px;}
+  .chart-canvas-wrap.short{height:200px;}
+
+  .donut-wrap{display:flex;align-items:center;gap:20px;}
+  .donut-canvas-box{width:140px;height:140px;flex:0 0 140px;position:relative;}
+  .donut-legend{display:flex;flex-direction:column;gap:9px;flex:1;min-width:0;}
+  .donut-legend-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-light-muted);}
+  .donut-legend-dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;}
+  .donut-legend-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .donut-legend-pct{margin-left:auto;color:var(--text-muted);font-weight:600;white-space:nowrap;}
+
+  .dealer-list-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .dealer-list-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:16px 20px 8px;}
+  .dealer-list-title{font-size:14px;font-weight:600;color:var(--text-muted);margin:0 0 4px;}
+  .dealer-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 8px;border-radius:5px;}
+  .dealer-row:nth-child(even){background:var(--sidebar-bg);}
+  .dealer-row .rank{font-size:12px;color:var(--text-light-muted);width:18px;flex:0 0 18px;}
+  .dealer-row .name-wrap{flex:1;min-width:0;}
+  .dealer-row .name{font-weight:600;color:var(--text-dark);font-size:14px;}
+  .dealer-row .sub{font-size:11px;color:var(--text-light-muted);margin-top:1px;}
+  .dealer-row .value{font-weight:700;color:var(--green);font-size:14px;white-space:nowrap;}
+
+  .dash-footer{
+    margin-top:28px;
+    padding-top:16px;
+    border-top:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:12px;
+    color:var(--text-muted);
+  }
+  .dash-footer .links{display:flex;gap:20px;}
+  .dash-footer .links a{color:var(--text-muted);text-decoration:none;}
+  .dash-footer .links a:hover{color:var(--text-dark);}
+
+  @media (max-width:1100px){
+    .dash-grid, .dash-grid.reverse, .dealer-list-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <div class="logo-full">
+        <div class="brand">UrbanSofa<sup>&reg;</sup></div>
+        <div class="tagline">by Ira Ness</div>
+      </div>
+      <div class="logo-mini">US</div>
+    </div>
+    <nav class="nav-list" id="navList"></nav>
+  </aside>
+  <div id="sidebarFlyout"></div>
+
+  <!-- Main -->
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span class="current">Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <div class="exact-status">
+          <span class="exact-check">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </span>
+          <span>Exact Online Connection: <strong>Connected</strong></span>
+          <span class="exact-sub">&middot; re-auth in 2 days</span>
+        </div>
+        <div class="divider-v"></div>
+        <button class="bell-wrap" type="button" aria-label="Notifications">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="bell-badge">10+</span>
+        </button>
+        <div class="divider-v"></div>
+        <div class="user-menu-wrap">
+          <button class="user-chip" type="button" id="userMenuBtn" aria-haspopup="true" aria-expanded="false">
+            <div class="avatar">MA</div>
+            <span class="name">Mahsa Amiri</span>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="dropdown-menu" id="userMenu" hidden>
+            <button type="button" data-action="lock">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              Lock
+            </button>
+            <button type="button" data-action="logout">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <main class="dash-main">
+
+        <h1 class="dash-welcome">Welcome back Mahsa</h1>
+
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-icon">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18.5 7a6.5 6.5 0 1 0 0 10"/><path d="M4 10h9M4 14h8"/></svg>
+            </div>
+            <div class="kpi-body">
+              <p class="kpi-label">Total Sales</p>
+              <p class="kpi-value">&euro;469.09M</p>
+              <p class="kpi-delta"><span class="up">+8.2%</span><span class="since">vs. prior period</span></p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+            </div>
+            <div class="kpi-body">
+              <p class="kpi-label">Total Orders</p>
+              <p class="kpi-value">232.43K</p>
+              <p class="kpi-delta"><span class="up">+5.4%</span><span class="since">vs. prior period</span></p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.1"/><circle cx="17" cy="17" r="2.1"/><path d="M19 5 5 19"/></svg>
+            </div>
+            <div class="kpi-body">
+              <p class="kpi-label">Cancelled Rate</p>
+              <p class="kpi-value">1.16%</p>
+              <p class="kpi-delta"><span class="since">2,696 cancelled orders</span></p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13" height="11" rx="2"/><path d="M15.5 10h3.2l2.8 3.6V17h-6"/><circle cx="7" cy="18.3" r="1.6"/><circle cx="17" cy="18.3" r="1.6"/></svg>
+            </div>
+            <div class="kpi-body">
+              <p class="kpi-label">Avg. Delivery Day</p>
+              <p class="kpi-value">109</p>
+              <p class="kpi-delta"><span class="since">days from order to delivery</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Total Sales by Year and Month</span>
+              <span class="chart-pill">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+                Year / Month
+              </span>
+            </div>
+            <div class="chart-canvas-wrap"><canvas id="salesTrendChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Product Sales by Collection</span>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut-canvas-box"><canvas id="collectionDonutChart"></canvas></div>
+              <div class="donut-legend" id="collectionLegend"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-grid reverse">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Top Dealers by Sales</span>
+            </div>
+            <div class="chart-canvas-wrap short"><canvas id="topDealersChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Total Sales per City</span>
+              <span class="chart-pill">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+                This year
+              </span>
+            </div>
+            <div class="chart-canvas-wrap"><canvas id="cityBarChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="dealer-list-grid">
+          <div class="dealer-list-card">
+            <p class="dealer-list-title">Top Ranked Dealers</p>
+            <div id="topDealersList"></div>
+          </div>
+          <div class="dealer-list-card">
+            <p class="dealer-list-title">Sales by Country</p>
+            <div id="countryList"></div>
+          </div>
+        </div>
+
+        <div class="dash-footer">
+          <span>Copyright &copy; 2026 UrbanSofa by Bugloos</span>
+          <span class="links"><a href="#">About</a><a href="#">Terms</a><a href="#">Contact</a></span>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <div class="collapse-btn left" id="sidebarCollapseBtn">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  /* ---------------- Sidebar navigation (data-driven: accordion when expanded, flyout when collapsed) ---------------- */
+  var NAV_ICONS = {
+    dashboard:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+    orders:'<circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/>',
+    collections:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>',
+    crm:'<path d="M4 20V10M12 20V4M20 20v-7"/>',
+    invoices:'<path d="M6 3h12v16l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3V3Z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+    downloads:'<path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
+    services:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/>',
+    reports:'<path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M9 12h6M9 16h6M9 8h2"/>',
+    users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+    settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1Z"/>',
+    export:'<path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/>',
+    bug:'<path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5l-8-3Z"/><path d="M12 8v5M12 16h.01"/>',
+    chevron:'<path d="m6 9 6 6 6-6"/>'
+  };
+
+  var NAV_DATA = [
+    { label:'Dashboard', icon:'dashboard', href:'dashboard.html', active:true },
+    { label:'Orders', icon:'orders', children:[
+      { label:'Orders', href:'orders-overview.html' },
+      { label:'Quotes', href:'#' },
+      { label:'Packaging label', href:'#' },
+      { label:'Internal packaging label', href:'#' }
+    ]},
+    { label:'Collections', icon:'collections', badge:{text:'5', color:'green'}, children:[
+      { label:'Collection overview', href:'#' },
+      { label:'Collection archive', href:'#' },
+      { label:'Add new collection', href:'#' },
+      { group:'Models', children:[
+        { label:'Model overview', href:'#' }, { label:'Model archive', href:'#' }, { label:'Add new model', href:'#' }
+      ]},
+      { group:'Styles', children:[
+        { label:'Style overview', href:'#' }, { label:'Style archive', href:'#' }, { label:'Add new Style', href:'#' }
+      ]},
+      { group:'Products', children:[
+        { label:'Product overview', href:'#' }, { label:'Inventory', href:'#' }, { label:'Product archive', href:'#' }, { label:'Add new product', href:'#' }
+      ]},
+      { group:'Parts', children:[
+        { label:'Parts overview', href:'#' }, { label:'Parts archive', href:'#' }, { label:'Add new part', href:'#' }
+      ]},
+      { group:'Fabrics', children:[
+        { label:'Fabric collection overview', href:'#' }, { label:'Fabric collection archive', href:'#' }, { label:'Add fabric collection', href:'#' }
+      ]},
+      { group:'Options', children:[
+        { label:'Options overview', href:'#' }, { label:'Options archive', href:'#' }, { label:'Add options', href:'#' }
+      ]},
+      { group:'Properties', children:[
+        { label:'Property overview', href:'#' }, { label:'Property archive', href:'#' }, { label:'Add new property', href:'#' }
+      ]}
+    ]},
+    { label:'CRM & Exact', icon:'crm', badge:{dot:true, color:'green'}, children:[
+      { label:'Dealers', href:'#' },
+      { label:'Dealer points', href:'#' },
+      { label:'Dealer dashboard', href:'#' },
+      { label:'Dealer profile', href:'#' },
+      { label:'Billing Accounts', href:'#' },
+      { group:'Suppliers', children:[
+        { label:'Supplier overview', href:'#' }, { label:'Supplier archive', href:'#' }, { label:'Add new supplier', href:'#' }
+      ]},
+      { label:'Exact Logs', href:'#' },
+      { label:'Exact Retries', href:'#', badge:{text:'117', color:'green'} },
+      { label:'Exact CRM updates', href:'#', badge:{text:'1', color:'green'} }
+    ]},
+    { label:'Invoices', icon:'invoices', badge:{text:'8', color:'green'}, children:[
+      { label:'Invoices', href:'#' },
+      { label:'Draft Invoices', href:'#' },
+      { label:'Invoice layout', href:'#' },
+      { label:'Draft Invoice Logs', href:'#' }
+    ]},
+    { label:'Downloads', icon:'downloads', children:[
+      { label:'Downloads overview', href:'#' },
+      { label:'Add new category', href:'#' }
+    ]},
+    { label:'Services', icon:'services', children:[
+      { label:'Service requests', href:'#' },
+      { label:'Subjects', href:'#' },
+      { label:'Solutions', href:'#' },
+      { label:'Exchange', href:'#' },
+      { label:'Exchange Logs', href:'#' }
+    ]},
+    { label:'Reports', icon:'reports', href:'#' },
+    { label:'System Users', icon:'users', href:'#', badge:{text:'5', color:'green'} },
+    { label:'Settings', icon:'settings', badge:{dot:true, color:'green'}, children:[
+      { label:'Account Setting', href:'#' },
+      { group:'Emails', children:[
+        { label:'Email overview', href:'#' }, { label:'Email logs', href:'#' }
+      ]},
+      { group:'Countries', children:[
+        { label:'Countries', href:'#' }, { label:'Add new country', href:'#' }
+      ]},
+      { group:'Languages', children:[
+        { label:'Localization overview', href:'#' }, { label:'Language overview', href:'#' }, { label:'Localization label', href:'#' }, { label:'Add new language', href:'#' }
+      ]},
+      { label:'Terms', href:'#' },
+      { label:'Disclaimer', href:'#' },
+      { label:'Work form item', href:'#' }
+    ]},
+    { label:'Exports', icon:'export', href:'#' },
+    { label:'Report Bug', icon:'bug', href:'#' }
+  ];
+
+  function svgIcon(name, cls){
+    return '<svg class="' + (cls || 'icon') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + NAV_ICONS[name] + '</svg>';
+  }
+
+  function badgeHTML(badge, small){
+    if(!badge) return '';
+    var cls = 'badge ' + (badge.color || 'yellow') + (small ? ' small' : '');
+    if(badge.dot) return '<span class="' + cls + '" style="width:9px;height:9px;min-width:0;padding:0;"></span>';
+    return '<span class="' + cls + '">' + badge.text + '</span>';
+  }
+
+  function leafHTML(item, depth){
+    var cls = 'nav-item ' + (depth === 2 ? 'subsub' : 'sub') + (item.active ? ' active' : '');
+    return '<a class="' + cls + '" href="' + item.href + '" data-nav-leaf="1">' +
+      '<span class="label">' + item.label + '</span>' + badgeHTML(item.badge, true) +
+      '</a>';
+  }
+
+  function childrenHTML(children, depth){
+    return children.map(function(c){
+      if(c.group){
+        return '<div class="nav-subgroup-label">' + c.group + '</div>' + childrenHTML(c.children, 2);
+      }
+      return leafHTML(c, depth);
+    }).join('');
+  }
+
+  function itemHTML(item, idx){
+    var badgeCls = item.badge ? (' has-badge badge-' + (item.badge.color || 'yellow')) : '';
+    if(!item.children){
+      var cls = 'nav-item' + badgeCls + (item.active ? ' active' : '');
+      return '<a class="' + cls + '" href="' + item.href + '" data-nav-idx="' + idx + '" title="' + item.label + '">' +
+        svgIcon(item.icon) + '<span class="label">' + item.label + '</span>' + badgeHTML(item.badge) +
+        '</a>';
+    }
+    return '<div class="nav-group' + (item.open ? ' open' : '') + '" data-nav-idx="' + idx + '">' +
+      '<a class="nav-item group-header' + badgeCls + '" href="#" data-nav-idx="' + idx + '" title="' + item.label + '">' +
+        svgIcon(item.icon) + '<span class="label">' + item.label + '</span>' + badgeHTML(item.badge) +
+        svgIcon('chevron', 'chevron-mini') +
+      '</a>' +
+      '<div class="nav-sublist">' + childrenHTML(item.children, 1) + '</div>' +
+    '</div>';
+  }
+
+  function renderNav(){
+    var html = NAV_DATA.map(itemHTML).join('');
+    document.getElementById('navList').innerHTML = html;
+  }
+
+  var flyout = document.getElementById('sidebarFlyout');
+  var flyoutCloseTimer = null;
+
+  function hideFlyout(){
+    flyout.classList.remove('show');
+  }
+
+  function showFlyoutFor(navItemEl, idx){
+    clearTimeout(flyoutCloseTimer);
+    var item = NAV_DATA[idx];
+    var html = '<div class="flyout-header">' + item.label + '</div>';
+    if(item.children) html += '<div class="flyout-list">' + childrenHTML(item.children, 1) + '</div>';
+    flyout.innerHTML = html;
+    var rect = navItemEl.getBoundingClientRect();
+    flyout.style.left = (rect.right + 8) + 'px';
+    flyout.style.top = Math.max(8, Math.min(rect.top, window.innerHeight - 60)) + 'px';
+    flyout.classList.add('show');
+  }
+
+  function scheduleHideFlyout(){
+    clearTimeout(flyoutCloseTimer);
+    flyoutCloseTimer = setTimeout(hideFlyout, 150);
+  }
+
+  renderNav();
+
+  var navList = document.getElementById('navList');
+  navList.addEventListener('click', function(e){
+    var header = e.target.closest('.group-header');
+    if(header){
+      e.preventDefault();
+      if(sidebar.classList.contains('collapsed')){
+        var idx = Number(header.getAttribute('data-nav-idx'));
+        if(flyout.classList.contains('show') && flyout.dataset.forIdx === String(idx)){ hideFlyout(); }
+        else { flyout.dataset.forIdx = String(idx); showFlyoutFor(header, idx); }
+      } else {
+        header.closest('.nav-group').classList.toggle('open');
+      }
+      return;
+    }
+    if(e.target.closest('[data-nav-leaf]')){
+      e.preventDefault(); /* prototype: no destination page yet */
+    }
+  });
+  navList.addEventListener('mouseover', function(e){
+    if(!sidebar.classList.contains('collapsed')) return;
+    var el = e.target.closest('[data-nav-idx]');
+    if(!el) return;
+    var idx = Number(el.getAttribute('data-nav-idx'));
+    if(!NAV_DATA[idx].children) return;
+    flyout.dataset.forIdx = String(idx);
+    showFlyoutFor(el, idx);
+  });
+  navList.addEventListener('mouseout', function(e){
+    if(!sidebar.classList.contains('collapsed')) return;
+    if(e.relatedTarget && flyout.contains(e.relatedTarget)) return;
+    scheduleHideFlyout();
+  });
+  flyout.addEventListener('mouseover', function(){ clearTimeout(flyoutCloseTimer); });
+  flyout.addEventListener('mouseout', function(e){
+    if(e.relatedTarget && navList.contains(e.relatedTarget)) return;
+    scheduleHideFlyout();
+  });
+  flyout.addEventListener('click', function(e){
+    if(e.target.closest('[data-nav-leaf]')) e.preventDefault();
+  });
+
+  var app = document.getElementById('app');
+  var sidebar = document.getElementById('sidebar');
+
+  document.getElementById('sidebarCollapseBtn').addEventListener('click', function(){
+    sidebar.classList.toggle('collapsed');
+    app.classList.toggle('sidebar-collapsed');
+    this.classList.toggle('flipped');
+    if(sidebar.classList.contains('collapsed')){
+      sidebar.querySelectorAll('.nav-group.open').forEach(function(g){ g.classList.remove('open'); });
+      hideFlyout();
+    }
+  });
+
+  /* User account dropdown */
+  var userMenuBtn = document.getElementById('userMenuBtn');
+  var userMenu = document.getElementById('userMenu');
+  userMenuBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var willOpen = userMenu.hidden;
+    userMenu.hidden = !willOpen;
+    userMenuBtn.setAttribute('aria-expanded', String(willOpen));
+  });
+  document.addEventListener('click', function(){
+    userMenu.hidden = true;
+    userMenuBtn.setAttribute('aria-expanded', 'false');
+  });
+  userMenu.addEventListener('click', function(e){ e.stopPropagation(); });
+
+  /* ---------------- Dashboard charts ---------------- */
+  Chart.defaults.font.family = "'Source Sans Pro', sans-serif";
+  Chart.defaults.color = '#a1b1c7';
+  Chart.defaults.font.size = 12;
+
+  function fmtEuro(n){
+    return '€ ' + n.toLocaleString('en-US', {maximumFractionDigits:0});
+  }
+
+  /* Total Sales by Year and Month: flat 2020-2021, ramps up with fluctuation through 2026 */
+  (function(){
+    var labels = [];
+    var data = [];
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var years = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
+    var val = 4000;
+    years.forEach(function(year, yi){
+      months.forEach(function(m, mi){
+        if(year === 2026 && mi > 5) return; // data through mid-2026
+        labels.push(yi % 1 === 0 && mi === 0 ? String(year) : '');
+        if(yi <= 1){
+          val = 3000 + Math.random() * 4000;
+        } else {
+          var target = 480000 + Math.sin((yi * 12 + mi) / 4) * 220000;
+          val = val + (target - val) * 0.35 + (Math.random() - 0.5) * 90000;
+          val = Math.max(150000, val);
+        }
+        data.push(Math.round(val));
+      });
+    });
+    var ctx = document.getElementById('salesTrendChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          borderColor: '#597671',
+          backgroundColor: 'rgba(89,118,113,0.08)',
+          borderWidth: 2.5,
+          tension: 0.45,
+          fill: true,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#597671',
+          pointHoverBorderColor: '#fff',
+          pointHoverBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#46615c',
+            padding: 10,
+            cornerRadius: 8,
+            titleFont: { size: 0 },
+            callbacks: {
+              title: function(){ return ''; },
+              label: function(ctx){ return fmtEuro(ctx.parsed.y); }
+            }
+          }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { autoSkip: false, maxRotation: 0 } },
+          y: { grid: { color: '#f0ebe3' }, ticks: { callback: function(v){ return (v/1000) + 'K'; } } }
+        }
+      }
+    });
+  })();
+
+  /* Product Sales by Collection (donut) */
+  (function(){
+    var rows = [
+      { name: "Sofa's", pct: 53.43, color: '#597671' },
+      { name: 'Collection', pct: 12.11, color: '#c6b8a1' },
+      { name: 'Pillows and plaids', pct: 10.42, color: '#7d9d9c' },
+      { name: 'Dining chairs', pct: 5.94, color: '#b08a3e' },
+      { name: 'Discontinued', pct: 5.30, color: '#a1b1c7' },
+      { name: 'Chairs', pct: 4.91, color: '#e4c98f' },
+      { name: 'Other', pct: 7.89, color: '#e3e0d8' }
+    ];
+    var ctx = document.getElementById('collectionDonutChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: rows.map(function(r){ return r.name; }),
+        datasets: [{
+          data: rows.map(function(r){ return r.pct; }),
+          backgroundColor: rows.map(function(r){ return r.color; }),
+          borderWidth: 2,
+          borderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#46615c',
+            padding: 10,
+            cornerRadius: 8,
+            callbacks: { label: function(ctx){ return ctx.label + ': ' + ctx.parsed + '%'; } }
+          }
+        }
+      }
+    });
+    var legend = document.getElementById('collectionLegend');
+    legend.innerHTML = rows.map(function(r){
+      return '<div class="donut-legend-row"><span class="donut-legend-dot" style="background:' + r.color + '"></span>' +
+        '<span class="donut-legend-name">' + r.name + '</span>' +
+        '<span class="donut-legend-pct">' + r.pct.toFixed(1) + '%</span></div>';
+    }).join('');
+  })();
+
+  /* Top Dealers by Sales (horizontal bar) */
+  (function(){
+    var rows = [
+      { name: 'Rob Addink', value: 12400000 },
+      { name: 'Adrie Vorsouw', value: 7100000 },
+      { name: 'John Cheng', value: 5800000 },
+      { name: 'Rocky Orsouw', value: 4900000 },
+      { name: 'Jerry Smoor', value: 4200000 }
+    ];
+    var ctx = document.getElementById('topDealersChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: rows.map(function(r){ return r.name; }),
+        datasets: [{
+          data: rows.map(function(r){ return r.value; }),
+          backgroundColor: '#7d9d9c',
+          borderRadius: 8,
+          maxBarThickness: 20
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#46615c', padding: 10, cornerRadius: 8,
+            callbacks: { label: function(ctx){ return fmtEuro(ctx.parsed.x); } }
+          }
+        },
+        scales: {
+          x: { grid: { color: '#f0ebe3' }, ticks: { callback: function(v){ return (v/1000000) + 'M'; } } },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+  })();
+
+  /* Total Sales per City (horizontal bar) */
+  (function(){
+    var rows = [
+      { name: 'South Holland', value: 113.31 },
+      { name: 'North Brabant', value: 92.44 },
+      { name: 'Gelderland', value: 65.34 },
+      { name: 'North Holland', value: 56.26 },
+      { name: 'Utrecht', value: 24.24 },
+      { name: 'Drenthe', value: 23.29 },
+      { name: 'Overijssel', value: 18.66 },
+      { name: 'Flevoland', value: 15.61 }
+    ];
+    var ctx = document.getElementById('cityBarChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: rows.map(function(r){ return r.name; }),
+        datasets: [{
+          data: rows.map(function(r){ return r.value; }),
+          backgroundColor: '#597671',
+          borderRadius: 8,
+          maxBarThickness: 18
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#46615c', padding: 10, cornerRadius: 8,
+            callbacks: { label: function(ctx){ return '€ ' + ctx.parsed.x.toFixed(1) + 'M'; } }
+          }
+        },
+        scales: {
+          x: { grid: { color: '#f0ebe3' }, ticks: { callback: function(v){ return v + 'M'; } } },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+  })();
+
+  /* Top Ranked Dealers list */
+  (function(){
+    var rows = [
+      { name: 'Rob Addink', sub: 'Rank 1', value: '€ 12.4M' },
+      { name: 'Adrie Vorle', sub: 'Rank 2', value: '€ 9.8M' },
+      { name: 'John Cheng', sub: 'Rank 3', value: '€ 8.1M' },
+      { name: 'Rocky Orsouw', sub: 'Rank 4', value: '€ 7.4M' },
+      { name: 'Jerry Smoor', sub: 'Rank 5', value: '€ 6.9M' },
+      { name: 'Klaas Zuur', sub: 'Rank 6', value: '€ 6.2M' }
+    ];
+    document.getElementById('topDealersList').innerHTML = rows.map(function(r, i){
+      return '<div class="dealer-row"><span class="rank">' + (i+1) + '</span>' +
+        '<div class="name-wrap"><div class="name">' + r.name + '</div><div class="sub">' + r.sub + '</div></div>' +
+        '<span class="value">' + r.value + '</span></div>';
+    }).join('');
+  })();
+
+  /* Sales by Country list */
+  (function(){
+    var rows = [
+      { name: 'Netherlands', sub: 'Home market', value: '€ 443.56M' },
+      { name: 'Belgium', sub: 'Export', value: '€ 12.92M' },
+      { name: 'Germany', sub: 'Export', value: '€ 5.67M' },
+      { name: 'United States', sub: 'Export', value: '€ 3.67M' },
+      { name: 'Norway', sub: 'Export', value: '€ 2.40M' },
+      { name: 'Portugal', sub: 'Export', value: '€ 0.75M' }
+    ];
+    document.getElementById('countryList').innerHTML = rows.map(function(r, i){
+      return '<div class="dealer-row"><span class="rank">' + (i+1) + '</span>' +
+        '<div class="name-wrap"><div class="name">' + r.name + '</div><div class="sub">' + r.sub + '</div></div>' +
+        '<span class="value">' + r.value + '</span></div>';
+    }).join('');
+  })();
+
+})();
+</script>
+</body>
+</html>
