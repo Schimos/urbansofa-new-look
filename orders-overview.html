@@ -1117,78 +1117,110 @@
   .overview-toolbar{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:12px;
     margin-bottom:20px;
     flex-wrap:wrap;
   }
-  .bulk-select-wrap{display:flex;align-items:center;gap:8px;}
-  .bulk-select-wrap select{
+
+  /* Bulk action: merged pill = custom-select "Status" + attached green play button */
+  .bulk-action-pill{
+    display:flex;
+    align-items:center;
+    width:202px;
     height:38px;
-    border:1px solid var(--border);
+    border:1px solid #e5e5e5;
     border-radius:8px;
-    padding:0 12px;
-    font-size:13px;
-    color:var(--text-dark);
     background:#fff;
-    font-family:inherit;
+    overflow:hidden;
+    flex:0 0 202px;
   }
-  .apply-btn{
-    height:38px;
-    padding:0 16px;
+  .bulk-action-pill .select{
+    flex:1;
+    height:100%;
     border:none;
-    border-radius:8px;
-    background:var(--sidebar-active-bg);
-    color:#3d3624;
-    font-weight:700;
-    font-size:13px;
+    box-shadow:none;
+    border-radius:0;
+    padding:0 8px 0 16px;
+  }
+  .bulk-action-pill .select-trigger{color:var(--green);font-weight:500;}
+  .bulk-action-pill .select-options-panel{left:0;right:auto;width:202px;}
+  .bulk-apply-btn{
+    width:36px;
+    height:36px;
+    margin:1px;
+    border:none;
+    border-radius:7px;
+    background:var(--green);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    flex:0 0 36px;
+  }
+  .bulk-apply-btn:hover{background:var(--green-dark);}
+  .bulk-apply-btn .icon{width:16px;height:16px;}
+
+  /* Search: collapses to a green icon button, expands into an input on click */
+  .search-toggle{
+    display:flex;
+    align-items:center;
+    height:36px;
+    border-radius:7px;
+    background:var(--green);
+    overflow:hidden;
+    transition:width .2s ease, background .15s ease;
+    width:36px;
+    flex:0 0 auto;
+  }
+  .search-toggle.expanded{width:240px;background:#fff;border:1px solid #e5e5e5;}
+  .search-toggle-btn{
+    width:36px;
+    height:36px;
+    flex:0 0 36px;
+    border:none;
+    background:none;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     cursor:pointer;
   }
-  .apply-btn:hover{background:#d3c497;}
-
-  .search-box{
-    position:relative;
+  .search-toggle.expanded .search-toggle-btn{color:var(--green);}
+  .search-toggle-btn .icon{width:16px;height:16px;}
+  .search-toggle input{
     flex:1;
-    min-width:180px;
-    max-width:280px;
-  }
-  .search-box input{
-    width:100%;
-    height:38px;
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:0 14px 0 36px;
+    min-width:0;
+    border:none;
+    outline:none;
     font-size:13px;
     font-family:inherit;
     color:var(--text-dark);
+    background:none;
+    padding:0;
+    width:0;
+    opacity:0;
+    transition:opacity .15s ease;
   }
-  .search-box .icon{
-    position:absolute;
-    left:11px;
-    top:50%;
-    transform:translateY(-50%);
-    width:15px;
-    height:15px;
-    color:var(--text-muted);
-    pointer-events:none;
-  }
+  .search-toggle.expanded input{width:auto;opacity:1;padding-right:12px;}
 
   .filters-wrap{position:relative;}
   .filters-btn{
-    height:38px;
+    height:36px;
     padding:0 16px;
-    border:1px solid var(--border);
-    border-radius:8px;
-    background:#fff;
-    color:var(--text-dark);
-    font-weight:600;
-    font-size:13px;
+    border:none;
+    border-radius:7px;
+    background:var(--green);
+    color:#fff;
+    font-weight:500;
+    font-size:14px;
     cursor:pointer;
     display:inline-flex;
     align-items:center;
     gap:8px;
   }
-  .filters-btn:hover{background:#faf8f2;}
-  .filters-btn .icon{width:14px;height:14px;}
+  .filters-btn:hover{background:var(--green-dark);}
+  .filters-btn .icon{width:16px;height:16px;}
   .filters-panel{
     position:absolute;
     top:calc(100% + 8px);
@@ -1233,20 +1265,138 @@
 
   .toolbar-spacer{flex:1;}
   .icon-only-btn{
-    width:38px;
-    height:38px;
-    border-radius:8px;
-    border:1px solid var(--border);
-    background:#fff;
-    color:var(--text-muted);
+    position:relative;
+    width:36px;
+    height:36px;
+    border-radius:7px;
+    border:none;
+    background:var(--green);
+    color:#fff;
     display:flex;
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    flex:0 0 38px;
+    flex:0 0 36px;
   }
-  .icon-only-btn:hover{background:#faf8f2;color:var(--green);}
+  .icon-only-btn:hover{background:var(--green-dark);}
   .icon-only-btn .icon{width:16px;height:16px;}
+  .icon-only-btn .active-dot{
+    position:absolute;
+    top:-3px;
+    right:-3px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--red);
+    border:2px solid #fff;
+    display:none;
+  }
+  .icon-only-btn.has-range .active-dot{display:block;}
+  .date-range-chip{
+    display:none;
+    align-items:center;
+    gap:6px;
+    height:36px;
+    padding:0 6px 0 12px;
+    border:1px solid var(--green);
+    border-radius:7px;
+    background:var(--green-pale-bg);
+    color:var(--green);
+    font-size:12.5px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .date-range-chip.visible{display:flex;}
+  .date-range-chip button{
+    width:20px;
+    height:20px;
+    border:none;
+    background:none;
+    color:var(--green);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+  }
+  .date-range-chip button:hover{background:rgba(89,118,113,.15);}
+  .date-range-chip .icon{width:11px;height:11px;}
+
+  /* ---------------- Date range picker popover ---------------- */
+  .date-range-popover{
+    position:absolute;
+    top:calc(100% + 8px);
+    right:0;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    box-shadow:0 16px 40px rgba(41,50,36,.16);
+    z-index:50;
+    display:flex;
+  }
+  .date-range-popover[hidden]{display:none;}
+  .drp-presets{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    padding:12px;
+    border-right:1px solid var(--border);
+    background:var(--sidebar-bg);
+    min-width:140px;
+    border-radius:12px 0 0 12px;
+  }
+  .drp-presets button{
+    text-align:left;
+    border:none;
+    background:none;
+    padding:9px 10px;
+    border-radius:7px;
+    font-size:13px;
+    color:var(--text-dark);
+    cursor:pointer;
+    font-family:inherit;
+    white-space:nowrap;
+  }
+  .drp-presets button:hover{background:#fff;}
+  .drp-calendar{padding:16px;width:280px;}
+  .drp-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .drp-cal-header span{font-size:14px;font-weight:700;color:var(--text-dark);}
+  .drp-nav{width:26px;height:26px;border-radius:6px;border:none;background:none;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .drp-nav:hover{background:var(--sidebar-bg);color:var(--green);}
+  .drp-nav .icon{width:14px;height:14px;}
+  .drp-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--text-muted);margin-bottom:4px;}
+  .drp-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+  .drp-day{
+    height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    color:var(--text-dark);
+    cursor:pointer;
+    border-radius:6px;
+    background:none;
+    border:none;
+    font-family:inherit;
+    position:relative;
+  }
+  .drp-day.other-month{color:var(--text-light-muted);}
+  .drp-day:hover{background:var(--sidebar-bg);}
+  .drp-day.today{font-weight:700;box-shadow:inset 0 0 0 1.5px var(--green);}
+  .drp-day.in-range{background:var(--green-pale-bg);border-radius:0;}
+  .drp-day.range-start, .drp-day.range-end{background:var(--green);color:#fff;font-weight:700;}
+  .drp-day.range-start:hover, .drp-day.range-end:hover{background:var(--green-dark);}
+  .drp-day.range-start{border-radius:6px 0 0 6px;}
+  .drp-day.range-end{border-radius:0 6px 6px 0;}
+  .drp-day.range-start.range-end{border-radius:6px;}
+  .drp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);gap:10px;}
+  .drp-range-label{font-size:12px;color:var(--text-muted);}
+  .drp-footer-actions{display:flex;gap:8px;flex:0 0 auto;}
+  .drp-footer-actions button{height:32px;padding:0 14px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;border:none;font-family:inherit;}
+  .drp-cancel{background:none;color:var(--text-muted);}
+  .drp-cancel:hover{color:var(--red);}
+  .drp-apply{background:var(--green);color:#fff;}
+  .drp-apply:hover{background:var(--green-dark);}
 
   .table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:10px;}
   table.orders-table{
@@ -1483,19 +1633,25 @@
         </div>
 
         <div class="overview-toolbar">
-          <div class="bulk-select-wrap">
-            <select id="bulkStatusSelect">
-              <option value="">Bulk action: Status&hellip;</option>
-              <option value="New">New</option>
-              <option value="Delivery">Delivery</option>
-              <option value="Completed">Completed</option>
-              <option value="Cancelled">Cancelled</option>
-            </select>
-            <button type="button" class="apply-btn" id="bulkApplyBtn">Apply</button>
+          <div class="bulk-action-pill">
+            <div class="select">
+              <select class="field-select" id="bulkStatusSelect">
+                <option value="">Status</option>
+                <option value="New">New</option>
+                <option value="Delivery">Delivery</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+            <button type="button" class="bulk-apply-btn" id="bulkApplyBtn" title="Apply to selected orders">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>
+            </button>
           </div>
 
-          <div class="search-box">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <div class="search-toggle" id="searchToggle">
+            <button type="button" class="search-toggle-btn" id="searchToggleBtn" aria-label="Search orders">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            </button>
             <input type="text" id="searchInput" placeholder="Search orders&hellip;">
           </div>
 
@@ -1530,15 +1686,58 @@
 
           <div class="toolbar-spacer"></div>
 
-          <button type="button" class="icon-only-btn" id="importWeeksBtn" title="Import delivery weeks">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+          <div class="date-range-chip" id="dateRangeChip">
+            <span id="dateRangeChipText">Jul 1 &ndash; Jul 14</span>
+            <button type="button" id="dateRangeClearBtn" aria-label="Clear date range">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <button type="button" class="icon-only-btn" id="exportBtn" title="Export">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/></svg>
           </button>
           <button type="button" class="icon-only-btn" id="sendEmailBtn" title="Send email">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
           </button>
-          <button type="button" class="icon-only-btn" id="exportBtn" title="Export">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/></svg>
-          </button>
+          <div class="date-picker-wrap" style="position:relative;">
+            <button type="button" class="icon-only-btn" id="dateRangeBtn" title="Filter by order date range">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+              <span class="active-dot"></span>
+            </button>
+            <div class="date-range-popover" id="dateRangePopover" hidden>
+              <div class="drp-presets">
+                <button type="button" data-preset="today">Today</button>
+                <button type="button" data-preset="last7">Last 7 days</button>
+                <button type="button" data-preset="lastWeek">Last week</button>
+                <button type="button" data-preset="thisMonth">This month</button>
+                <button type="button" data-preset="lastMonth">Last month</button>
+                <button type="button" data-preset="lastQuarter">Last quarter</button>
+              </div>
+              <div class="drp-calendar">
+                <div class="drp-cal-header">
+                  <button type="button" class="drp-nav" id="drpPrevMonth" aria-label="Previous month">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  </button>
+                  <span id="drpMonthLabel">July 2026</span>
+                  <button type="button" class="drp-nav" id="drpNextMonth" aria-label="Next month">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </div>
+                <div class="drp-weekdays"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
+                <div class="drp-days" id="drpDaysGrid"></div>
+                <div class="drp-footer">
+                  <span class="drp-range-label" id="drpRangeLabel">Select a start date</span>
+                  <div class="drp-footer-actions">
+                    <button type="button" class="drp-cancel" id="drpCancelBtn">Cancel</button>
+                    <button type="button" class="drp-apply" id="drpApplyBtn">Apply</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="icon-only-btn" href="select-template.html" title="Add new order">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          </a>
         </div>
 
         <div class="table-scroll">
@@ -1743,6 +1942,161 @@
     filtersPanel.hidden = true;
   });
 
+  /* ---------------- Date range picker ---------------- */
+  var WEEKDAY_LABELS = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+  var MONTH_LABELS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  function dOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function addDays(d, n){ var r = new Date(d); r.setDate(r.getDate() + n); return r; }
+  function fmtChip(d){ return d.getDate() + ' ' + MONTH_LABELS[d.getMonth()].slice(0,3); }
+
+  var today = dOnly(new Date());
+  var drp = {
+    viewMonth: new Date(today.getFullYear(), today.getMonth(), 1),
+    start: null,
+    end: null
+  };
+
+  var dateRangeBtn = document.getElementById('dateRangeBtn');
+  var dateRangePopover = document.getElementById('dateRangePopover');
+  var drpDaysGrid = document.getElementById('drpDaysGrid');
+  var drpMonthLabel = document.getElementById('drpMonthLabel');
+  var drpRangeLabel = document.getElementById('drpRangeLabel');
+  var dateRangeChip = document.getElementById('dateRangeChip');
+  var dateRangeChipText = document.getElementById('dateRangeChipText');
+
+  function renderCalendar(){
+    drpMonthLabel.textContent = MONTH_LABELS[drp.viewMonth.getMonth()] + ' ' + drp.viewMonth.getFullYear();
+    drpDaysGrid.innerHTML = '';
+
+    var firstOfMonth = new Date(drp.viewMonth.getFullYear(), drp.viewMonth.getMonth(), 1);
+    var startOffset = (firstOfMonth.getDay() + 6) % 7; // Monday-first grid
+    var gridStart = addDays(firstOfMonth, -startOffset);
+
+    for(var i = 0; i < 42; i++){
+      var day = addDays(gridStart, i);
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'drp-day';
+      btn.textContent = day.getDate();
+      if(day.getMonth() !== drp.viewMonth.getMonth()) btn.classList.add('other-month');
+      if(sameDay(day, today)) btn.classList.add('today');
+      if(drp.start && sameDay(day, drp.start)) btn.classList.add('range-start');
+      if(drp.end && sameDay(day, drp.end)) btn.classList.add('range-end');
+      if(drp.start && drp.end && day > drp.start && day < drp.end) btn.classList.add('in-range');
+      btn.addEventListener('click', function(day){
+        return function(){
+          if(!drp.start || (drp.start && drp.end)){
+            drp.start = day; drp.end = null;
+          } else if(day < drp.start){
+            drp.end = drp.start; drp.start = day;
+          } else {
+            drp.end = day;
+          }
+          renderCalendar();
+          drpRangeLabel.textContent = drp.start && drp.end
+            ? (fmtChip(drp.start) + ' – ' + fmtChip(drp.end))
+            : (drp.start ? 'Select an end date' : 'Select a start date');
+        };
+      }(day));
+      drpDaysGrid.appendChild(btn);
+    }
+  }
+
+  function sameDay(a, b){ return a && b && a.getTime() === b.getTime(); }
+
+  function setRange(start, end, viewMonth){
+    drp.start = dOnly(start);
+    drp.end = dOnly(end);
+    drp.viewMonth = viewMonth ? new Date(viewMonth.getFullYear(), viewMonth.getMonth(), 1) : new Date(drp.start.getFullYear(), drp.start.getMonth(), 1);
+    renderCalendar();
+    drpRangeLabel.textContent = fmtChip(drp.start) + ' – ' + fmtChip(drp.end);
+  }
+
+  document.getElementById('drpPrevMonth').addEventListener('click', function(){
+    drp.viewMonth = new Date(drp.viewMonth.getFullYear(), drp.viewMonth.getMonth() - 1, 1);
+    renderCalendar();
+  });
+  document.getElementById('drpNextMonth').addEventListener('click', function(){
+    drp.viewMonth = new Date(drp.viewMonth.getFullYear(), drp.viewMonth.getMonth() + 1, 1);
+    renderCalendar();
+  });
+
+  document.querySelectorAll('.drp-presets button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var preset = btn.dataset.preset;
+      if(preset === 'today'){
+        setRange(today, today);
+      } else if(preset === 'last7'){
+        setRange(addDays(today, -6), today);
+      } else if(preset === 'lastWeek'){
+        var mondayThisWeek = addDays(today, -((today.getDay() + 6) % 7));
+        var mondayLastWeek = addDays(mondayThisWeek, -7);
+        setRange(mondayLastWeek, addDays(mondayLastWeek, 6));
+      } else if(preset === 'thisMonth'){
+        var firstThis = new Date(today.getFullYear(), today.getMonth(), 1);
+        setRange(firstThis, today, firstThis);
+      } else if(preset === 'lastMonth'){
+        var firstLast = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        var lastLast = new Date(today.getFullYear(), today.getMonth(), 0);
+        setRange(firstLast, lastLast, firstLast);
+      } else if(preset === 'lastQuarter'){
+        var qStartMonth = Math.floor(today.getMonth() / 3) * 3 - 3;
+        var qStart = new Date(today.getFullYear(), qStartMonth, 1);
+        var qEnd = new Date(today.getFullYear(), qStartMonth + 3, 0);
+        setRange(qStart, qEnd, qStart);
+      }
+    });
+  });
+
+  dateRangeBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var willOpen = dateRangePopover.hidden;
+    dateRangePopover.hidden = !willOpen;
+    if(willOpen){
+      if(state.dateFrom && state.dateTo){
+        drp.start = state.dateFrom; drp.end = state.dateTo; drp.viewMonth = new Date(drp.start.getFullYear(), drp.start.getMonth(), 1);
+      } else {
+        drp.start = null; drp.end = null; drp.viewMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      }
+      renderCalendar();
+      drpRangeLabel.textContent = drp.start && drp.end ? (fmtChip(drp.start) + ' – ' + fmtChip(drp.end)) : 'Select a start date';
+    }
+  });
+  dateRangePopover.addEventListener('click', function(e){ e.stopPropagation(); });
+  document.addEventListener('click', function(){ dateRangePopover.hidden = true; });
+
+  document.getElementById('drpCancelBtn').addEventListener('click', function(){
+    dateRangePopover.hidden = true;
+  });
+  document.getElementById('drpApplyBtn').addEventListener('click', function(){
+    if(drp.start && drp.end){
+      state.dateFrom = drp.start;
+      state.dateTo = drp.end;
+      dateRangeChipText.textContent = fmtChip(drp.start) + ' – ' + fmtChip(drp.end);
+      dateRangeChip.classList.add('visible');
+      dateRangeBtn.classList.add('has-range');
+    } else {
+      state.dateFrom = null;
+      state.dateTo = null;
+      dateRangeChip.classList.remove('visible');
+      dateRangeBtn.classList.remove('has-range');
+    }
+    dateRangePopover.hidden = true;
+    state.page = 1;
+    render();
+  });
+  document.getElementById('dateRangeClearBtn').addEventListener('click', function(e){
+    e.stopPropagation();
+    state.dateFrom = null;
+    state.dateTo = null;
+    drp.start = null; drp.end = null;
+    dateRangeChip.classList.remove('visible');
+    dateRangeBtn.classList.remove('has-range');
+    state.page = 1;
+    render();
+  });
+
   /* ---------------- Sample order data ---------------- */
   var STATUS_META = {
     'New': { cls: 'status-new', icon: '<path d="m12 2 2.9 6.6L22 9.3l-5 4.9 1.2 7-6.2-3.4L5.8 21.2 7 14.2l-5-4.9 7.1-1.1z"/>' },
@@ -1798,7 +2152,9 @@
     sortKey: 'date',
     sortDir: 'desc',
     page: 1,
-    pageSize: 25
+    pageSize: 25,
+    dateFrom: null,
+    dateTo: null
   };
 
   function parseDate(d){
@@ -1814,6 +2170,12 @@
         return Object.keys(o).some(function(k){
           return String(o[k]).toLowerCase().indexOf(q) !== -1;
         });
+      });
+    }
+    if(state.dateFrom && state.dateTo){
+      rows = rows.filter(function(o){
+        var d = parseDate(o.date).getTime();
+        return d >= state.dateFrom.getTime() && d <= state.dateTo.getTime();
       });
     }
     rows.sort(function(a, b){
@@ -1915,11 +2277,30 @@
     alert('Would set ' + checkedCount + ' order(s) to "' + status + '".');
   });
 
-  ['importWeeksBtn', 'sendEmailBtn', 'exportBtn'].forEach(function(id){
+  ['sendEmailBtn', 'exportBtn'].forEach(function(id){
     document.getElementById(id).addEventListener('click', function(){
-      var labels = { importWeeksBtn: 'Import delivery weeks', sendEmailBtn: 'Send email', exportBtn: 'Export' };
+      var labels = { sendEmailBtn: 'Send email', exportBtn: 'Export' };
       alert(labels[id] + ' — not wired to a backend in this prototype.');
     });
+  });
+
+  /* Search: collapse/expand toggle */
+  var searchToggle = document.getElementById('searchToggle');
+  var searchToggleBtn = document.getElementById('searchToggleBtn');
+  var searchInputEl = document.getElementById('searchInput');
+  searchToggleBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(!searchToggle.classList.contains('expanded')){
+      searchToggle.classList.add('expanded');
+      searchInputEl.focus();
+    } else if(!searchInputEl.value){
+      searchToggle.classList.remove('expanded');
+    }
+  });
+  document.addEventListener('click', function(e){
+    if(!searchToggle.contains(e.target) && !searchInputEl.value){
+      searchToggle.classList.remove('expanded');
+    }
   });
 
   /* Row actions */
