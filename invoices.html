@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<title>UrbanSofa &mdash; Select Template</title>
+<title>UrbanSofa &mdash; Invoices</title>
 <style>
   :root{
     --sidebar-bg:#f0ebe3;
@@ -267,9 +267,11 @@
     justify-content:space-between;
     padding:0 28px;
     border-bottom:1px solid var(--border);
+    gap:16px;
   }
   .breadcrumb{
     font-size:15px;
+    white-space:nowrap;
   }
   .breadcrumb .muted{
     color:var(--text-muted);
@@ -282,66 +284,9 @@
   .topbar-right{
     display:flex;
     align-items:center;
-    gap:18px;
+    gap:16px;
+    min-width:0;
   }
-  .bell-wrap{
-    position:relative;
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    background:#f4f2ec;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#6b6a5f;
-    border:none;
-    cursor:pointer;
-  }
-  .bell-wrap .icon{width:17px;height:17px;}
-  .bell-badge{
-    position:absolute;
-    top:-5px;
-    right:-8px;
-    background:var(--red);
-    color:#fff;
-    font-size:9.5px;
-    font-weight:700;
-    padding:2px 4px;
-    border-radius:9px;
-    line-height:1;
-  }
-  .divider-v{
-    width:1px;
-    height:28px;
-    background:var(--border);
-  }
-  .user-chip{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    cursor:pointer;
-    background:none;
-    border:none;
-  }
-  .avatar{
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#e3b6a4,#c98b7b);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:12px;
-    font-weight:700;
-  }
-  .user-chip .name{
-    font-weight:600;
-    font-size:14.5px;
-    color:var(--text-dark);
-  }
-  .user-chip .icon{width:14px;height:14px;color:#8c8878;transition:transform .15s ease;}
-  .user-chip[aria-expanded="true"] .icon{transform:rotate(180deg);}
   .exact-status{
     display:flex;
     align-items:center;
@@ -364,7 +309,69 @@
   .exact-status .exact-check .icon{width:9px;height:9px;}
   .exact-status strong{color:var(--text-dark);font-weight:700;}
   .exact-status .exact-sub{color:var(--text-light-muted);}
+  .bell-wrap{
+    position:relative;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#f4f2ec;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#6b6a5f;
+    border:none;
+    cursor:pointer;
+    flex:0 0 34px;
+  }
+  .bell-wrap .icon{width:17px;height:17px;}
+  .bell-badge{
+    position:absolute;
+    top:-5px;
+    right:-8px;
+    background:var(--red);
+    color:#fff;
+    font-size:9.5px;
+    font-weight:700;
+    padding:2px 4px;
+    border-radius:9px;
+    line-height:1;
+  }
+  .divider-v{
+    width:1px;
+    height:28px;
+    background:var(--border);
+    flex:0 0 1px;
+  }
   .user-menu-wrap{position:relative;}
+  .user-chip{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    background:none;
+    border:none;
+    white-space:nowrap;
+  }
+  .avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#e3b6a4,#c98b7b);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:700;
+    flex:0 0 34px;
+  }
+  .user-chip .name{
+    font-weight:600;
+    font-size:14.5px;
+    color:var(--text-dark);
+  }
+  .user-chip .icon{width:14px;height:14px;color:#8c8878;transition:transform .15s ease;}
+  .user-chip[aria-expanded="true"] .icon{transform:rotate(180deg);}
   .dropdown-menu{
     position:absolute;
     top:calc(100% + 12px);
@@ -395,65 +402,6 @@
   .dropdown-menu button:hover{background:var(--sidebar-bg);}
   .dropdown-menu .icon{width:15px;height:15px;color:var(--text-muted);flex:0 0 15px;}
 
-  /* ---------------- Content area ---------------- */
-  .content-area{
-    flex:1;
-    display:flex;
-    min-height:0;
-  }
-  .order-form{
-    flex:1;
-    min-width:0;
-    padding:26px 34px 60px;
-    overflow-y:auto;
-  }
-
-  /* Stepper */
-  .step-row{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    margin-bottom:26px;
-  }
-  .step-circle{
-    width:26px;
-    height:26px;
-    border-radius:50%;
-    flex:0 0 26px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-    font-size:12px;
-    font-weight:700;
-  }
-  .step-circle.done{background:var(--green);}
-  .step-circle.progress{background:var(--tan);}
-  .step-circle .icon{width:14px;height:14px;}
-  .pill{
-    padding:4px 12px;
-    border-radius:14px;
-    font-size:12.5px;
-    font-weight:700;
-    white-space:nowrap;
-  }
-  .pill.done{background:var(--green-pale-bg);color:var(--green);}
-  .pill.progress{background:var(--tan-pale-bg);color:var(--tan);}
-  .step-label{
-    color:var(--text-muted);
-    font-size:13.5px;
-    white-space:nowrap;
-  }
-  .step-line{
-    flex:1;
-    height:2px;
-    border-radius:2px;
-    background:var(--green);
-  }
-  .step-line.split{
-    background:linear-gradient(to right, var(--tan-line) 0 38%, #ece7d9 38% 100%);
-  }
-
   /* Field grid */
   .field-row{
     display:grid;
@@ -477,7 +425,7 @@
     height:42px;
     border:1px solid var(--border);
     border-radius:8px;
-    padding:0 14px;
+    padding:0 10px 0 14px;
     font-size:14px;
     color:#4a473c;
     background:#fff;
@@ -486,6 +434,7 @@
     justify-content:space-between;
     box-shadow:var(--shadow-sm);
     position:relative;
+    gap:6px;
   }
   .input.disabled, .select.disabled{
     color:#b9b6ab;
@@ -527,6 +476,25 @@
     text-overflow:ellipsis;
     white-space:nowrap;
   }
+  .select-clear{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    border:none;
+    background:#ece7db;
+    color:#8c8878;
+    cursor:pointer;
+    flex:0 0 16px;
+    padding:0;
+    line-height:0;
+  }
+  .select-clear .icon{width:8px;height:8px;display:block;}
+  .select-clear:hover{background:var(--red);color:#fff;}
+  .select.has-value .select-clear{display:flex;}
+  .select.disabled .select-clear{display:none !important;}
   .select-options-panel{
     position:absolute;
     top:calc(100% + 6px);
@@ -565,372 +533,8 @@
     height:100%;
     font-family:inherit;
   }
-  input.text-input::placeholder{color:#4a473c;}
+  input.text-input::placeholder{color:#9a978c;}
   input.text-input:disabled{color:#b9b6ab;}
-  input[type="number"].text-input::-webkit-inner-spin-button,
-  input[type="number"].text-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
-  input[type="number"].text-input{-moz-appearance:textfield;}
-
-  .amount-field{
-    position:relative;
-  }
-  .stepper-btns{
-    position:absolute;
-    right:10px;
-    top:50%;
-    transform:translateY(-50%);
-    display:flex;
-    flex-direction:column;
-    gap:2px;
-    color:#a9a599;
-  }
-  .stepper-btns .icon{width:10px;height:10px;cursor:pointer;}
-  .stepper-btns .icon:hover{color:var(--green);}
-  .input.disabled .stepper-btns .icon{cursor:not-allowed;}
-  .input.disabled .stepper-btns .icon:hover{color:#a9a599;}
-
-  /* Section headers (Article / Element) */
-  .section-title{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:15px;
-    font-weight:700;
-    color:#28271f;
-    margin-bottom:16px;
-  }
-  .section-title.sub{
-    font-size:14px;
-    margin-bottom:14px;
-  }
-  .icon-btn{
-    width:20px;
-    height:20px;
-    border-radius:5px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-    flex:0 0 20px;
-    border:none;
-    cursor:pointer;
-    padding:0;
-  }
-  .icon-btn .icon{width:12px;height:12px;}
-  .icon-btn.remove{background:var(--red);}
-  .icon-btn.add{background:var(--green);}
-  @keyframes shake{
-    10%,90%{transform:translateX(-1px);}
-    20%,80%{transform:translateX(2px);}
-    30%,50%,70%{transform:translateX(-3px);}
-    40%,60%{transform:translateX(3px);}
-  }
-  .icon-btn.shake{animation:shake .4s;}
-
-  .element-box{
-    border:1.5px dashed var(--border-dashed);
-    border-radius:10px;
-    padding:20px;
-    margin-bottom:26px;
-    transition:border-color .15s ease;
-  }
-  .element-box.disabled{
-    border-color:#e6e2d5;
-  }
-  .stock-note{
-    display:flex;
-    align-items:center;
-    gap:7px;
-    font-size:12.5px;
-    color:#8c8878;
-    font-style:italic;
-    margin:-10px 0 18px;
-  }
-  .dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:#5fae6a;
-    flex:0 0 7px;
-  }
-  .element-box .field-row{margin-bottom:18px;}
-  .element-box .field-row:last-child,
-  .element-box .field:last-child{margin-bottom:0;}
-
-  .article-block{
-    margin-bottom:8px;
-  }
-
-  .add-custom-row{
-    width:100%;
-    border:1.5px dashed var(--border-dashed);
-    border-radius:10px;
-    padding:14px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    color:var(--green);
-    font-weight:600;
-    font-size:14px;
-    background:transparent;
-    cursor:pointer;
-    margin-bottom:34px;
-  }
-  .add-custom-row:hover{background:#f7f5ef;}
-  .add-custom-row .icon{width:15px;height:15px;}
-
-  .delivery-row{
-    display:flex;
-    align-items:center;
-    gap:40px;
-    margin-bottom:60px;
-  }
-  .delivery-row .field{width:320px;}
-  .requested-date{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-top:26px;
-    font-size:14px;
-    font-weight:600;
-    color:var(--text-light-muted);
-    transition:color .15s ease;
-  }
-  .requested-date.checked{color:#28271f;}
-  .requested-date .check-circle{
-    width:19px;
-    height:19px;
-    border-radius:50%;
-    background:#d8d4c6;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-    flex:0 0 19px;
-    transition:background .15s ease;
-  }
-  .requested-date.checked .check-circle{background:var(--green);}
-  .requested-date .check-circle .icon{width:11px;height:11px;}
-
-  /* ---------------- Summary panel ---------------- */
-  .summary-panel{
-    width:230px;
-    flex:0 0 230px;
-    background:#faf9f6;
-    border-left:1px solid var(--border);
-    padding:26px 22px;
-    display:flex;
-    flex-direction:column;
-    transition:width .22s ease, flex-basis .22s ease;
-    overflow-y:auto;
-  }
-  .summary-panel.expanded{
-    width:500px;
-    flex:0 0 500px;
-  }
-  .summary-header-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:18px;
-  }
-  .summary-title{
-    font-size:16px;
-    font-weight:700;
-  }
-  .price-toggle{
-    display:none;
-    align-items:center;
-    gap:8px;
-    font-size:11.5px;
-    color:#8c8878;
-  }
-  .summary-panel.expanded .price-toggle{display:flex;}
-  .price-toggle .lbl{cursor:pointer;user-select:none;}
-  .price-toggle .lbl.active{color:#28271f;font-weight:700;}
-  .price-toggle .switch{
-    width:32px;
-    height:18px;
-    border-radius:10px;
-    background:#ddd8c8;
-    position:relative;
-    cursor:pointer;
-    flex:0 0 32px;
-    border:none;
-    padding:0;
-    transition:background .2s ease;
-  }
-  .price-toggle .switch::after{
-    content:'';
-    position:absolute;
-    top:2px;
-    left:2px;
-    width:14px;
-    height:14px;
-    border-radius:50%;
-    background:#fff;
-    transition:transform .2s ease;
-    box-shadow:0 1px 2px rgba(0,0,0,.2);
-  }
-  .price-toggle .switch.on{background:var(--green);}
-  .price-toggle .switch.on::after{transform:translateX(14px);}
-
-  .summary-line{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    font-size:13.5px;
-    color:#3a3830;
-    margin-bottom:12px;
-  }
-  .summary-line .icon{width:15px;height:15px;color:#8c8878;flex:0 0 15px;}
-  .summary-divider{
-    height:1px;
-    background:var(--border);
-    margin:14px 0 16px;
-  }
-  .summary-cols{
-    display:flex;
-    justify-content:space-between;
-    font-size:12.5px;
-    font-weight:700;
-    color:#28271f;
-    margin-bottom:12px;
-  }
-  .summary-cols-exp{
-    display:none;
-    grid-template-columns:1fr 80px 90px;
-    font-size:12.5px;
-    font-weight:700;
-    color:#28271f;
-    margin-bottom:12px;
-    gap:6px;
-  }
-  .summary-cols-exp span:not(:first-child){text-align:right;}
-  .summary-panel.expanded .summary-cols{display:none;}
-  .summary-panel.expanded .summary-cols-exp{display:grid;}
-
-  .summary-category{
-    font-size:12.5px;
-    color:#8c8878;
-    margin-bottom:8px;
-    font-weight:600;
-  }
-  .summary-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    margin-bottom:4px;
-  }
-  .summary-item .name-qty{
-    font-size:13.5px;
-    font-weight:600;
-    color:#28271f;
-  }
-  .summary-item .name-qty .qty{
-    font-weight:400;
-    color:#8c8878;
-  }
-  .summary-item .price{
-    font-size:13.5px;
-    font-weight:600;
-    white-space:nowrap;
-  }
-  .summary-sub{
-    font-size:11.5px;
-    color:#a9a599;
-    max-width:150px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    margin-bottom:16px;
-  }
-
-  #summaryItemsExpanded{display:none;}
-  .summary-panel.expanded #summaryItemsSimple{display:none;}
-  .summary-panel.expanded #summaryItemsExpanded{display:block;}
-  .summary-item-exp{
-    display:grid;
-    grid-template-columns:1fr 80px 90px;
-    gap:6px;
-    align-items:baseline;
-    margin-bottom:4px;
-    font-size:13px;
-  }
-  .summary-item-exp span:not(:first-child){text-align:right;white-space:nowrap;}
-  .summary-item-exp .name-qty{font-weight:600;color:#28271f;}
-  .summary-item-exp .name-qty .qty{font-weight:400;color:#8c8878;}
-  .summary-item-exp.sub-leg{color:#a9a599;font-size:12px;margin-bottom:14px;}
-  .summary-item-exp.sub-leg .name-qty{font-weight:400;color:#a9a599;}
-
-  .summary-total-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-  }
-  .summary-total-label{
-    font-size:14px;
-    font-weight:700;
-  }
-  .summary-total-label .vat{
-    display:block;
-    font-size:11px;
-    font-weight:400;
-    color:#a9a599;
-  }
-  .summary-total-price{
-    font-size:16px;
-    font-weight:700;
-  }
-  .summary-spacer{flex:1;}
-  .summary-actions{
-    display:flex;
-    gap:10px;
-    margin-top:24px;
-  }
-  .order-pdf-btn{
-    display:none;
-    flex:0 0 42%;
-    height:44px;
-    border-radius:8px;
-    border:none;
-    background:var(--sidebar-active-bg);
-    color:#3d3624;
-    font-size:13.5px;
-    font-weight:700;
-    align-items:center;
-    justify-content:center;
-    gap:7px;
-    cursor:pointer;
-  }
-  .order-pdf-btn:hover{background:#d3c497;}
-  .order-pdf-btn .icon{width:15px;height:15px;}
-  .summary-panel.expanded .order-pdf-btn{display:flex;}
-  .place-order-btn{
-    width:100%;
-    flex:1;
-    height:44px;
-    border-radius:8px;
-    border:none;
-    background:var(--green);
-    color:#fff;
-    font-size:14px;
-    font-weight:700;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:9px;
-    cursor:pointer;
-  }
-  .place-order-btn:hover{background:var(--green-dark);}
-  .place-order-btn:disabled{background:#d8d4c6;color:#fff;cursor:not-allowed;}
-  .place-order-btn:disabled:hover{background:#d8d4c6;}
-  .place-order-btn .icon{width:16px;height:16px;}
-
-  /* Collapse chevrons */
   .collapse-btn{
     position:absolute;
     bottom:70px;
@@ -945,244 +549,171 @@
     justify-content:center;
     color:#8c8878;
     cursor:pointer;
-    transition:left .22s ease, right .22s ease;
+    transition:left .22s ease;
     z-index:5;
   }
   .collapse-btn:hover{color:var(--green);}
   .collapse-btn.left{left:238px;}
-  .collapse-btn.right{right:222px;}
   .collapse-btn .icon{width:13px;height:13px;transition:transform .2s ease;}
   .collapse-btn.flipped .icon{transform:rotate(180deg);}
   .app.sidebar-collapsed .collapse-btn.left{left:66px;}
-  .app.summary-expanded .collapse-btn.right{right:492px;}
 
-  /* ---------------- Order Placed modal ---------------- */
-  .modal-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(40,39,31,.35);
-    backdrop-filter:blur(3px);
+  /* ---------------- Shared data-table component ---------------- */
+  .status-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 10px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .status-badge .icon{width:11px;height:11px;}
+
+  .row-actions{display:flex;align-items:center;gap:8px;}
+  .row-action-btn{
+    width:26px;
+    height:26px;
+    border-radius:6px;
+    border:none;
+    background:none;
+    color:var(--text-muted);
     display:flex;
     align-items:center;
     justify-content:center;
-    z-index:100;
-    padding:20px;
+    cursor:pointer;
   }
-  .modal-overlay[hidden]{display:none;}
-  .modal-card{
-    background:#fff;
-    border-radius:16px;
-    width:100%;
-    max-width:560px;
-    padding:36px 40px 32px;
-    text-align:center;
-    box-shadow:0 20px 60px rgba(0,0,0,.2);
-    max-height:90vh;
+  .row-action-btn:hover{background:var(--sidebar-bg);color:var(--green);}
+  .row-action-btn .icon{width:14px;height:14px;}
+  .row-action-btn.spinning .icon{animation:spin .7s linear;}
+  @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+  .dt-main{
+    flex:1;
+    min-width:0;
+    padding:26px 34px 40px;
     overflow-y:auto;
   }
-  .modal-icon{
-    width:96px;
-    height:96px;
-    border-radius:50%;
-    background:var(--tan-pale-bg);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:0 auto 20px;
-    color:var(--green);
+  .dt-page-title{font-size:18px;font-weight:700;color:var(--text-dark);margin:0 0 20px;}
+  .dt-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px 24px 20px;}
+  .dt-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:16px;}
+  .dt-card-header h2{font-size:15px;font-weight:700;color:var(--text-dark);margin:0;}
+  .dt-add-btn{
+    display:flex;align-items:center;gap:8px;
+    background:var(--green);color:#fff;border:none;border-radius:8px;
+    padding:9px 16px;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;
+    text-decoration:none;
   }
-  .modal-icon .icon{width:38px;height:38px;}
-  .modal-card h2{
-    margin:0 0 8px;
-    font-size:24px;
-  }
-  .modal-card p.subtext{
-    margin:0 0 26px;
-    color:var(--text-muted);
-    font-size:14.5px;
-  }
-  .modal-summary{
-    text-align:left;
-    border-top:1px solid var(--border);
-    padding-top:20px;
-  }
-  .modal-parties{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:18px;
-    font-size:14px;
-    font-weight:600;
-  }
-  .modal-parties span{display:flex;align-items:center;gap:8px;}
-  .modal-parties .icon{width:15px;height:15px;color:#8c8878;}
-  .modal-cols{
-    display:grid;
-    grid-template-columns:1fr 90px 100px;
-    font-weight:700;
-    font-size:13px;
-    margin-bottom:10px;
-    color:#28271f;
-  }
-  .modal-cols span:not(:first-child){text-align:right;}
-  .modal-item-name{
-    font-weight:700;
-    font-size:13.5px;
-    margin-bottom:4px;
-  }
-  .modal-item-line{
-    display:grid;
-    grid-template-columns:1fr 90px 100px;
-    font-size:13.5px;
-    margin-bottom:2px;
-  }
-  .modal-item-line span:not(:first-child){text-align:right;}
-  .modal-item-line.sub{color:var(--text-muted);font-size:12.5px;margin-bottom:14px;}
-  .modal-divider{height:1px;background:var(--border);margin:14px 0;}
-  .modal-total-row{
-    display:flex;
-    justify-content:space-between;
-    font-size:15px;
-    font-weight:700;
-    margin-bottom:26px;
-  }
-  .done-btn{
-    background:var(--green);
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    padding:12px 34px;
-    font-size:14.5px;
-    font-weight:700;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    cursor:pointer;
-  }
-  .done-btn:hover{background:var(--green-dark);}
-  .done-btn .icon{width:15px;height:15px;}
+  .dt-add-btn:hover{background:var(--green-dark);}
+  .dt-add-btn .icon{width:15px;height:15px;}
 
-  /* ---------------- Template picker page ---------------- */
-  .template-section-title{
-    font-size:15px;
-    font-weight:700;
-    color:var(--text-dark);
-    margin:32px 0 16px;
+  .dt-toolbar{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
+  .dt-show{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-muted);white-space:nowrap;}
+  .dt-show .select{width:72px;height:34px;padding:0 8px 0 12px;}
+  .dt-refresh-btn{
+    width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:#fff;
+    color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 30px;
   }
+  .dt-refresh-btn:hover{background:var(--sidebar-bg);color:var(--green);}
+  .dt-refresh-btn .icon{width:15px;height:15px;}
+  .dt-refresh-btn.spinning .icon{animation:spin .7s linear;}
+  .dt-spacer{flex:1;}
+  .dt-search{display:flex;align-items:center;gap:8px;}
+  .dt-search label{font-size:13.5px;color:var(--text-muted);white-space:nowrap;}
+  .dt-search input{
+    height:34px;border:1px solid var(--border);border-radius:8px;padding:0 12px;
+    font-size:13.5px;font-family:inherit;width:220px;color:var(--text-dark);
+  }
+  .dt-search input:focus{outline:none;border-color:var(--green);}
 
-  .template-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px;
+  .dt-filters-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+  .dt-check-filter{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-dark);cursor:pointer;white-space:nowrap;}
+  .dt-check-filter input[type="checkbox"]{width:16px;height:16px;accent-color:var(--green);cursor:pointer;}
+  .dt-date-range{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-muted);white-space:nowrap;}
+  .dt-date-range input[type="date"]{
+    height:34px;border:1px solid var(--border);border-radius:8px;padding:0 10px;
+    font-size:13px;font-family:inherit;color:var(--text-dark);
   }
-  .template-card{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    padding:6px;
-    border-radius:8px;
-    cursor:pointer;
-    border:1px solid transparent;
-    transition:background .15s ease;
-  }
-  .template-card:hover{background:#faf8f2;}
-  .template-card.selected{background:var(--sidebar-bg);}
-  .template-thumb{
-    width:72px;
-    height:48px;
-    border-radius:6px;
-    flex:0 0 72px;
-    background:linear-gradient(135deg,#cfc3ad,#a9987e);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-  }
-  .template-thumb .icon{width:22px;height:22px;opacity:.85;}
-  .template-info{flex:1;min-width:0;}
-  .template-name{
-    font-weight:600;
-    font-size:15.5px;
-    color:var(--text-dark);
-    letter-spacing:.1px;
-    margin-bottom:3px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .template-meta{
-    font-size:12px;
-    color:var(--text-muted);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .run-btn{
-    flex:0 0 auto;
-    margin-left:10px;
-    border:1px solid var(--green);
-    color:var(--green);
-    background:transparent;
-    border-radius:4px;
-    padding:5px 16px;
-    font-size:12.5px;
-    font-weight:700;
-    cursor:pointer;
-    font-family:inherit;
-  }
-  .run-btn:hover{background:var(--green);color:#fff;}
-  .run-btn.running{background:var(--green);color:#fff;}
+  .dt-filter-select .select{width:170px;height:34px;padding:0 10px 0 12px;}
 
-  .template-footer{
-    display:flex;
-    justify-content:flex-end;
-    gap:12px;
-    margin-top:36px;
+  .dt-bulk{display:flex;align-items:center;gap:0;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .dt-bulk .select{width:150px;height:34px;border:none;border-radius:0;box-shadow:none;padding:0 8px 0 12px;}
+  .dt-bulk-apply-btn{
+    height:34px;padding:0 16px;border:none;background:var(--green);color:#fff;
+    font-size:13px;font-weight:600;cursor:pointer;border-left:1px solid rgba(255,255,255,.2);white-space:nowrap;
   }
-  .btn-cancel{
-    background:var(--sidebar-active-bg);
-    color:#3d3624;
-    border:none;
-    border-radius:8px;
-    height:40px;
-    padding:0 20px;
-    font-weight:700;
-    font-size:13.5px;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    cursor:pointer;
-    font-family:inherit;
-  }
-  .btn-cancel:hover{background:#d3c497;}
-  .btn-cancel .icon{width:15px;height:15px;}
-  .btn-next{
-    background:var(--green);
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    height:40px;
-    padding:0 20px;
-    font-weight:700;
-    font-size:13.5px;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    cursor:pointer;
-    font-family:inherit;
-  }
-  .btn-next:hover{background:var(--green-dark);}
-  .btn-next .icon{width:15px;height:15px;}
+  .dt-bulk-apply-btn:hover{background:var(--green-dark);}
 
-  .summary-panel.mini-collapsed{width:64px;flex:0 0 64px;padding:26px 12px;overflow:hidden;}
-  .summary-panel.mini-collapsed .summary-title{display:none;}
-  .summary-panel.mini-collapsed .place-order-btn{white-space:nowrap;overflow:hidden;padding:0;justify-content:center;}
+  .dt-table-wrap{overflow-x:auto;}
+  table.dt-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  .dt-table thead th{
+    text-align:left;padding:11px 14px;color:var(--text-muted);font-weight:600;
+    border-bottom:2px solid var(--border);white-space:nowrap;font-size:12.5px;
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  .dt-table thead th.sortable{cursor:pointer;user-select:none;}
+  .dt-table thead th.sortable:hover{color:var(--green);}
+  .dt-sort-icons{display:inline-flex;flex-direction:column;margin-left:5px;vertical-align:middle;gap:1px;}
+  .dt-sort-icons .icon{width:9px;height:9px;color:#c8c4b6;display:block;}
+  .dt-table thead th.sort-asc .dt-sort-icons .icon.up,
+  .dt-table thead th.sort-desc .dt-sort-icons .icon.down{color:var(--green);}
+  .dt-table tbody td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--text-dark);vertical-align:middle;}
+  .dt-table tbody tr:hover{background:var(--sidebar-bg);}
+  .dt-table tbody tr.selected{background:var(--green-pale-bg);}
+  .dt-table tbody tr:last-child td{border-bottom:none;}
+  .dt-table a.dt-link{color:var(--green);text-decoration:none;font-weight:600;}
+  .dt-table a.dt-link:hover{text-decoration:underline;}
+  .dt-table input[type="checkbox"].dt-row-check{width:16px;height:16px;accent-color:var(--green);cursor:pointer;}
+  .dt-muted{color:var(--text-light-muted);}
+  .dt-amount{font-weight:600;color:var(--text-dark);white-space:nowrap;}
+
+  .status-badge.status-open{background:#eef2f7;color:#5d6481;}
+  .status-badge.status-partial{background:var(--tan-pale-bg);color:var(--tan);}
+  .status-badge.status-paid{background:var(--green-pale-bg);color:var(--green);}
+  .status-badge.status-credit{background:#fbe7e5;color:var(--red);}
+  .status-badge.status-active{background:var(--green-pale-bg);color:var(--green);}
+  .status-badge.status-create{background:#eef2f7;color:#5d6481;}
+  .status-badge.status-approve{background:var(--green-pale-bg);color:var(--green);}
+  .status-badge.status-edit{background:var(--tan-pale-bg);color:var(--tan);}
+
+  .dt-inline-edit{
+    width:56px;height:30px;border:1px solid var(--border);border-radius:6px;
+    padding:0 8px;font-size:13px;font-family:inherit;text-align:center;color:var(--text-dark);
+  }
+  .dt-inline-edit:focus{outline:none;border-color:var(--green);}
+
+  .dt-pagination{display:flex;align-items:center;justify-content:space-between;margin-top:16px;font-size:13px;color:var(--text-muted);flex-wrap:wrap;gap:10px;}
+  .dt-pagination .page-nav{display:flex;align-items:center;gap:8px;}
+  .dt-pagination .page-nav button{
+    width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:#fff;
+    color:var(--text-dark);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  .dt-pagination .page-nav button:hover{background:var(--sidebar-bg);}
+  .dt-pagination .page-nav button:disabled{opacity:.4;cursor:not-allowed;}
+  .dt-pagination .page-nav button .icon{width:12px;height:12px;}
+  .dt-no-results td{text-align:center;color:var(--text-muted);padding:30px !important;}
+
+  .tooltip-wrap{position:relative;}
+  .row-action-btn[title]:hover::after{
+    content:attr(title);
+    position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+    background:#293224;color:#fff;font-size:11px;font-weight:500;white-space:nowrap;
+    padding:5px 9px;border-radius:6px;z-index:20;pointer-events:none;
+  }
+  .row-action-btn{position:relative;}
+
+  @media (max-width:1000px){
+    .dt-toolbar, .dt-filters-row{flex-direction:column;align-items:stretch;}
+    .dt-search input{width:100%;}
+  }
 </style>
 </head>
 <body>
 <div class="app" id="app">
 
   <!-- Sidebar -->
-  <aside class="sidebar collapsed" id="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="logo">
       <div class="logo-full">
         <div class="brand">UrbanSofa<sup>&reg;</sup></div>
@@ -1198,8 +729,7 @@
   <div class="main-wrap">
     <header class="topbar">
       <div class="breadcrumb">
-        <a href="orders-overview.html" class="muted" style="text-decoration:none;">Orders</a>
-        <span class="current">Place Order</span>
+        <span class="current">Invoices</span>
       </div>
       <div class="topbar-right">
         <div class="exact-status">
@@ -1236,155 +766,121 @@
     </header>
 
     <div class="content-area">
-      <main class="order-form">
+      <main class="dt-main">
 
-        <div class="field-row">
-          <div class="field">
-            <label class="field-label">Reference <span class="req">*</span>
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
-            </label>
-            <div class="input">
-              <input class="text-input" type="text" id="referenceInput" placeholder="My Order">
+        <h1 class="dt-page-title">Invoices</h1>
+
+        <div class="dt-card">
+          <div class="dt-card-header"><h2>Overview</h2></div>
+
+          <div class="dt-toolbar">
+            <div class="dt-show">
+              <span>Show</span>
+              <div class="select">
+                <select class="field-select" id="pageSizeSelect">
+                  <option value="10">10</option>
+                  <option value="25" selected>25</option>
+                  <option value="50">50</option>
+                </select>
+                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <span>Entries</span>
+              <button type="button" class="dt-refresh-btn" id="refreshBtn" title="Refresh">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg>
+              </button>
+            </div>
+            <label class="dt-check-filter"><input type="checkbox" id="creditCheck"> Show credit invoices</label>
+            <div class="dt-spacer"></div>
+            <div class="dt-search">
+              <label for="searchInput">Search:</label>
+              <input type="text" id="searchInput" placeholder="Search invoices&hellip;">
             </div>
           </div>
-          <div class="field">
-            <label class="field-label">Dealer <span class="req">*</span>
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
-            </label>
-            <div class="select">
-              <select class="field-select" id="dealerSelect">
-                <option value="">Select dealer&hellip;</option>
-                <option>Wooden Planet</option>
-                <option>Tiger Touch</option>
-                <option>Xander Home</option>
-                <option>Firenca Living</option>
-              </select>
-              <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+
+          <div class="dt-filters-row">
+            <div class="dt-bulk">
+              <div class="select">
+                <select class="field-select" id="bulkActionSelect">
+                  <option value="">Actions</option>
+                  <option value="download">Download</option>
+                  <option value="sync">Sync with Exact</option>
+                  <option value="markpaid">Mark as paid</option>
+                </select>
+                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <button type="button" class="dt-bulk-apply-btn" id="bulkApplyBtn">Apply</button>
+            </div>
+            <div class="dt-spacer"></div>
+            <div class="dt-date-range">
+              <span>From</span>
+              <input type="date" id="fromDate">
+              <span>To</span>
+              <input type="date" id="toDate">
+            </div>
+            <div class="dt-filter-select">
+              <div class="select">
+                <select class="field-select" id="dealerFilter">
+                  <option value="">All</option>
+                  <option>WoontrendsXL</option>
+                  <option>UrbanSofa test account</option>
+                  <option>Wooden Planet</option>
+                  <option>Tiger Touch</option>
+                </select>
+                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+            <div class="dt-filter-select">
+              <div class="select">
+                <select class="field-select" id="statusFilter">
+                  <option value="">All</option>
+                  <option>Open</option>
+                  <option>Partial paid</option>
+                  <option>Paid</option>
+                  <option>Credit</option>
+                </select>
+                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="template-grid" id="templateGrid">
-          <div class="template-card" data-template="Firenca Order Template">
-            <div class="template-thumb">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg>
-            </div>
-            <div class="template-info">
-              <div class="template-name">Firenca Order Template</div>
-              <div class="template-meta">1131 Dusty Townline, Jacksonville, TX 40322 | (936) 361-0310</div>
-            </div>
-            <button type="button" class="run-btn">Run</button>
+          <div class="dt-table-wrap">
+            <table class="dt-table" id="invoicesTable">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" class="dt-row-check" id="selectAllCheck"></th>
+                  <th class="sortable" data-sort="date">Date</th>
+                  <th class="sortable" data-sort="number">Invoice number</th>
+                  <th class="sortable" data-sort="dealer">Invoice dealer</th>
+                  <th class="sortable" data-sort="dueDate">Due date</th>
+                  <th class="sortable" data-sort="amountInc">Amount inc.</th>
+                  <th class="sortable" data-sort="amountEx">Amount ex.</th>
+                  <th class="sortable" data-sort="status">Invoice status</th>
+                  <th class="sortable" data-sort="type">Type</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="invoicesBody"></tbody>
+            </table>
           </div>
 
-          <div class="template-card" data-template="Best Selling 2026">
-            <div class="template-thumb">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg>
+          <div class="dt-pagination">
+            <span><strong id="fromCount">1</strong> To <strong id="toCount">25</strong> - <strong id="totalCount">25</strong> Total items</span>
+            <div class="page-nav">
+              <button type="button" id="prevPageBtn" aria-label="Previous page">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <button type="button" id="nextPageBtn" aria-label="Next page">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
             </div>
-            <div class="template-info">
-              <div class="template-name">Best Selling 2026</div>
-              <div class="template-meta">1131 Dusty Townline, Jacksonville, TX 40322 | (936) 361-0310</div>
-            </div>
-            <button type="button" class="run-btn">Run</button>
           </div>
-
-          <div class="template-card selected" data-template="Pock-IT Banken Template">
-            <div class="template-thumb">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg>
-            </div>
-            <div class="template-info">
-              <div class="template-name">Pock-IT Banken Template</div>
-              <div class="template-meta">1131 Dusty Townline, Jacksonville, TX 40322 | (936) 361-0310</div>
-            </div>
-            <button type="button" class="run-btn">Run</button>
-          </div>
-
-          <div class="template-card" data-template="Template 6">
-            <div class="template-thumb">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg>
-            </div>
-            <div class="template-info">
-              <div class="template-name">Template 6</div>
-              <div class="template-meta">1131 Dusty Townline, Jacksonville, TX 40322 | (936) 361-0310</div>
-            </div>
-            <button type="button" class="run-btn">Run</button>
-          </div>
-
-          <div class="template-card" data-template="Tiger Touch Banken Template">
-            <div class="template-thumb">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg>
-            </div>
-            <div class="template-info">
-              <div class="template-name">Tiger Touch Banken Template</div>
-              <div class="template-meta">1131 Dusty Townline, Jacksonville, TX 40322 | (936) 361-0310</div>
-            </div>
-            <button type="button" class="run-btn">Run</button>
-          </div>
-
-          <div class="template-card" data-template="Template 7">
-            <div class="template-thumb">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg>
-            </div>
-            <div class="template-info">
-              <div class="template-name">Template 7</div>
-              <div class="template-meta">1131 Dusty Townline, Jacksonville, TX 40322 | (936) 361-0310</div>
-            </div>
-            <button type="button" class="run-btn">Run</button>
-          </div>
-
-          <div class="template-card" data-template="Rechthoek, live edge rand 5cm">
-            <div class="template-thumb">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg>
-            </div>
-            <div class="template-info">
-              <div class="template-name">Rechthoek, live edge rand 5cm</div>
-              <div class="template-meta">1131 Dusty Townline, Jacksonville, TX 40322 | (936) 361-0310</div>
-            </div>
-            <button type="button" class="run-btn">Run</button>
-          </div>
-
-          <div class="template-card" data-template="Template 8">
-            <div class="template-thumb">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg>
-            </div>
-            <div class="template-info">
-              <div class="template-name">Template 8</div>
-              <div class="template-meta">1131 Dusty Townline, Jacksonville, TX 40322 | (936) 361-0310</div>
-            </div>
-            <button type="button" class="run-btn">Run</button>
-          </div>
-        </div>
-
-        <div class="template-footer">
-          <button type="button" class="btn-cancel" id="cancelBtn">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#3d3624" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg>
-            Cancel
-          </button>
-          <button type="button" class="btn-next" id="nextBtn">
-            Next
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </button>
         </div>
 
       </main>
-
-      <!-- Summary Panel (empty until a template/order is started) -->
-      <aside class="summary-panel" id="summaryPanel">
-        <div class="summary-title">Summary</div>
-        <div class="summary-spacer"></div>
-        <div class="summary-actions">
-          <button type="button" class="place-order-btn" id="placeOrderBtn" disabled>
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
-            Place Order
-          </button>
-        </div>
-      </aside>
     </div>
   </div>
 
-  <div class="collapse-btn left flipped" id="sidebarCollapseBtn">
-    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-  </div>
-  <div class="collapse-btn right" id="summaryCollapseBtn">
+  <div class="collapse-btn left" id="sidebarCollapseBtn">
     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
   </div>
 
@@ -1413,8 +909,8 @@
 
   var NAV_DATA = [
     { label:'Dashboard', icon:'dashboard', href:'dashboard.html' },
-    { label:'Orders', icon:'orders', open:true, children:[
-      { label:'Orders', href:'orders-overview.html', active:true },
+    { label:'Orders', icon:'orders', children:[
+      { label:'Orders', href:'orders-overview.html' },
       { label:'Quotes', href:'#' },
       { label:'Packaging label', href:'#' },
       { label:'Internal packaging label', href:'#' }
@@ -1458,11 +954,11 @@
       { label:'Exact Retries', href:'#', badge:{text:'117', color:'green'} },
       { label:'Exact CRM updates', href:'#', badge:{text:'1', color:'green'} }
     ]},
-    { label:'Invoices', icon:'invoices', badge:{text:'8', color:'green'}, children:[
-      { label:'Invoices', href:'invoices.html' },
+    { label:'Invoices', icon:'invoices', badge:{text:'8', color:'green'}, open:true, children:[
+      { label:'Invoices', href:'invoices.html', active:true },
       { label:'Draft Invoices', href:'draft-invoices.html' },
       { label:'Invoice layout', href:'invoice-layout.html' },
-      { label:'Draft Invoice Logs', href:'draft-invoice-logs.html' }
+      { label:'Draft Invoice Logs', href:'draft-invoice-logs.html' },
     ]},
     { label:'Downloads', icon:'downloads', children:[
       { label:'Downloads overview', href:'#' },
@@ -1614,7 +1110,6 @@
 
   var app = document.getElementById('app');
   var sidebar = document.getElementById('sidebar');
-  var summaryPanel = document.getElementById('summaryPanel');
 
   document.getElementById('sidebarCollapseBtn').addEventListener('click', function(){
     sidebar.classList.toggle('collapsed');
@@ -1624,11 +1119,6 @@
       sidebar.querySelectorAll('.nav-group.open').forEach(function(g){ g.classList.remove('open'); });
       hideFlyout();
     }
-  });
-
-  document.getElementById('summaryCollapseBtn').addEventListener('click', function(){
-    summaryPanel.classList.toggle('mini-collapsed');
-    this.classList.toggle('flipped');
   });
 
   /* User account dropdown */
@@ -1645,8 +1135,8 @@
     userMenuBtn.setAttribute('aria-expanded', 'false');
   });
   userMenu.addEventListener('click', function(e){ e.stopPropagation(); });
-
   /* ---------------- Custom select dropdowns ---------------- */
+  var CLEAR_ICON_SVG = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
   var openPanel = null;
 
   function closeOpenPanel(){
@@ -1682,6 +1172,14 @@
       display.className = 'select-display';
       trigger.appendChild(display);
       wrap.insertBefore(trigger, select);
+
+      var clearBtn = document.createElement('button');
+      clearBtn.type = 'button';
+      clearBtn.className = 'select-clear';
+      clearBtn.setAttribute('aria-label', 'Reset selection');
+      clearBtn.innerHTML = CLEAR_ICON_SVG;
+      var chevron = wrap.querySelector('.chevron');
+      wrap.insertBefore(clearBtn, chevron || null);
 
       var panel = document.createElement('div');
       panel.className = 'select-options-panel';
@@ -1719,44 +1217,226 @@
     });
   }
 
+  document.addEventListener('click', function(e){
+    var clearBtn = e.target.closest('.select-clear');
+    if(!clearBtn) return;
+    var wrap = clearBtn.closest('.select');
+    var select = wrap.querySelector('select.field-select');
+    if(select && !select.disabled){
+      select.selectedIndex = 0;
+      syncSelectDisplay(select);
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
   document.addEventListener('click', function(){ closeOpenPanel(); });
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape') closeOpenPanel();
   });
-  enhanceSelects();
 
-  /* Template selection */
-  var grid = document.getElementById('templateGrid');
-  grid.addEventListener('click', function(e){
-    var card = e.target.closest('.template-card');
-    if(!card) return;
+  /* ---------------- Shared data-table controller ---------------- */
+  function initDataTable(opts){
+    var state = { page: 1, pageSize: Number(opts.pageSizeSelect.value), sortKey: opts.defaultSortKey || null, sortDir: opts.defaultSortDir || 1, query: '' };
+    if(state.sortKey){
+      opts.headerEls.forEach(function(h){
+        if(h.getAttribute('data-sort') === state.sortKey) h.classList.add(state.sortDir === 1 ? 'sort-asc' : 'sort-desc');
+      });
+    }
 
-    Array.prototype.forEach.call(grid.querySelectorAll('.template-card'), function(c){
-      c.classList.toggle('selected', c === card);
+    function getFiltered(){
+      var rows = opts.data.filter(function(item){ return opts.filterFn(item, state.query); });
+      if(state.sortKey){
+        rows = rows.slice().sort(function(a, b){
+          var av = opts.sortValue(a, state.sortKey), bv = opts.sortValue(b, state.sortKey);
+          if(av < bv) return -1 * state.sortDir;
+          if(av > bv) return 1 * state.sortDir;
+          return 0;
+        });
+      }
+      return rows;
+    }
+
+    function render(){
+      var filtered = getFiltered();
+      var total = filtered.length;
+      var pages = Math.max(1, Math.ceil(total / state.pageSize));
+      if(state.page > pages) state.page = pages;
+      var startIdx = (state.page - 1) * state.pageSize;
+      var pageRows = filtered.slice(startIdx, startIdx + state.pageSize);
+      opts.tbody.innerHTML = pageRows.length
+        ? pageRows.map(function(item, i){ return opts.renderRow(item, startIdx + i); }).join('')
+        : '<tr class="dt-no-results"><td colspan="' + opts.colCount + '">No results found.</td></tr>';
+      var toIdx = total === 0 ? 0 : Math.min(startIdx + state.pageSize, total);
+      opts.fromEl.textContent = total === 0 ? 0 : startIdx + 1;
+      opts.toEl.textContent = toIdx;
+      opts.totalEl.textContent = total;
+      opts.prevBtn.disabled = state.page <= 1;
+      opts.nextBtn.disabled = state.page >= pages;
+      if(opts.afterRender) opts.afterRender(pageRows);
+    }
+
+    opts.searchInput.addEventListener('input', function(){
+      state.query = this.value.trim().toLowerCase();
+      state.page = 1;
+      render();
+    });
+    opts.pageSizeSelect.addEventListener('change', function(){
+      state.pageSize = Number(this.value);
+      state.page = 1;
+      render();
+    });
+    opts.prevBtn.addEventListener('click', function(){ if(state.page > 1){ state.page--; render(); } });
+    opts.nextBtn.addEventListener('click', function(){ state.page++; render(); });
+    if(opts.refreshBtn){
+      opts.refreshBtn.addEventListener('click', function(){
+        var btn = this;
+        btn.classList.add('spinning');
+        setTimeout(function(){ btn.classList.remove('spinning'); render(); }, 450);
+      });
+    }
+    opts.headerEls.forEach(function(th){
+      th.addEventListener('click', function(){
+        var key = th.getAttribute('data-sort');
+        if(state.sortKey === key){ state.sortDir *= -1; } else { state.sortKey = key; state.sortDir = 1; }
+        opts.headerEls.forEach(function(h){ h.classList.remove('sort-asc', 'sort-desc'); });
+        th.classList.add(state.sortDir === 1 ? 'sort-asc' : 'sort-desc');
+        render();
+      });
     });
 
-    if(e.target.closest('.run-btn')){
-      var btn = e.target.closest('.run-btn');
-      btn.textContent = 'Running…';
-      btn.classList.add('running');
-      window.setTimeout(function(){
-        window.location.href = 'place-order.html?template=' + encodeURIComponent(card.dataset.template);
-      }, 300);
+    render();
+    return { render: render, state: state };
+  }
+
+  function sortIconsHTML(){
+    return '<span class="dt-sort-icons">' +
+      '<svg class="icon up" viewBox="0 0 24 24" fill="currentColor"><path d="M12 6l6 8H6z"/></svg>' +
+      '<svg class="icon down" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18l-6-8h12z"/></svg>' +
+      '</span>';
+  }
+
+  function fmtCurrency(n){
+    return '&euro; ' + Number(n).toLocaleString('nl-NL', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  }
+
+  /* ---------------- Invoices data + table ---------------- */
+  var STATUS_CLASS = { 'Open':'status-open', 'Partial paid':'status-partial', 'Paid':'status-paid', 'Credit':'status-credit' };
+
+  var INVOICES = [
+    { date:'2026-07-07', number:'6277366', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:760.12, amountEx:628.20, status:'Open', type:'Invoice' },
+    { date:'2026-07-07', number:'6277365', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:736.17, amountEx:608.40, status:'Open', type:'Invoice' },
+    { date:'2026-07-07', number:'6277364', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:1599.92, amountEx:1322.25, status:'Open', type:'Invoice' },
+    { date:'2026-07-07', number:'6277363', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:9683.94, amountEx:8003.26, status:'Open', type:'Invoice' },
+    { date:'2026-07-07', number:'6277362', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:12.10, amountEx:10.00, status:'Open', type:'Invoice' },
+    { date:'2026-07-07', number:'6277361', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:905.08, amountEx:748.00, status:'Open', type:'Invoice' },
+    { date:'2026-07-07', number:'6277360', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:2053.97, amountEx:1697.50, status:'Partial paid', type:'Invoice' },
+    { date:'2026-07-07', number:'6277359', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:3362.70, amountEx:2779.09, status:'Open', type:'Invoice' },
+    { date:'2026-07-07', number:'6277358', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:3622.16, amountEx:2993.52, status:'Open', type:'Invoice' },
+    { date:'2026-07-07', number:'6277357', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:1457.62, amountEx:1204.64, status:'Open', type:'Invoice' },
+    { date:'2026-07-07', number:'6277356', dealer:'WoontrendsXL', dueDate:'2026-08-06', amountInc:6649.83, amountEx:5495.73, status:'Open', type:'Invoice' },
+    { date:'2026-07-05', number:'6277355', dealer:'WoontrendsXL', dueDate:'2026-08-04', amountInc:12357.32, amountEx:10212.66, status:'Open', type:'Invoice' },
+    { date:'2026-06-14', number:'6277354', dealer:'WoontrendsXL', dueDate:'2026-07-14', amountInc:1055.24, amountEx:872.10, status:'Paid', type:'Invoice' },
+    { date:'2026-06-11', number:'6277353', dealer:'WoontrendsXL', dueDate:'2026-07-11', amountInc:47.85, amountEx:39.55, status:'Paid', type:'Invoice' },
+    { date:'2026-06-11', number:'6277352', dealer:'WoontrendsXL', dueDate:'2026-07-11', amountInc:931.70, amountEx:770.00, status:'Paid', type:'Invoice' },
+    { date:'2026-06-11', number:'6277351', dealer:'WoontrendsXL', dueDate:'2026-07-11', amountInc:12.10, amountEx:10.00, status:'Paid', type:'Invoice' },
+    { date:'2026-05-21', number:'6277350', dealer:'UrbanSofa test account', dueDate:'2026-05-21', amountInc:849.42, amountEx:702.00, status:'Paid', type:'Invoice' },
+    { date:'2026-05-21', number:'6277349', dealer:'UrbanSofa test account', dueDate:'2026-05-21', amountInc:215.38, amountEx:178.00, status:'Paid', type:'Invoice' },
+    { date:'2026-05-20', number:'6277344', dealer:'Wooden Planet', dueDate:'2026-06-19', amountInc:-3.63, amountEx:-3.00, status:'Credit', type:'Credit invoice' },
+    { date:'2026-05-20', number:'6277343', dealer:'Wooden Planet', dueDate:'2026-06-19', amountInc:512.40, amountEx:423.60, status:'Open', type:'Invoice' },
+    { date:'2026-05-20', number:'6277342', dealer:'Tiger Touch', dueDate:'2026-06-19', amountInc:1876.05, amountEx:1550.45, status:'Partial paid', type:'Invoice' },
+    { date:'2026-05-20', number:'6277339', dealer:'Tiger Touch', dueDate:'2026-06-19', amountInc:340.10, amountEx:281.00, status:'Paid', type:'Invoice' },
+    { date:'2026-05-20', number:'6277338', dealer:'UrbanSofa test account', dueDate:'2026-06-19', amountInc:98.55, amountEx:81.45, status:'Paid', type:'Invoice' },
+    { date:'2026-05-20', number:'6277337', dealer:'UrbanSofa test account', dueDate:'2026-06-19', amountInc:2200.00, amountEx:1818.18, status:'Open', type:'Invoice' }
+  ];
+
+  function invoiceRowHTML(inv){
+    return '<tr data-number="' + inv.number + '">' +
+      '<td><input type="checkbox" class="dt-row-check row-select"></td>' +
+      '<td>' + inv.date.split('-').reverse().join('-') + '</td>' +
+      '<td><a class="dt-link" href="#">' + inv.number + '</a></td>' +
+      '<td>' + inv.dealer + '</td>' +
+      '<td>' + inv.dueDate.split('-').reverse().join('-') + '</td>' +
+      '<td class="dt-amount">' + fmtCurrency(inv.amountInc) + '</td>' +
+      '<td class="dt-amount">' + fmtCurrency(inv.amountEx) + '</td>' +
+      '<td><span class="status-badge ' + STATUS_CLASS[inv.status] + '">' + inv.status + '</span></td>' +
+      '<td>' + inv.type + '</td>' +
+      '<td class="row-actions">' +
+        '<button type="button" class="row-action-btn" title="Download"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></button>' +
+        '<button type="button" class="row-action-btn dt-sync-btn" title="Sync with Exact"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></button>' +
+        '<button type="button" class="row-action-btn" title="' + inv.status + '"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>' +
+      '</td>' +
+    '</tr>';
+  }
+
+  var invoicesTbody = document.getElementById('invoicesBody');
+  var creditCheck = document.getElementById('creditCheck');
+  var fromDateInput = document.getElementById('fromDate');
+  var toDateInput = document.getElementById('toDate');
+  var dealerFilter = document.getElementById('dealerFilter');
+  var statusFilter = document.getElementById('statusFilter');
+  var selectAllCheck = document.getElementById('selectAllCheck');
+
+  var invoicesDT = initDataTable({
+    data: INVOICES,
+    colCount: 10,
+    tbody: invoicesTbody,
+    searchInput: document.getElementById('searchInput'),
+    pageSizeSelect: document.getElementById('pageSizeSelect'),
+    refreshBtn: document.getElementById('refreshBtn'),
+    prevBtn: document.getElementById('prevPageBtn'),
+    nextBtn: document.getElementById('nextPageBtn'),
+    fromEl: document.getElementById('fromCount'),
+    toEl: document.getElementById('toCount'),
+    totalEl: document.getElementById('totalCount'),
+    headerEls: Array.prototype.slice.call(document.querySelectorAll('#invoicesTable thead th.sortable')),
+    filterFn: function(inv, query){
+      if(creditCheck.checked && inv.type !== 'Credit invoice') return false;
+      if(fromDateInput.value && inv.date < fromDateInput.value) return false;
+      if(toDateInput.value && inv.date > toDateInput.value) return false;
+      if(dealerFilter.value && inv.dealer !== dealerFilter.value) return false;
+      if(statusFilter.value && inv.status !== statusFilter.value) return false;
+      if(!query) return true;
+      return (inv.number + ' ' + inv.dealer + ' ' + inv.status + ' ' + inv.type).toLowerCase().indexOf(query) !== -1;
+    },
+    sortValue: function(inv, key){
+      if(key === 'amountInc' || key === 'amountEx') return inv[key];
+      return String(inv[key]).toLowerCase();
+    },
+    renderRow: function(inv){ return invoiceRowHTML(inv); },
+    afterRender: function(){
+      selectAllCheck.checked = false;
+      Array.prototype.slice.call(invoicesTbody.querySelectorAll('.dt-sync-btn')).forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var icon = btn.querySelector('.icon');
+          btn.classList.add('spinning');
+          setTimeout(function(){ btn.classList.remove('spinning'); }, 600);
+        });
+      });
     }
   });
 
-  /* Next: start a blank order */
-  document.getElementById('nextBtn').addEventListener('click', function(){
-    window.location.href = 'place-order.html';
+  selectAllCheck.addEventListener('change', function(){
+    Array.prototype.slice.call(invoicesTbody.querySelectorAll('.row-select')).forEach(function(cb){
+      cb.checked = selectAllCheck.checked;
+      cb.closest('tr').classList.toggle('selected', selectAllCheck.checked);
+    });
+  });
+  invoicesTbody.addEventListener('change', function(e){
+    if(e.target.classList.contains('row-select')) e.target.closest('tr').classList.toggle('selected', e.target.checked);
   });
 
-  /* Cancel: back to previous screen */
-  document.getElementById('cancelBtn').addEventListener('click', function(){
-    if(window.history.length > 1){
-      window.history.back();
-    } else {
-      window.location.href = 'place-order.html';
-    }
+  [creditCheck, fromDateInput, toDateInput].forEach(function(el){
+    el.addEventListener('change', function(){ invoicesDT.render(); });
+  });
+  dealerFilter.addEventListener('change', function(){ invoicesDT.render(); });
+  statusFilter.addEventListener('change', function(){ invoicesDT.render(); });
+
+  document.getElementById('bulkApplyBtn').addEventListener('click', function(){
+    var selected = invoicesTbody.querySelectorAll('.row-select:checked').length;
+    var action = document.getElementById('bulkActionSelect').value;
+    if(!action || !selected) return;
+    this.textContent = 'Applied ✓';
+    var self = this;
+    setTimeout(function(){ self.textContent = 'Apply'; }, 1200);
   });
 })();
 </script>
