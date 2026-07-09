@@ -419,21 +419,44 @@
     color:#b9b6ab;
     background:#fbfaf7;
   }
-  .select .chevron{width:14px;height:14px;color:#8c8878;flex:0 0 14px;pointer-events:none;}
+  .select .chevron{width:14px;height:14px;color:#8c8878;flex:0 0 14px;pointer-events:none;transition:transform .15s ease;}
+  .select.open .chevron{transform:rotate(180deg);}
+  /* Real <select> stays in the DOM as the data source (so change events / recalculation
+     keep working) but is visually hidden — the custom trigger + panel below is what renders. */
   .select select.field-select{
-    appearance:none;
-    -webkit-appearance:none;
-    border:none;
-    outline:none;
-    background:transparent;
-    font-size:14px;
-    color:#4a473c;
-    width:100%;
-    height:100%;
-    font-family:inherit;
-    cursor:pointer;
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:0;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    border:0;
+    opacity:0;
   }
-  .select.disabled select.field-select{color:#b9b6ab;cursor:not-allowed;}
+  .select-trigger{
+    flex:1;
+    min-width:0;
+    height:100%;
+    border:none;
+    background:none;
+    padding:0;
+    margin:0;
+    text-align:left;
+    font:inherit;
+    color:#4a473c;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+  }
+  .select-trigger:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:4px;}
+  .select.disabled .select-trigger{color:#b9b6ab;cursor:not-allowed;}
+  .select-display{
+    width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
   .select-clear{
     display:none;
     align-items:center;
@@ -447,12 +470,40 @@
     cursor:pointer;
     flex:0 0 16px;
     padding:0;
-    font-size:11px;
-    line-height:1;
+    line-height:0;
   }
+  .select-clear .icon{width:8px;height:8px;display:block;}
   .select-clear:hover{background:var(--red);color:#fff;}
   .select.has-value .select-clear{display:flex;}
   .select.disabled .select-clear{display:none !important;}
+  .select-options-panel{
+    position:absolute;
+    top:calc(100% + 6px);
+    left:0;
+    right:0;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:8px;
+    box-shadow:0 12px 28px rgba(41,50,36,.14);
+    padding:6px;
+    max-height:248px;
+    overflow-y:auto;
+    z-index:40;
+  }
+  .select-options-panel[hidden]{display:none;}
+  .select-option{
+    padding:9px 12px;
+    border-radius:6px;
+    font-size:14px;
+    font-family:inherit;
+    color:#4a473c;
+    cursor:pointer;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .select-option:hover{background:var(--sidebar-bg);}
+  .select-option.selected{background:var(--green-pale-bg);color:var(--green);font-weight:600;}
   input.text-input{
     border:none;
     outline:none;
@@ -1805,28 +1856,90 @@
     if(e.key === 'Escape'){ userMenu.hidden = true; userMenuBtn.setAttribute('aria-expanded', 'false'); }
   });
 
-  /* ---------------- Clearable selects (reset-to-default "x") ---------------- */
-  function ensureClearButtons(root){
-    (root || document).querySelectorAll('.select').forEach(function(wrap){
-      if(wrap.querySelector('.select-clear')) return;
-      var select = wrap.querySelector('select.field-select');
-      if(!select) return;
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'select-clear';
-      btn.setAttribute('aria-label', 'Reset selection');
-      btn.textContent = '×';
-      var chevron = wrap.querySelector('.chevron');
-      wrap.insertBefore(btn, chevron || null);
-    });
+  /* ---------------- Custom select dropdowns ---------------- */
+  /* Native <select> stays in the DOM as the single source of truth (so every existing
+     change-listener / recalculation keeps working unmodified) but is visually hidden.
+     A custom trigger + options panel — built from that same <select>'s <option> list —
+     renders instead, so the popup always matches our field width, fonts, and colors. */
+  var CLEAR_ICON_SVG = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+  var openPanel = null;
+
+  function closeOpenPanel(){
+    if(!openPanel) return;
+    openPanel.panel.hidden = true;
+    openPanel.wrap.classList.remove('open');
+    openPanel = null;
   }
-  function refreshSelectState(select){
+
+  function syncSelectDisplay(select){
     var wrap = select.closest('.select');
     if(!wrap) return;
+    var display = wrap.querySelector('.select-display');
+    if(display) display.textContent = select.selectedOptions[0] ? select.selectedOptions[0].textContent : '';
     wrap.classList.toggle('has-value', select.selectedIndex > 0);
+    var panel = wrap.querySelector('.select-options-panel');
+    if(panel){
+      panel.querySelectorAll('.select-option').forEach(function(opt, i){
+        opt.classList.toggle('selected', i === select.selectedIndex);
+      });
+    }
   }
-  function refreshAllSelectStates(root){
-    (root || document).querySelectorAll('select.field-select').forEach(refreshSelectState);
+
+  function enhanceSelects(root){
+    (root || document).querySelectorAll('.select').forEach(function(wrap){
+      var select = wrap.querySelector('select.field-select');
+      if(!select || wrap.querySelector('.select-trigger')) return;
+
+      var trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'select-trigger';
+      var display = document.createElement('span');
+      display.className = 'select-display';
+      trigger.appendChild(display);
+      wrap.insertBefore(trigger, select);
+
+      var clearBtn = document.createElement('button');
+      clearBtn.type = 'button';
+      clearBtn.className = 'select-clear';
+      clearBtn.setAttribute('aria-label', 'Reset selection');
+      clearBtn.innerHTML = CLEAR_ICON_SVG;
+      var chevron = wrap.querySelector('.chevron');
+      wrap.insertBefore(clearBtn, chevron || null);
+
+      var panel = document.createElement('div');
+      panel.className = 'select-options-panel';
+      panel.hidden = true;
+      Array.prototype.forEach.call(select.options, function(opt, i){
+        var row = document.createElement('div');
+        row.className = 'select-option';
+        row.textContent = opt.textContent;
+        row.dataset.index = i;
+        panel.appendChild(row);
+      });
+      wrap.appendChild(panel);
+
+      trigger.addEventListener('click', function(e){
+        e.stopPropagation();
+        if(select.disabled) return;
+        if(openPanel && openPanel.panel === panel){ closeOpenPanel(); return; }
+        closeOpenPanel();
+        panel.hidden = false;
+        wrap.classList.add('open');
+        openPanel = { panel: panel, wrap: wrap };
+      });
+
+      panel.addEventListener('click', function(e){
+        e.stopPropagation();
+        var row = e.target.closest('.select-option');
+        if(!row) return;
+        select.selectedIndex = parseInt(row.dataset.index, 10);
+        syncSelectDisplay(select);
+        closeOpenPanel();
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+
+      syncSelectDisplay(select);
+    });
   }
 
   document.addEventListener('click', function(e){
@@ -1836,9 +1949,14 @@
     var select = wrap.querySelector('select.field-select');
     if(select && !select.disabled){
       select.selectedIndex = 0;
-      refreshSelectState(select);
+      syncSelectDisplay(select);
       select.dispatchEvent(new Event('change', { bubbles: true }));
     }
+  });
+
+  document.addEventListener('click', function(){ closeOpenPanel(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeOpenPanel();
   });
 
   /* ---------------- Remark toggle ---------------- */
@@ -1992,8 +2110,7 @@
     wrapper.querySelectorAll('[data-guarded="true"]').forEach(function(btn){
       btn.addEventListener('click', function(){ shake(this); });
     });
-    ensureClearButtons(wrapper);
-    refreshAllSelectStates(wrapper);
+    enhanceSelects(wrapper);
 
     recalcSummary();
   });
@@ -2057,7 +2174,7 @@
   });
 
   document.addEventListener('change', function(e){
-    if(e.target.matches('select.field-select')) refreshSelectState(e.target);
+    if(e.target.matches('select.field-select')) syncSelectDisplay(e.target);
     if(e.target.matches('[data-role="product"], [data-role="leg"], [data-role="fabricCollection"], [data-role="fabricName"], [data-role="fabricColor"], [data-role="collection"], [data-role="model"], [data-role="modelVariant"], [data-role="qty"], [data-role="custom-desc"], [data-role="custom-qty"], [data-role="custom-price"], [data-role="discount-amount"], [data-role="discount-reason"]')){
       recalcSummary();
     }
@@ -2312,8 +2429,7 @@
   });
 
   /* ---------------- Init ---------------- */
-  ensureClearButtons();
-  refreshAllSelectStates();
+  enhanceSelects();
   updatePriceModeLabels();
   updateDeliveryState();
   recalcSummary();
