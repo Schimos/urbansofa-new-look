@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<title>UrbanSofa &mdash; Draft Invoices</title>
+<title>UrbanSofa &mdash; Quotes</title>
 <style>
   :root{
     --sidebar-bg:#f0ebe3;
@@ -673,6 +673,8 @@
   .status-badge.status-paid{background:var(--green-pale-bg);color:var(--green);}
   .status-badge.status-credit{background:#fbe7e5;color:var(--red);}
   .status-badge.status-active{background:var(--green-pale-bg);color:var(--green);}
+  .status-badge.status-expired{background:#fbe7e5;color:var(--red);}
+  .status-badge.status-expiringsoon{background:var(--tan-pale-bg);color:var(--tan);}
   .status-badge.status-create{background:#eef2f7;color:#5d6481;}
   .status-badge.status-approve{background:var(--green-pale-bg);color:var(--green);}
   .status-badge.status-edit{background:var(--tan-pale-bg);color:var(--tan);}
@@ -729,8 +731,8 @@
   <div class="main-wrap">
     <header class="topbar">
       <div class="breadcrumb">
-        <span class="muted">Invoices</span>
-        <span class="current">Draft Invoices</span>
+        <span class="muted">Orders</span>
+        <span class="current">Quotes</span>
       </div>
       <div class="topbar-right">
         <div class="exact-status">
@@ -769,7 +771,7 @@
     <div class="content-area">
       <main class="dt-main">
 
-        <h1 class="dt-page-title">Draft Invoices</h1>
+        <h1 class="dt-page-title">Quotes</h1>
 
         <div class="dt-card">
           <div class="dt-card-header"><h2>Overview</h2></div>
@@ -791,35 +793,32 @@
               </button>
             </div>
             <div class="dt-spacer"></div>
-            <button type="button" class="dt-add-btn" id="generateBtn">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-              Generate
-            </button>
-            <div class="dt-search">
-              <label for="searchInput">Search:</label>
-              <input type="text" id="searchInput" placeholder="Search draft invoices&hellip;">
+            <div class="dt-date-range">
+              <span>From</span>
+              <input type="date" id="fromDate">
+              <span>To</span>
+              <input type="date" id="toDate">
             </div>
           </div>
 
           <div class="dt-table-wrap">
-            <table class="dt-table" id="draftInvoicesTable">
+            <table class="dt-table" id="quotesTable">
               <thead>
                 <tr>
-                  <th class="sortable" data-sort="date">Date</th>
-                  <th class="sortable" data-sort="draftNumber">Draft Number</th>
-                  <th class="sortable" data-sort="dealer">Dealer</th>
-                  <th class="sortable" data-sort="amountInc">Amount inc.</th>
-                  <th class="sortable" data-sort="amountEx">Amount ex.</th>
-                  <th class="sortable" data-sort="type">Type</th>
+                  <th class="sortable" data-sort="number">Quote number</th>
+                  <th class="sortable" data-sort="dateSort">Date</th>
+                  <th class="sortable" data-sort="reference">Reference</th>
+                  <th class="sortable" data-sort="total">Total costs</th>
+                  <th class="sortable" data-sort="remaining">Remaining time</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="draftInvoicesBody"></tbody>
+              <tbody id="quotesBody"></tbody>
             </table>
           </div>
 
           <div class="dt-pagination">
-            <span><strong id="fromCount">1</strong> To <strong id="toCount">8</strong> - <strong id="totalCount">8</strong> Total items</span>
+            <span><strong id="fromCount">1</strong> To <strong id="toCount">16</strong> - <strong id="totalCount">16</strong> Total items</span>
             <div class="page-nav">
               <button type="button" id="prevPageBtn" aria-label="Previous page">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -864,9 +863,9 @@
 
   var NAV_DATA = [
     { label:'Dashboard', icon:'dashboard', href:'dashboard.html' },
-    { label:'Orders', icon:'orders', children:[
+    { label:'Orders', icon:'orders', open:true, children:[
       { label:'Orders', href:'orders-overview.html' },
-      { label:'Quotes', href:'quotes-overview.html' },
+      { label:'Quotes', href:'quotes-overview.html', active:true },
       { label:'Packaging label', href:'packaging-label.html' },
       { label:'Internal packaging label', href:'internal-packaging-label.html' }
     ]},
@@ -909,11 +908,11 @@
       { label:'Exact Retries', href:'#', badge:{text:'117', color:'green'} },
       { label:'Exact CRM updates', href:'#', badge:{text:'1', color:'green'} }
     ]},
-    { label:'Invoices', icon:'invoices', badge:{text:'8', color:'green'}, open:true, children:[
+    { label:'Invoices', icon:'invoices', badge:{text:'8', color:'green'}, children:[
       { label:'Invoices', href:'invoices.html' },
-      { label:'Draft Invoices', href:'draft-invoices.html', active:true },
+      { label:'Draft Invoices', href:'draft-invoices.html' },
       { label:'Invoice layout', href:'invoice-layout.html' },
-      { label:'Draft Invoice Logs', href:'draft-invoice-logs.html' },
+      { label:'Draft Invoice Logs', href:'draft-invoice-logs.html' }
     ]},
     { label:'Downloads', icon:'downloads', children:[
       { label:'Downloads overview', href:'#' },
@@ -1229,11 +1228,13 @@
       if(opts.afterRender) opts.afterRender(pageRows);
     }
 
-    opts.searchInput.addEventListener('input', function(){
-      state.query = this.value.trim().toLowerCase();
-      state.page = 1;
-      render();
-    });
+    if(opts.searchInput){
+      opts.searchInput.addEventListener('input', function(){
+        state.query = this.value.trim().toLowerCase();
+        state.page = 1;
+        render();
+      });
+    }
     opts.pageSizeSelect.addEventListener('change', function(){
       state.pageSize = Number(this.value);
       state.page = 1;
@@ -1273,39 +1274,97 @@
     return '&euro; ' + Number(n).toLocaleString('nl-NL', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
 
-  /* ---------------- Draft Invoices data + table ---------------- */
-  var DRAFT_INVOICES = [
-    { date:'2026-05-21', draftNumber:'80', dealer:'UrbanSofa test account', amountInc:338.80, amountEx:280.00, type:'custom' },
-    { date:'2026-05-21', draftNumber:'79', dealer:'UrbanSofa test account', amountInc:338.80, amountEx:280.00, type:'custom' },
-    { date:'2026-05-21', draftNumber:'78', dealer:'UrbanSofa test account', amountInc:304.92, amountEx:252.00, type:'custom' },
-    { date:'2026-05-21', draftNumber:'77', dealer:'UrbanSofa test account', amountInc:104.06, amountEx:86.00, type:'custom' },
-    { date:'2026-05-20', draftNumber:'75', dealer:'UrbanSofa test account', amountInc:174.24, amountEx:144.00, type:'custom' },
-    { date:'2026-05-19', draftNumber:'70', dealer:'UrbanSofa test account', amountInc:3.63, amountEx:3.00, type:'credit' },
-    { date:'2026-05-14', draftNumber:'67', dealer:'WoontrendsXL', amountInc:306.13, amountEx:253.00, type:'custom' },
-    { date:'2026-05-14', draftNumber:'66', dealer:'WoontrendsXL', amountInc:159.72, amountEx:132.00, type:'custom' }
+  /* ---------------- Quotes data + table ---------------- */
+  var QUOTES = [
+    { number:'Offerte.998.3149', date:'05-02-2026', reference:'Test', dealer:'UrbanSofa test account' },
+    { number:'Offerte.998.3150', date:'15-01-2026', reference:'Oude offerte test', dealer:'UrbanSofa test account' },
+    { number:'Offerte.998.3151', date:'10-03-2026', reference:'Fam. Groen bank en fauteuil', dealer:'WoontrendsXL' },
+    { number:'Offerte.998.3152', date:'22-04-2026', reference:'Dhr. Mulder eethoek', dealer:'Wooden Planet' },
+    { number:'Offerte.998.3153', date:'30-05-2026', reference:'Com: Kantoor inrichting', dealer:'Xander Home' },
+    { number:'Offerte.998.3154', date:'05-06-2026', reference:'Mevr. Hendriks slaapkamer', dealer:'Tiger Touch' },
+    { number:'Offerte.998.3155', date:'28-06-2026', reference:'Fam. de Boer terrasmeubilair', dealer:'WoontrendsXL' },
+    { number:'Offerte.998.3201', date:'20-06-2026', reference:'Fam. Jansen woonkamer', dealer:'WoontrendsXL' },
+    { number:'Offerte.998.3202', date:'25-06-2026', reference:'Dhr. de Vries', dealer:'Wooden Planet' },
+    { number:'Offerte.998.3203', date:'01-07-2026', reference:'Mevr. Bakker eetkamer', dealer:'Tiger Touch' },
+    { number:'Offerte.998.3204', date:'03-07-2026', reference:'Com: Fam. Willems', dealer:'WoontrendsXL' },
+    { number:'Offerte.998.3205', date:'05-07-2026', reference:'Xander Home restock quote', dealer:'Xander Home' },
+    { number:'Offerte.998.3206', date:'06-07-2026', reference:'Dhr. Smit terras set', dealer:'WoontrendsXL' },
+    { number:'Offerte.998.3207', date:'07-07-2026', reference:'Fam. Peters keukenstoelen', dealer:'UrbanSofa test account' },
+    { number:'Offerte.998.3208', date:'08-07-2026', reference:'Mevr. Visser bank', dealer:'Wooden Planet' },
+    { number:'Offerte.998.3209', date:'09-07-2026', reference:'Dhr en Mevr. Klaassen', dealer:'Tiger Touch' }
   ];
 
-  var draftInvoicesTbody = document.getElementById('draftInvoicesBody');
+  /* Same generator inputs as detail-view.html, so the total shown here always
+     matches the total computed on the quote's own detail page. */
+  var PRODUCTS = [
+    { price:698, variants:[{ total:null }] },
+    { price:548, variants:[{ total:26.25 }, { total:75 }] },
+    { price:1240, variants:[{ total:null }] },
+    { price:890, variants:[{ total:null }] },
+    { price:249, variants:[{ total:null }] },
+    { price:765, variants:[{ total:null }, { total:90 }] }
+  ];
+  function hashIndex(str, mod){
+    var h = 0;
+    for(var i = 0; i < str.length; i++){ h = (h * 31 + str.charCodeAt(i)) >>> 0; }
+    return h % mod;
+  }
+  function computeQuoteTotal(number){
+    var idx = hashIndex(number, 997);
+    var itemCount = 1 + (idx % 2);
+    var subtotal = 0;
+    for(var i = 0; i < itemCount; i++){
+      var p = PRODUCTS[(idx + i) % PRODUCTS.length];
+      subtotal += p.price;
+      p.variants.forEach(function(v){ if(v.total) subtotal += v.total; });
+    }
+    return subtotal * 1.21;
+  }
 
-  function draftInvoiceRowHTML(row){
+  function parseDMY(d){
+    var parts = d.split('-');
+    return new Date(parts[2], parts[1] - 1, parts[0]);
+  }
+  function remainingInfo(dateStr){
+    var quoteDate = parseDMY(dateStr);
+    var validUntil = new Date(quoteDate);
+    validUntil.setDate(validUntil.getDate() + 30);
+    var now = new Date();
+    var daysLeft = Math.ceil((validUntil - now) / 86400000);
+    if(daysLeft < 0) return { label: 'Expired', cls: 'status-expired' };
+    if(daysLeft <= 5) return { label: 'Expiring soon', cls: 'status-expiringsoon' };
+    return { label: 'Active', cls: 'status-active' };
+  }
+
+  QUOTES.forEach(function(q){
+    q.dateSort = parseDMY(q.date).getTime();
+    q.total = computeQuoteTotal(q.number);
+  });
+
+  var quotesTbody = document.getElementById('quotesBody');
+  var fromDateInput = document.getElementById('fromDate');
+  var toDateInput = document.getElementById('toDate');
+
+  function quoteRowHTML(q){
+    var remaining = remainingInfo(q.date);
     return '<tr>' +
-      '<td>' + row.date.split('-').reverse().join('-') + '</td>' +
-      '<td>' + row.draftNumber + '</td>' +
-      '<td>' + row.dealer + '</td>' +
-      '<td class="dt-amount">' + fmtCurrency(row.amountInc) + '</td>' +
-      '<td class="dt-amount">' + fmtCurrency(row.amountEx) + '</td>' +
-      '<td>' + row.type + '</td>' +
+      '<td><a class="dt-link" href="detail-view.html?type=quote&id=' + encodeURIComponent(q.number) + '">' + q.number + '</a></td>' +
+      '<td>' + q.date + '</td>' +
+      '<td>' + q.reference + '</td>' +
+      '<td class="dt-amount">' + fmtCurrency(q.total) + '</td>' +
+      '<td><span class="status-badge ' + remaining.cls + '">' + remaining.label + '</span></td>' +
       '<td class="row-actions">' +
-        '<button type="button" class="row-action-btn" title="View"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>' +
+        '<button type="button" class="row-action-btn" data-action="assign" title="Assign"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 11 2 2 4-4"/></svg></button>' +
+        '<a class="row-action-btn" href="detail-view.html?type=quote&id=' + encodeURIComponent(q.number) + '" title="View ex"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></a>' +
+        '<button type="button" class="row-action-btn" data-action="cancel" data-number="' + q.number + '" title="Cancel"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
       '</td>' +
     '</tr>';
   }
 
-  var draftInvoicesDT = initDataTable({
-    data: DRAFT_INVOICES,
-    colCount: 7,
-    tbody: draftInvoicesTbody,
-    searchInput: document.getElementById('searchInput'),
+  var quotesDT = initDataTable({
+    data: QUOTES,
+    colCount: 6,
+    tbody: quotesTbody,
     pageSizeSelect: document.getElementById('pageSizeSelect'),
     refreshBtn: document.getElementById('refreshBtn'),
     prevBtn: document.getElementById('prevPageBtn'),
@@ -1313,25 +1372,40 @@
     fromEl: document.getElementById('fromCount'),
     toEl: document.getElementById('toCount'),
     totalEl: document.getElementById('totalCount'),
-    headerEls: Array.prototype.slice.call(document.querySelectorAll('#draftInvoicesTable thead th.sortable')),
-    filterFn: function(row, query){
-      if(!query) return true;
-      return (row.draftNumber + ' ' + row.dealer + ' ' + row.type).toLowerCase().indexOf(query) !== -1;
+    headerEls: Array.prototype.slice.call(document.querySelectorAll('#quotesTable thead th.sortable')),
+    filterFn: function(q, query){
+      if(fromDateInput.value && q.dateSort < new Date(fromDateInput.value).getTime()) return false;
+      if(toDateInput.value && q.dateSort > new Date(toDateInput.value).getTime()) return false;
+      return true;
     },
-    sortValue: function(row, key){
-      if(key === 'amountInc' || key === 'amountEx') return row[key];
-      if(key === 'draftNumber') return Number(row.draftNumber);
-      return String(row[key]).toLowerCase();
+    sortValue: function(q, key){
+      if(key === 'total' || key === 'dateSort') return q[key];
+      if(key === 'remaining') return remainingInfo(q.date).label;
+      return String(q[key]).toLowerCase();
     },
-    renderRow: function(row){ return draftInvoiceRowHTML(row); }
+    renderRow: function(q){ return quoteRowHTML(q); },
+    afterRender: function(){
+      Array.prototype.slice.call(quotesTbody.querySelectorAll('[data-action="assign"]')).forEach(function(btn){
+        btn.addEventListener('click', function(){ window.alert('Assigned to Bugloos Team.'); });
+      });
+      Array.prototype.slice.call(quotesTbody.querySelectorAll('[data-action="cancel"]')).forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var number = btn.getAttribute('data-number');
+          if(window.confirm('Cancel quote ' + number + '?')){
+            var q = QUOTES.filter(function(x){ return x.number === number; })[0];
+            if(q){
+              var i = QUOTES.indexOf(q);
+              QUOTES.splice(i, 1);
+              quotesDT.render();
+            }
+          }
+        });
+      });
+    }
   });
 
-  document.getElementById('generateBtn').addEventListener('click', function(){
-    this.textContent = 'Generated';
-    var self = this;
-    setTimeout(function(){
-      self.innerHTML = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Generate';
-    }, 1200);
+  [fromDateInput, toDateInput].forEach(function(el){
+    el.addEventListener('change', function(){ quotesDT.render(); });
   });
 })();
 </script>

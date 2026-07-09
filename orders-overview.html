@@ -1586,14 +1586,6 @@
   .page-nav button:disabled{opacity:.4;cursor:not-allowed;}
   .page-nav button .icon{width:12px;height:12px;}
   .no-results-row td{text-align:center;color:var(--text-muted);padding:30px !important;}
-
-  /* View order modal (reuse Order Placed modal look) */
-  .view-modal-card{max-width:480px;text-align:left;}
-  .view-modal-card h2{font-size:19px;margin-bottom:18px;}
-  .view-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px;}
-  .view-row:last-child{border-bottom:none;}
-  .view-row .lbl{color:var(--text-muted);}
-  .view-row .val{font-weight:600;color:var(--text-dark);}
 </style>
 </head>
 <body>
@@ -1821,15 +1813,6 @@
 
 </div>
 
-<!-- View order modal -->
-<div class="modal-overlay" id="viewModalOverlay" hidden>
-  <div class="modal-card view-modal-card">
-    <h2>Order details</h2>
-    <div id="viewModalBody"></div>
-    <button type="button" class="done-btn" id="viewModalCloseBtn" style="margin-top:20px;">Close</button>
-  </div>
-</div>
-
 <script>
 (function(){
   'use strict';
@@ -1855,9 +1838,9 @@
     { label:'Dashboard', icon:'dashboard', href:'dashboard.html' },
     { label:'Orders', icon:'orders', open:true, children:[
       { label:'Orders', href:'orders-overview.html', active:true },
-      { label:'Quotes', href:'#' },
-      { label:'Packaging label', href:'#' },
-      { label:'Internal packaging label', href:'#' }
+      { label:'Quotes', href:'quotes-overview.html' },
+      { label:'Packaging label', href:'packaging-label.html' },
+      { label:'Internal packaging label', href:'internal-packaging-label.html' }
     ]},
     { label:'Collections', icon:'collections', badge:{text:'5', color:'green'}, children:[
       { label:'Collection overview', href:'#' },
@@ -2558,34 +2541,18 @@
   });
 
   /* Row actions */
-  var viewOverlay = document.getElementById('viewModalOverlay');
   document.getElementById('ordersTableBody').addEventListener('click', function(e){
     var btn = e.target.closest('.row-action-btn');
     if(!btn) return;
     var action = btn.dataset.action;
     if(action === 'view'){
-      var number = btn.dataset.number;
-      var order = ORDERS.filter(function(o){ return o.number === number; })[0];
-      if(!order) return;
-      document.getElementById('viewModalBody').innerHTML =
-        '<div class="view-row"><span class="lbl">Order number</span><span class="val">' + order.number + '</span></div>' +
-        '<div class="view-row"><span class="lbl">Reference</span><span class="val">' + order.reference + '</span></div>' +
-        '<div class="view-row"><span class="lbl">Dealer</span><span class="val">' + order.dealer + '</span></div>' +
-        '<div class="view-row"><span class="lbl">Supplier</span><span class="val">' + order.supplier + '</span></div>' +
-        '<div class="view-row"><span class="lbl">Delivery week</span><span class="val">' + (order.deliveryWeek || '&mdash;') + '</span></div>' +
-        '<div class="view-row"><span class="lbl">Status</span><span class="val">' + order.status + '</span></div>';
-      viewOverlay.hidden = false;
+      window.location.href = 'detail-view.html?type=order&id=' + encodeURIComponent(btn.dataset.number);
     } else if(action === 'edit'){
       window.location.href = 'place-order.html';
     } else if(action === 'sync'){
       btn.classList.add('spinning');
       window.setTimeout(function(){ btn.classList.remove('spinning'); }, 700);
     }
-  });
-  document.getElementById('viewModalCloseBtn').addEventListener('click', function(){ viewOverlay.hidden = true; });
-  viewOverlay.addEventListener('click', function(e){ if(e.target === viewOverlay) viewOverlay.hidden = true; });
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && !viewOverlay.hidden) viewOverlay.hidden = true;
   });
 
   enhanceSelects();
