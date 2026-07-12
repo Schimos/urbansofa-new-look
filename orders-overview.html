@@ -18,6 +18,9 @@
     --tan:#b08a3e;
     --tan-pale-bg:#f2e9d3;
     --tan-line:#c9a860;
+    --primary:#b08a3e;
+    --primary-dark:#8f6f30;
+    --primary-pale-bg:#f2e9d3;
     --red:#e2544c;
     --yellow-badge:#eab445;
     --border:#e3e0d8;
@@ -434,7 +437,7 @@
     font-size:12px;
     font-weight:700;
   }
-  .step-circle.done{background:var(--green);}
+  .step-circle.done{background:var(--primary);}
   .step-circle.progress{background:var(--tan);}
   .step-circle .icon{width:14px;height:14px;}
   .pill{
@@ -444,7 +447,7 @@
     font-weight:700;
     white-space:nowrap;
   }
-  .pill.done{background:var(--green-pale-bg);color:var(--green);}
+  .pill.done{background:var(--primary-pale-bg);color:var(--primary);}
   .pill.progress{background:var(--tan-pale-bg);color:var(--tan);}
   .step-label{
     color:var(--text-muted);
@@ -455,7 +458,7 @@
     flex:1;
     height:2px;
     border-radius:2px;
-    background:var(--green);
+    background:var(--primary);
   }
   .step-line.split{
     background:linear-gradient(to right, var(--tan-line) 0 38%, #ece7d9 38% 100%);
@@ -527,7 +530,7 @@
     display:flex;
     align-items:center;
   }
-  .select-trigger:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:4px;}
+  .select-trigger:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:4px;}
   .select.disabled .select-trigger{color:#b9b6ab;cursor:not-allowed;}
   .select-display{
     width:100%;
@@ -581,7 +584,7 @@
     text-overflow:ellipsis;
   }
   .select-option:hover{background:var(--sidebar-bg);}
-  .select-option.selected{background:var(--green-pale-bg);color:var(--green);font-weight:600;}
+  .select-option.selected{background:var(--primary-pale-bg);color:var(--primary);font-weight:600;}
   input.text-input{
     border:none;
     outline:none;
@@ -612,7 +615,7 @@
     color:#a9a599;
   }
   .stepper-btns .icon{width:10px;height:10px;cursor:pointer;}
-  .stepper-btns .icon:hover{color:var(--green);}
+  .stepper-btns .icon:hover{color:var(--primary);}
   .input.disabled .stepper-btns .icon{cursor:not-allowed;}
   .input.disabled .stepper-btns .icon:hover{color:#a9a599;}
 
@@ -628,7 +631,7 @@
     user-select:none;
   }
   .remark-row input[type="checkbox"]{
-    width:16px;height:16px;accent-color:var(--green);cursor:pointer;
+    width:16px;height:16px;accent-color:var(--primary);cursor:pointer;
   }
   .remark-textarea-wrap{display:none;margin:-4px 0 22px;}
   .remark-textarea-wrap.open{display:block;}
@@ -680,7 +683,7 @@
   }
   .icon-btn .icon{width:12px;height:12px;}
   .icon-btn.remove{background:var(--red);}
-  .icon-btn.add{background:var(--green);}
+  .icon-btn.add{background:var(--primary);}
   @keyframes shake{
     10%,90%{transform:translateX(-1px);}
     20%,80%{transform:translateX(2px);}
@@ -769,7 +772,7 @@
     align-items:center;
     justify-content:center;
     gap:8px;
-    color:var(--green);
+    color:var(--primary);
     font-weight:600;
     font-size:14px;
     background:transparent;
@@ -828,7 +831,7 @@
     flex:0 0 19px;
     transition:background .15s ease;
   }
-  .requested-date.checked .check-circle{background:var(--green);}
+  .requested-date.checked .check-circle{background:var(--primary);}
   .requested-date .check-circle .icon{width:11px;height:11px;}
   .partial-order-row{
     display:flex;
@@ -842,7 +845,7 @@
     cursor:pointer;
     user-select:none;
   }
-  .partial-order-row input[type="checkbox"]{width:16px;height:16px;accent-color:var(--green);cursor:pointer;}
+  .partial-order-row input[type="checkbox"]{width:16px;height:16px;accent-color:var(--primary);cursor:pointer;}
 
   /* ---------------- Summary panel ---------------- */
   .summary-panel{
@@ -875,7 +878,7 @@
     flex-wrap:wrap;
   }
   .price-radio-group label{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;}
-  .price-radio-group input[type="radio"]{accent-color:var(--green);width:14px;height:14px;cursor:pointer;}
+  .price-radio-group input[type="radio"]{accent-color:var(--primary);width:14px;height:14px;cursor:pointer;}
   .price-radio-group .lbl-active{color:var(--text-dark);font-weight:700;}
 
   .summary-line{
@@ -1019,7 +1022,7 @@
     height:44px;
     border-radius:8px;
     border:none;
-    background:var(--green);
+    background:var(--primary);
     color:#fff;
     font-size:14px;
     font-weight:700;
@@ -1029,7 +1032,7 @@
     gap:9px;
     cursor:pointer;
   }
-  .place-order-btn:hover{background:var(--green-dark);}
+  .place-order-btn:hover{background:var(--primary-dark);}
   .place-order-btn:disabled{background:#d8d4c6;color:#fff;cursor:not-allowed;}
   .place-order-btn:disabled:hover{background:#d8d4c6;}
   .place-order-btn .icon{width:16px;height:16px;}
@@ -1052,7 +1055,7 @@
     transition:left .22s ease, right .22s ease;
     z-index:5;
   }
-  .collapse-btn:hover{color:var(--green);}
+  .collapse-btn:hover{color:var(--primary);}
   .collapse-btn.left{left:238px;}
   .collapse-btn.right{right:242px;}
   .collapse-btn .icon{width:13px;height:13px;transition:transform .2s ease;}
@@ -1093,7 +1096,7 @@
     align-items:center;
     justify-content:center;
     margin:0 auto 20px;
-    color:var(--green);
+    color:var(--primary);
   }
   .modal-icon .icon{width:38px;height:38px;}
   .modal-card h2{
@@ -1150,7 +1153,7 @@
     margin-bottom:26px;
   }
   .done-btn{
-    background:var(--green);
+    background:var(--primary);
     color:#fff;
     border:none;
     border-radius:8px;
@@ -1162,7 +1165,7 @@
     gap:8px;
     cursor:pointer;
   }
-  .done-btn:hover{background:var(--green-dark);}
+  .done-btn:hover{background:var(--primary-dark);}
   .done-btn .icon{width:15px;height:15px;}
 
   /* ---------------- Orders overview page ---------------- */
@@ -1177,7 +1180,7 @@
   }
   .overview-title{font-size:22px;font-weight:700;color:var(--text-dark);}
   .add-new-order-btn{
-    background:var(--green);
+    background:var(--primary);
     color:#fff;
     border:none;
     border-radius:8px;
@@ -1191,7 +1194,7 @@
     cursor:pointer;
     text-decoration:none;
   }
-  .add-new-order-btn:hover{background:var(--green-dark);}
+  .add-new-order-btn:hover{background:var(--primary-dark);}
   .add-new-order-btn .icon{width:15px;height:15px;}
 
   .overview-toolbar{
@@ -1222,7 +1225,7 @@
     border-radius:0;
     padding:0 8px 0 16px;
   }
-  .bulk-action-pill .select-trigger{color:var(--green);font-weight:500;}
+  .bulk-action-pill .select-trigger{color:var(--primary);font-weight:500;}
   .bulk-action-pill .select-options-panel{left:0;right:auto;width:202px;}
   .bulk-apply-btn{
     width:36px;
@@ -1230,7 +1233,7 @@
     margin:1px;
     border:none;
     border-radius:7px;
-    background:var(--green);
+    background:var(--primary);
     color:#fff;
     display:flex;
     align-items:center;
@@ -1238,7 +1241,7 @@
     cursor:pointer;
     flex:0 0 36px;
   }
-  .bulk-apply-btn:hover{background:var(--green-dark);}
+  .bulk-apply-btn:hover{background:var(--primary-dark);}
   .bulk-apply-btn .icon{width:16px;height:16px;}
 
   /* Search: collapses to a green icon button, expands into an input on click */
@@ -1247,7 +1250,7 @@
     align-items:center;
     height:36px;
     border-radius:7px;
-    background:var(--green);
+    background:var(--primary);
     overflow:hidden;
     transition:width .2s ease, background .15s ease;
     width:36px;
@@ -1266,7 +1269,7 @@
     justify-content:center;
     cursor:pointer;
   }
-  .search-toggle.expanded .search-toggle-btn{color:var(--green);}
+  .search-toggle.expanded .search-toggle-btn{color:var(--primary);}
   .search-toggle-btn .icon{width:16px;height:16px;}
   .search-toggle input{
     flex:1;
@@ -1290,7 +1293,7 @@
     padding:0 16px;
     border:none;
     border-radius:7px;
-    background:var(--green);
+    background:var(--primary);
     color:#fff;
     font-weight:500;
     font-size:14px;
@@ -1299,7 +1302,7 @@
     align-items:center;
     gap:8px;
   }
-  .filters-btn:hover{background:var(--green-dark);}
+  .filters-btn:hover{background:var(--primary-dark);}
   .filters-btn .icon{width:16px;height:16px;}
   .filters-panel{
     position:absolute;
@@ -1327,7 +1330,7 @@
     cursor:pointer;
     user-select:none;
   }
-  .filters-check-row input{width:15px;height:15px;accent-color:var(--green);cursor:pointer;}
+  .filters-check-row input{width:15px;height:15px;accent-color:var(--primary);cursor:pointer;}
   .filters-actions{display:flex;justify-content:flex-end;gap:10px;}
   .filters-actions button{
     height:36px;
@@ -1340,8 +1343,8 @@
   }
   .filters-actions .clear-btn{background:none;color:var(--text-muted);}
   .filters-actions .clear-btn:hover{color:var(--red);}
-  .filters-actions .apply-filters-btn{background:var(--green);color:#fff;}
-  .filters-actions .apply-filters-btn:hover{background:var(--green-dark);}
+  .filters-actions .apply-filters-btn{background:var(--primary);color:#fff;}
+  .filters-actions .apply-filters-btn:hover{background:var(--primary-dark);}
 
   .toolbar-spacer{flex:1;}
   .icon-only-btn{
@@ -1350,7 +1353,7 @@
     height:36px;
     border-radius:7px;
     border:none;
-    background:var(--green);
+    background:var(--primary);
     color:#fff;
     display:flex;
     align-items:center;
@@ -1358,7 +1361,7 @@
     cursor:pointer;
     flex:0 0 36px;
   }
-  .icon-only-btn:hover{background:var(--green-dark);}
+  .icon-only-btn:hover{background:var(--primary-dark);}
   .icon-only-btn .icon{width:16px;height:16px;}
   .icon-only-btn .active-dot{
     position:absolute;
@@ -1378,10 +1381,10 @@
     gap:6px;
     height:36px;
     padding:0 6px 0 12px;
-    border:1px solid var(--green);
+    border:1px solid var(--primary);
     border-radius:7px;
-    background:var(--green-pale-bg);
-    color:var(--green);
+    background:var(--primary-pale-bg);
+    color:var(--primary);
     font-size:12.5px;
     font-weight:600;
     white-space:nowrap;
@@ -1392,7 +1395,7 @@
     height:20px;
     border:none;
     background:none;
-    color:var(--green);
+    color:var(--primary);
     cursor:pointer;
     display:flex;
     align-items:center;
@@ -1442,7 +1445,7 @@
   .drp-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
   .drp-cal-header span{font-size:14px;font-weight:700;color:var(--text-dark);}
   .drp-nav{width:26px;height:26px;border-radius:6px;border:none;background:none;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;}
-  .drp-nav:hover{background:var(--sidebar-bg);color:var(--green);}
+  .drp-nav:hover{background:var(--sidebar-bg);color:var(--primary);}
   .drp-nav .icon{width:14px;height:14px;}
   .drp-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--text-muted);margin-bottom:4px;}
   .drp-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
@@ -1462,10 +1465,10 @@
   }
   .drp-day.other-month{color:var(--text-light-muted);}
   .drp-day:hover{background:var(--sidebar-bg);}
-  .drp-day.today{font-weight:700;box-shadow:inset 0 0 0 1.5px var(--green);}
-  .drp-day.in-range{background:var(--green-pale-bg);border-radius:0;}
-  .drp-day.range-start, .drp-day.range-end{background:var(--green);color:#fff;font-weight:700;}
-  .drp-day.range-start:hover, .drp-day.range-end:hover{background:var(--green-dark);}
+  .drp-day.today{font-weight:700;box-shadow:inset 0 0 0 1.5px var(--primary);}
+  .drp-day.in-range{background:var(--primary-pale-bg);border-radius:0;}
+  .drp-day.range-start, .drp-day.range-end{background:var(--primary);color:#fff;font-weight:700;}
+  .drp-day.range-start:hover, .drp-day.range-end:hover{background:var(--primary-dark);}
   .drp-day.range-start{border-radius:6px 0 0 6px;}
   .drp-day.range-end{border-radius:0 6px 6px 0;}
   .drp-day.range-start.range-end{border-radius:6px;}
@@ -1475,8 +1478,8 @@
   .drp-footer-actions button{height:32px;padding:0 14px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;border:none;font-family:inherit;}
   .drp-cancel{background:none;color:var(--text-muted);}
   .drp-cancel:hover{color:var(--red);}
-  .drp-apply{background:var(--green);color:#fff;}
-  .drp-apply:hover{background:var(--green-dark);}
+  .drp-apply{background:var(--primary);color:#fff;}
+  .drp-apply:hover{background:var(--primary-dark);}
 
   .table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:10px;}
   table.orders-table{
@@ -1497,9 +1500,9 @@
     user-select:none;
     border-bottom:1px solid var(--border);
   }
-  table.orders-table thead th:hover{color:var(--green);}
+  table.orders-table thead th:hover{color:var(--primary);}
   table.orders-table thead th .sort-icon{width:10px;height:10px;margin-left:5px;opacity:.5;display:inline-block;vertical-align:middle;}
-  table.orders-table thead th.sorted .sort-icon{opacity:1;color:var(--green);}
+  table.orders-table thead th.sorted .sort-icon{opacity:1;color:var(--primary);}
   table.orders-table thead th.checkbox-col{width:36px;cursor:default;}
   table.orders-table tbody td{
     padding:11px 14px;
@@ -1509,12 +1512,12 @@
   }
   table.orders-table tbody tr:hover{background:#faf9f5;}
   table.orders-table tbody tr:last-child td{border-bottom:none;}
-  table.orders-table a.ref-link{color:var(--green);text-decoration:none;font-weight:600;}
+  table.orders-table a.ref-link{color:var(--primary);text-decoration:none;font-weight:600;}
   table.orders-table a.ref-link:hover{text-decoration:underline;}
   .dealer-cell{display:flex;align-items:center;gap:8px;}
   .dealer-dot{width:7px;height:7px;border-radius:50%;flex:0 0 7px;}
   .pl-icon, .invoice-icon{width:15px;height:15px;}
-  .pl-icon.yes, .invoice-icon.yes{color:var(--green);}
+  .pl-icon.yes, .invoice-icon.yes{color:var(--primary);}
   .pl-icon.no, .invoice-icon.no{color:var(--red);}
 
   .status-badge{
@@ -1531,7 +1534,7 @@
   .status-badge.status-new{background:#eef2f7;color:#5d6481;}
   .status-badge.status-delivery{background:var(--tan-pale-bg);color:var(--tan);}
   .status-badge.status-cancelled{background:#fbe7e5;color:var(--red);}
-  .status-badge.status-completed{background:var(--green-pale-bg);color:var(--green);}
+  .status-badge.status-completed{background:var(--primary-pale-bg);color:var(--primary);}
   .status-badge.status-changed{background:#f3e8f7;color:#8a5fae;}
 
   .row-actions{display:flex;align-items:center;gap:8px;}
@@ -1546,8 +1549,9 @@
     align-items:center;
     justify-content:center;
     cursor:pointer;
+    position:relative;
   }
-  .row-action-btn:hover{background:var(--sidebar-bg);color:var(--green);}
+  .row-action-btn:hover{background:var(--sidebar-bg);color:var(--primary);}
   .row-action-btn .icon{width:14px;height:14px;}
   .row-action-btn.spinning .icon{animation:spin .7s linear;}
   @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
@@ -1556,36 +1560,120 @@
     display:flex;
     align-items:center;
     justify-content:flex-end;
-    gap:16px;
+    gap:14px;
     margin-top:18px;
     font-size:13px;
     color:var(--text-muted);
   }
-  .pagination-bar select{
-    height:32px;
-    border:1px solid var(--border);
-    border-radius:6px;
-    padding:0 8px;
+  .pagination-size{display:flex;align-items:center;gap:4px;}
+  .pagination-size select{
+    border:none;
+    background:none;
     font-family:inherit;
     font-size:13px;
+    font-weight:600;
+    color:var(--text-dark);
+    cursor:pointer;
+    appearance:none;
+    -webkit-appearance:none;
+    padding-right:2px;
   }
+  .pagination-size .icon{width:12px;height:12px;color:var(--text-muted);}
+  .pagination-divider{width:1px;height:20px;background:var(--border);flex:0 0 1px;}
   .page-nav{display:flex;align-items:center;gap:8px;}
   .page-nav button{
-    width:28px;
-    height:28px;
-    border-radius:6px;
-    border:1px solid var(--border);
-    background:#fff;
-    color:var(--text-dark);
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    border:none;
+    background:none;
+    color:var(--text-muted);
     cursor:pointer;
     display:flex;
     align-items:center;
     justify-content:center;
   }
-  .page-nav button:hover{background:var(--sidebar-bg);}
-  .page-nav button:disabled{opacity:.4;cursor:not-allowed;}
+  .page-nav button:hover{color:var(--primary);}
+  .page-nav button:disabled{opacity:.35;cursor:not-allowed;}
   .page-nav button .icon{width:12px;height:12px;}
+  .page-number-bubble{
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:var(--primary);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12.5px;
+    font-weight:700;
+  }
   .no-results-row td{text-align:center;color:var(--text-muted);padding:30px !important;}
+
+  /* ---------------- Consistent hover tooltips (matches the rest of the app) ---------------- */
+  .icon-only-btn[title]:hover::after,
+  .row-action-btn[title]:hover::after,
+  .bulk-btn[title]:hover::after{
+    content:attr(title);
+    position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+    background:#293224;color:#fff;font-size:11px;font-weight:500;white-space:nowrap;
+    padding:5px 9px;border-radius:6px;z-index:20;pointer-events:none;
+  }
+
+  /* ---------------- PF column (same pattern as PL) ---------------- */
+  .pf-icon{width:15px;height:15px;}
+  .pf-icon.yes{color:var(--primary);}
+  .pf-icon.no{color:var(--red);}
+
+  /* ---------------- Bulk action bar: appears once 1+ orders are selected ---------------- */
+  .bulk-action-bar{
+    display:none;align-items:center;gap:10px;flex-wrap:wrap;
+    background:var(--primary-pale-bg);border:1px solid var(--tan-line);border-radius:10px;
+    padding:10px 14px;margin-bottom:14px;
+  }
+  .bulk-action-bar.visible{display:flex;}
+  .bulk-count{font-size:13px;font-weight:700;color:var(--text-dark);white-space:nowrap;}
+  .bulk-divider{width:1px;height:22px;background:var(--tan-line);flex:0 0 1px;}
+  .bulk-btn{
+    display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:7px;
+    border:1px solid var(--tan-line);background:#fff;color:var(--text-dark);font-size:12.5px;font-weight:600;
+    cursor:pointer;white-space:nowrap;position:relative;font-family:inherit;
+  }
+  .bulk-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .bulk-btn .icon{width:14px;height:14px;}
+  .bulk-status-wrap{position:relative;}
+  .bulk-clear-btn{
+    margin-left:auto;width:28px;height:28px;border-radius:50%;border:none;background:none;
+    color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 28px;
+  }
+  .bulk-clear-btn:hover{background:#fff;color:var(--red);}
+  .bulk-clear-btn .icon{width:14px;height:14px;}
+
+  /* Reused status dropdown + week-picker components (same pattern as detail-view.html) */
+  .status-edit-panel{
+    position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--border);
+    border-radius:10px;box-shadow:0 12px 28px rgba(41,50,36,.14);padding:6px;min-width:250px;z-index:40;
+  }
+  .status-edit-panel[hidden]{display:none;}
+  .status-option{
+    display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border:none;background:none;
+    border-radius:7px;cursor:pointer;font-size:13px;color:var(--text-dark);text-align:left;font-family:inherit;
+  }
+  .status-option:hover{background:var(--sidebar-bg);}
+  .status-badge.status-onhold{background:#fdf1de;color:#a9700c;}
+  .status-badge.status-freedelivery{background:#fdece0;color:#c05621;}
+  .week-picker-popover{
+    position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--border);
+    border-radius:12px;box-shadow:0 16px 40px rgba(41,50,36,.16);z-index:50;padding:16px;width:280px;
+  }
+  .week-picker-popover[hidden]{display:none;}
+  .wp-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .wp-cal-header span{font-size:14px;font-weight:700;color:var(--text-dark);}
+  .drp-day.in-week{background:var(--primary-pale-bg);}
+  .drp-day.in-week.week-start{border-radius:6px 0 0 6px;}
+  .drp-day.in-week.week-end{border-radius:0 6px 6px 0;}
+  .drp-day.week-selected{background:var(--primary);color:#fff;font-weight:700;}
+  .mwp-trigger{width:100%;cursor:pointer;font:inherit;color:#4a473c;text-align:left;}
 </style>
 </head>
 <body>
@@ -1650,28 +1738,9 @@
 
         <div class="overview-header-row">
           <div class="overview-title">Orders Overview</div>
-          <a class="add-new-order-btn" href="select-template.html">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-            Add new order
-          </a>
         </div>
 
         <div class="overview-toolbar">
-          <div class="bulk-action-pill">
-            <div class="select">
-              <select class="field-select" id="bulkStatusSelect">
-                <option value="">Status</option>
-                <option value="New">New</option>
-                <option value="Delivery">Delivery</option>
-                <option value="Completed">Completed</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
-            </div>
-            <button type="button" class="bulk-apply-btn" id="bulkApplyBtn" title="Apply to selected orders">
-              <svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>
-            </button>
-          </div>
-
           <div class="search-toggle" id="searchToggle">
             <button type="button" class="search-toggle-btn" id="searchToggleBtn" aria-label="Search orders">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
@@ -1686,20 +1755,47 @@
             </button>
             <div class="filters-panel" id="filtersPanel" hidden>
               <div class="filters-grid">
-                <div class="field"><label class="field-label">Invoice NO.</label><div class="input"><input class="text-input" type="text" placeholder="e.g. INV-2026-001"></div></div>
-                <div class="field"><label class="field-label">Packing list NO.</label><div class="input"><input class="text-input" type="text" placeholder="e.g. PL-2026-001"></div></div>
-                <div class="field"><label class="field-label">Total Amount (incl.VAT)</label><div class="input"><input class="text-input" type="number" placeholder="0.00"></div></div>
-                <div class="field"><label class="field-label">Total Amount (ex.VAT)</label><div class="input"><input class="text-input" type="number" placeholder="0.00"></div></div>
-                <div class="field"><label class="field-label">Exact No.</label><div class="input"><input class="text-input" type="text" placeholder="Exact Online reference"></div></div>
-                <div class="field"><label class="field-label">Collection(s)</label>
-                  <div class="select"><select class="field-select"><option>Any collection</option><option>Sofa's</option><option>Tables</option><option>Beds</option></select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+                <div class="field"><label class="field-label">Dealer</label>
+                  <div class="select"><select class="field-select" id="dealerFilterSelect"><option value="">Any dealer</option></select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
                 </div>
-                <div class="field"><label class="field-label">Requested delivery week</label><div class="input"><input class="text-input" type="text" placeholder="Week, year"></div></div>
-                <div class="field"><label class="field-label">Delivery week</label><div class="input"><input class="text-input" type="text" placeholder="Week, year"></div></div>
-                <label class="filters-check-row">
-                  <input type="checkbox" id="partialOrderFilter">
-                  Partial order
-                </label>
+                <div class="field"><label class="field-label">Supplier</label>
+                  <div class="select"><select class="field-select" id="supplierFilterSelect"><option value="">Any supplier</option></select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+                </div>
+                <div class="field" style="position:relative;"><label class="field-label">Delivery week</label>
+                  <button type="button" class="input mwp-trigger" id="mwpTrigger">
+                    <span id="mwpTriggerLabel">Any week</span>
+                    <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <div class="week-picker-popover" id="mwpPopover" hidden>
+                    <div class="wp-cal-header">
+                      <button type="button" class="drp-nav" id="mwpPrevMonth" aria-label="Previous month">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                      </button>
+                      <span id="mwpMonthLabel">July 2026</span>
+                      <button type="button" class="drp-nav" id="mwpNextMonth" aria-label="Next month">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                      </button>
+                    </div>
+                    <div class="drp-weekdays"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
+                    <div class="drp-days" id="mwpDaysGrid"></div>
+                    <div class="drp-footer">
+                      <span class="drp-range-label" id="mwpCountLabel">0 weeks selected</span>
+                      <div class="drp-footer-actions">
+                        <button type="button" class="drp-cancel" id="mwpClearBtn">Clear</button>
+                        <button type="button" class="drp-apply" id="mwpDoneBtn">Done</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field"><label class="field-label">PF</label>
+                  <div class="select"><select class="field-select" id="pfFilterSelect"><option value="">Any</option><option value="yes">Yes</option><option value="no">No</option></select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+                </div>
+                <div class="field"><label class="field-label">PL</label>
+                  <div class="select"><select class="field-select" id="plFilterSelect"><option value="">Any</option><option value="yes">Yes</option><option value="no">No</option></select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+                </div>
+                <div class="field"><label class="field-label">Invoice</label>
+                  <div class="select"><select class="field-select" id="invoiceFilterSelect"><option value="">Any</option><option value="yes">Yes</option><option value="no">No</option></select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+                </div>
               </div>
               <div class="filters-actions">
                 <button type="button" class="clear-btn" id="filtersClearBtn">Clear</button>
@@ -1708,21 +1804,6 @@
             </div>
           </div>
 
-          <div class="toolbar-spacer"></div>
-
-          <div class="date-range-chip" id="dateRangeChip">
-            <span id="dateRangeChipText">Jul 1 &ndash; Jul 14</span>
-            <button type="button" id="dateRangeClearBtn" aria-label="Clear date range">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-            </button>
-          </div>
-
-          <button type="button" class="icon-only-btn" id="exportBtn" title="Export">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/></svg>
-          </button>
-          <button type="button" class="icon-only-btn" id="sendEmailBtn" title="Send email">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-          </button>
           <div class="date-picker-wrap" style="position:relative;">
             <button type="button" class="icon-only-btn" id="dateRangeBtn" title="Filter by order date range">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
@@ -1759,9 +1840,60 @@
               </div>
             </div>
           </div>
+          <div class="date-range-chip" id="dateRangeChip">
+            <span id="dateRangeChipText">Jul 1 &ndash; Jul 14</span>
+            <button type="button" id="dateRangeClearBtn" aria-label="Clear date range">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <div class="toolbar-spacer"></div>
+
+          <button type="button" class="icon-only-btn" id="exportBtn" title="Export">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+          <button type="button" class="icon-only-btn" id="sendEmailBtn" title="Send email">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          </button>
           <a class="icon-only-btn" href="select-template.html" title="Add new order">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
           </a>
+        </div>
+
+        <div class="bulk-action-bar" id="bulkActionBar">
+          <span class="bulk-count" id="bulkCount">0 selected</span>
+          <div class="bulk-divider"></div>
+          <div class="bulk-status-wrap">
+            <button type="button" class="bulk-btn" id="bulkStatusBtn">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2.3"/></svg>
+              Change status
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="status-edit-panel" id="bulkStatusPanel" hidden></div>
+          </div>
+          <button type="button" class="bulk-btn" id="bulkInvoiceBtn" title="Generate invoice">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v16l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3V3Z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+            Generate invoice
+          </button>
+          <button type="button" class="bulk-btn" id="bulkPackingLabelBtn" title="Generate packing label">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8V7l-3-4H6L3 7v1"/><path d="M3 8h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z"/><path d="M10 12h4"/></svg>
+            Generate packing label
+          </button>
+          <button type="button" class="bulk-btn" id="bulkAlertWeekBtn" title="Alert delivery week change">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+            Alert delivery week change
+          </button>
+          <button type="button" class="bulk-btn" id="bulkStickerBtn" title="Generate sticker">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5l-8-3Z"/></svg>
+            Generate sticker
+          </button>
+          <button type="button" class="bulk-btn" id="bulkExportDeliveryBtn" title="Export delivery">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V6a1 1 0 0 1 1-1h9v11"/><path d="M13 9h4l3 4v3h-2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg>
+            Export delivery
+          </button>
+          <button type="button" class="bulk-clear-btn" id="bulkClearBtn" title="Clear selection">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
         </div>
 
         <div class="table-scroll">
@@ -1776,6 +1908,7 @@
                 <th data-sort="supplier">Supplier <svg class="icon sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></th>
                 <th data-sort="deliveryWeek">Delivery week <svg class="icon sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></th>
                 <th>PL</th>
+                <th>PF</th>
                 <th>Invoice</th>
                 <th data-sort="status">Status <svg class="icon sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></th>
                 <th>Actions</th>
@@ -1786,21 +1919,26 @@
         </div>
 
         <div class="pagination-bar">
-          <span>Rows per page</span>
-          <select id="pageSizeSelect">
-            <option value="10">10</option>
-            <option value="25" selected>25</option>
-            <option value="50">50</option>
-          </select>
-          <span id="pageInfo">Page 1 of 1</span>
+          <div class="pagination-size">
+            <select id="pageSizeSelect">
+              <option value="10">10</option>
+              <option value="25" selected>25</option>
+              <option value="50">50</option>
+            </select>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+          <div class="pagination-divider"></div>
+          <span>Page</span>
           <div class="page-nav">
             <button type="button" id="prevPageBtn" aria-label="Previous page">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             </button>
+            <span class="page-number-bubble" id="pageNumberBubble">1</span>
             <button type="button" id="nextPageBtn" aria-label="Next page">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
             </button>
           </div>
+          <span id="pageOfTotal">of 1</span>
         </div>
 
       </main>
@@ -2171,12 +2309,20 @@
   filtersPanel.addEventListener('click', function(e){ e.stopPropagation(); });
   document.addEventListener('click', function(){ filtersPanel.hidden = true; });
   document.getElementById('filtersClearBtn').addEventListener('click', function(){
-    filtersPanel.querySelectorAll('input[type="text"], input[type="number"]').forEach(function(i){ i.value = ''; });
     filtersPanel.querySelectorAll('select.field-select').forEach(function(s){ s.selectedIndex = 0; syncSelectDisplay(s); });
-    document.getElementById('partialOrderFilter').checked = false;
+    mwp.selected = {};
+    mwpTriggerLabel.textContent = 'Any week';
   });
   document.getElementById('filtersApplyBtn').addEventListener('click', function(){
+    state.dealer = dealerFilterSelect.value;
+    state.supplier = supplierFilterSelect.value;
+    state.pf = document.getElementById('pfFilterSelect').value;
+    state.pl = document.getElementById('plFilterSelect').value;
+    state.invoice = document.getElementById('invoiceFilterSelect').value;
+    state.weeks = Object.keys(mwp.selected);
+    state.page = 1;
     filtersPanel.hidden = true;
+    render();
   });
 
   /* ---------------- Date range picker ---------------- */
@@ -2334,14 +2480,103 @@
     render();
   });
 
+  /* ---------------- Multi-select delivery-week picker (filters panel) ---------------- */
+  function mondayOf(d){ var day = (d.getDay() + 6) % 7; return addDays(dOnly(d), -day); }
+  function isoWeekInfo(date){
+    var d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    var dayNum = (d.getUTCDay() + 6) % 7;
+    d.setUTCDate(d.getUTCDate() - dayNum + 3);
+    var firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+    var week = 1 + Math.round(((d - firstThursday) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
+    return { week: week, year: d.getUTCFullYear() };
+  }
+  function weekLabelOf(date){ var info = isoWeekInfo(date); return 'Week ' + info.week + ', ' + info.year; }
+
+  var mwp = { viewMonth: new Date(today.getFullYear(), today.getMonth(), 1), selected: {} };
+  var mwpTrigger = document.getElementById('mwpTrigger');
+  var mwpTriggerLabel = document.getElementById('mwpTriggerLabel');
+  var mwpPopover = document.getElementById('mwpPopover');
+  var mwpMonthLabel = document.getElementById('mwpMonthLabel');
+  var mwpDaysGrid = document.getElementById('mwpDaysGrid');
+  var mwpCountLabel = document.getElementById('mwpCountLabel');
+
+  function renderMwpCalendar(){
+    mwpMonthLabel.textContent = MONTH_LABELS[mwp.viewMonth.getMonth()] + ' ' + mwp.viewMonth.getFullYear();
+    mwpDaysGrid.innerHTML = '';
+    var firstOfMonth = new Date(mwp.viewMonth.getFullYear(), mwp.viewMonth.getMonth(), 1);
+    var startOffset = (firstOfMonth.getDay() + 6) % 7;
+    var gridStart = addDays(firstOfMonth, -startOffset);
+    for(var i = 0; i < 42; i++){
+      var day = addDays(gridStart, i);
+      var weekKey = weekLabelOf(day);
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'drp-day';
+      btn.textContent = day.getDate();
+      if(day.getMonth() !== mwp.viewMonth.getMonth()) btn.classList.add('other-month');
+      if(sameDay(day, today)) btn.classList.add('today');
+      if(i % 7 === 0) btn.classList.add('week-start');
+      if(i % 7 === 6) btn.classList.add('week-end');
+      if(mwp.selected[weekKey]){
+        btn.classList.add('in-week');
+        btn.classList.add('week-selected');
+      }
+      btn.addEventListener('click', (function(weekKey){
+        return function(){
+          if(mwp.selected[weekKey]) delete mwp.selected[weekKey];
+          else mwp.selected[weekKey] = true;
+          renderMwpCalendar();
+          var count = Object.keys(mwp.selected).length;
+          mwpCountLabel.textContent = count + ' week' + (count === 1 ? '' : 's') + ' selected';
+        };
+      })(weekKey));
+      mwpDaysGrid.appendChild(btn);
+    }
+  }
+
+  document.getElementById('mwpPrevMonth').addEventListener('click', function(){
+    mwp.viewMonth = new Date(mwp.viewMonth.getFullYear(), mwp.viewMonth.getMonth() - 1, 1);
+    renderMwpCalendar();
+  });
+  document.getElementById('mwpNextMonth').addEventListener('click', function(){
+    mwp.viewMonth = new Date(mwp.viewMonth.getFullYear(), mwp.viewMonth.getMonth() + 1, 1);
+    renderMwpCalendar();
+  });
+  mwpTrigger.addEventListener('click', function(e){
+    e.stopPropagation();
+    var willOpen = mwpPopover.hidden;
+    mwpPopover.hidden = !willOpen;
+    if(willOpen){
+      renderMwpCalendar();
+      var count = Object.keys(mwp.selected).length;
+      mwpCountLabel.textContent = count + ' week' + (count === 1 ? '' : 's') + ' selected';
+    }
+  });
+  mwpPopover.addEventListener('click', function(e){ e.stopPropagation(); });
+  document.addEventListener('click', function(){ mwpPopover.hidden = true; });
+  document.getElementById('mwpClearBtn').addEventListener('click', function(){
+    mwp.selected = {};
+    renderMwpCalendar();
+    mwpCountLabel.textContent = '0 weeks selected';
+  });
+  document.getElementById('mwpDoneBtn').addEventListener('click', function(){
+    var count = Object.keys(mwp.selected).length;
+    mwpTriggerLabel.textContent = count ? (count + ' week' + (count === 1 ? '' : 's') + ' selected') : 'Any week';
+    mwpPopover.hidden = true;
+  });
+
   /* ---------------- Sample order data ---------------- */
   var STATUS_META = {
     'New': { cls: 'status-new', icon: '<path d="m12 2 2.9 6.6L22 9.3l-5 4.9 1.2 7-6.2-3.4L5.8 21.2 7 14.2l-5-4.9 7.1-1.1z"/>' },
+    'In progress': { cls: 'status-new', icon: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2.3"/>' },
     'Delivery': { cls: 'status-delivery', icon: '<path d="M3 16V6a1 1 0 0 1 1-1h9v11"/><path d="M13 9h4l3 4v3h-2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/>' },
     'Cancelled': { cls: 'status-cancelled', icon: '<circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/>' },
     'Completed': { cls: 'status-completed', icon: '<path d="M9 12.5 11 15l4-5"/><path d="M14 3h-4a1 1 0 0 0-1 1v1H8a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-1V4a1 1 0 0 0-1-1Z"/>' },
+    'On hold': { cls: 'status-onhold', icon: '<rect x="7" y="4" width="3.2" height="16" rx="1"/><rect x="13.8" y="4" width="3.2" height="16" rx="1"/>' },
+    'Free delivery amount not reached': { cls: 'status-freedelivery', icon: '<path d="M12 3 2 21h20L12 3Z"/><path d="M12 9v5M12 17h.01"/>' },
     'Changed': { cls: 'status-changed', icon: '<circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/>' }
   };
+  var EDITABLE_STATUSES = ['In progress', 'Delivery', 'Completed', 'On hold', 'Free delivery amount not reached', 'Cancelled'];
   var DEALER_COLORS = ['#597671', '#c6b8a1', '#a1b1c7', '#8a5fae', '#b08a3e'];
 
   var ORDERS = [
@@ -2375,6 +2610,9 @@
     { date: '25-06-2026', number: '001.26.06.588', reference: 'Xander Home restock', dealer: 'Xander Home', supplier: 'Andpol Furniture', deliveryWeek: 'Week 26, 2026', pl: true, invoice: true, status: 'Completed' }
   ];
 
+  /* PF (packing form) mirrors PL for most orders with a few deliberate mismatches, for realistic filtering demo */
+  ORDERS.forEach(function(o, idx){ o.pf = o.pl ? (idx % 5 !== 2) : (idx % 4 === 1); });
+
   var dealerColorMap = {};
   function colorForDealer(name){
     if(!dealerColorMap[name]){
@@ -2384,6 +2622,15 @@
     return dealerColorMap[name];
   }
 
+  var dealerFilterSelect = document.getElementById('dealerFilterSelect');
+  var supplierFilterSelect = document.getElementById('supplierFilterSelect');
+  Array.from(new Set(ORDERS.map(function(o){ return o.dealer; }))).sort().forEach(function(name){
+    var opt = document.createElement('option'); opt.value = name; opt.textContent = name; dealerFilterSelect.appendChild(opt);
+  });
+  Array.from(new Set(ORDERS.map(function(o){ return o.supplier; }))).sort().forEach(function(name){
+    var opt = document.createElement('option'); opt.value = name; opt.textContent = name; supplierFilterSelect.appendChild(opt);
+  });
+
   var state = {
     search: '',
     sortKey: 'date',
@@ -2391,7 +2638,13 @@
     page: 1,
     pageSize: 25,
     dateFrom: null,
-    dateTo: null
+    dateTo: null,
+    dealer: '',
+    supplier: '',
+    pf: '',
+    pl: '',
+    invoice: '',
+    weeks: []
   };
 
   function parseDate(d){
@@ -2415,6 +2668,12 @@
         return d >= state.dateFrom.getTime() && d <= state.dateTo.getTime();
       });
     }
+    if(state.dealer) rows = rows.filter(function(o){ return o.dealer === state.dealer; });
+    if(state.supplier) rows = rows.filter(function(o){ return o.supplier === state.supplier; });
+    if(state.pf) rows = rows.filter(function(o){ return (state.pf === 'yes') === o.pf; });
+    if(state.pl) rows = rows.filter(function(o){ return (state.pl === 'yes') === o.pl; });
+    if(state.invoice) rows = rows.filter(function(o){ return (state.invoice === 'yes') === o.invoice; });
+    if(state.weeks.length) rows = rows.filter(function(o){ return o.deliveryWeek && state.weeks.indexOf(o.deliveryWeek) !== -1; });
     rows.sort(function(a, b){
       var av = state.sortKey === 'date' ? parseDate(a.date) : a[state.sortKey];
       var bv = state.sortKey === 'date' ? parseDate(b.date) : b[state.sortKey];
@@ -2438,13 +2697,13 @@
 
     var tbody = document.getElementById('ordersTableBody');
     if(!pageRows.length){
-      tbody.innerHTML = '<tr class="no-results-row"><td colspan="11">No orders match your search/filters.</td></tr>';
+      tbody.innerHTML = '<tr class="no-results-row"><td colspan="12">No orders match your search/filters.</td></tr>';
     } else {
       tbody.innerHTML = pageRows.map(function(o){
         var meta = STATUS_META[o.status];
         var dotColor = colorForDealer(o.dealer);
         return '<tr>' +
-          '<td><input type="checkbox" class="row-checkbox"></td>' +
+          '<td><input type="checkbox" class="row-checkbox" data-number="' + o.number + '"></td>' +
           '<td>' + o.date + '</td>' +
           '<td><a class="ref-link" href="place-order.html?order=' + encodeURIComponent(o.number) + '">' + o.number + '</a></td>' +
           '<td>' + o.reference + '</td>' +
@@ -2452,24 +2711,29 @@
           '<td>' + o.supplier + '</td>' +
           '<td>' + (o.deliveryWeek || '&mdash;') + '</td>' +
           '<td>' + iconSvg(o.pl ? '<path d="M20 6 9 17l-5-5"/>' : '<path d="m6 6 12 12M18 6 6 18"/>', 'pl-icon ' + (o.pl ? 'yes' : 'no')) + '</td>' +
+          '<td>' + iconSvg(o.pf ? '<path d="M20 6 9 17l-5-5"/>' : '<path d="m6 6 12 12M18 6 6 18"/>', 'pf-icon ' + (o.pf ? 'yes' : 'no')) + '</td>' +
           '<td>' + iconSvg(o.invoice ? '<path d="M20 6 9 17l-5-5"/>' : '<path d="m6 6 12 12M18 6 6 18"/>', 'invoice-icon ' + (o.invoice ? 'yes' : 'no')) + '</td>' +
           '<td><span class="status-badge ' + meta.cls + '">' + iconSvg(meta.icon) + o.status + '</span></td>' +
           '<td><div class="row-actions">' +
             '<button type="button" class="row-action-btn" data-action="view" data-number="' + o.number + '" title="View">' + iconSvg('<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/>') + '</button>' +
             '<button type="button" class="row-action-btn" data-action="edit" title="Edit">' + iconSvg('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>') + '</button>' +
-            '<button type="button" class="row-action-btn" data-action="sync" title="Sync with Exact">' + iconSvg('<path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/>') + '</button>' +
+            '<button type="button" class="row-action-btn" data-action="sync" title="Exchange">' + iconSvg('<path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/>') + '</button>' +
           '</div></td>' +
         '</tr>';
       }).join('');
     }
 
-    document.getElementById('pageInfo').textContent = 'Page ' + state.page + ' of ' + totalPages;
+    document.getElementById('pageNumberBubble').textContent = state.page;
+    document.getElementById('pageOfTotal').textContent = 'of ' + totalPages;
     document.getElementById('prevPageBtn').disabled = state.page <= 1;
     document.getElementById('nextPageBtn').disabled = state.page >= totalPages;
 
     document.querySelectorAll('#ordersTable thead th[data-sort]').forEach(function(th){
       th.classList.toggle('sorted', th.dataset.sort === state.sortKey);
     });
+
+    document.getElementById('selectAllCheckbox').checked = false;
+    updateBulkBar();
   }
 
   document.querySelectorAll('#ordersTable thead th[data-sort]').forEach(function(th){
@@ -2502,16 +2766,70 @@
   document.getElementById('selectAllCheckbox').addEventListener('change', function(){
     var checked = this.checked;
     document.querySelectorAll('.row-checkbox').forEach(function(cb){ cb.checked = checked; });
+    updateBulkBar();
+  });
+  document.getElementById('ordersTableBody').addEventListener('change', function(e){
+    if(e.target.classList.contains('row-checkbox')) updateBulkBar();
   });
 
-  document.getElementById('bulkApplyBtn').addEventListener('click', function(){
-    var checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
-    var status = document.getElementById('bulkStatusSelect').value;
-    if(!status || !checkedCount){
-      alert('Select a status and at least one order first.');
-      return;
-    }
-    alert('Would set ' + checkedCount + ' order(s) to "' + status + '".');
+  /* ---------------- Bulk action bar ---------------- */
+  var bulkActionBar = document.getElementById('bulkActionBar');
+  var bulkCount = document.getElementById('bulkCount');
+  var bulkStatusBtn = document.getElementById('bulkStatusBtn');
+  var bulkStatusPanel = document.getElementById('bulkStatusPanel');
+
+  function getSelectedNumbers(){
+    return Array.from(document.querySelectorAll('.row-checkbox:checked')).map(function(cb){ return cb.dataset.number; });
+  }
+  function updateBulkBar(){
+    var n = getSelectedNumbers().length;
+    bulkActionBar.classList.toggle('visible', n > 0);
+    bulkCount.textContent = n + (n === 1 ? ' selected' : ' selected');
+    if(!n) bulkStatusPanel.hidden = true;
+  }
+
+  function renderBulkStatusPanel(){
+    bulkStatusPanel.innerHTML = EDITABLE_STATUSES.map(function(s){
+      var m = STATUS_META[s];
+      return '<button type="button" class="status-option" data-status="' + s + '">' +
+        '<span class="status-badge ' + m.cls + '">' + iconSvg(m.icon) + s + '</span>' +
+      '</button>';
+    }).join('');
+  }
+  bulkStatusBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var willOpen = bulkStatusPanel.hidden;
+    bulkStatusPanel.hidden = !willOpen;
+    if(willOpen) renderBulkStatusPanel();
+  });
+  bulkStatusPanel.addEventListener('click', function(e){
+    e.stopPropagation();
+    var opt = e.target.closest('.status-option');
+    if(!opt) return;
+    var status = opt.getAttribute('data-status');
+    var numbers = getSelectedNumbers();
+    ORDERS.forEach(function(o){
+      if(numbers.indexOf(o.number) !== -1) o.status = status;
+    });
+    bulkStatusPanel.hidden = true;
+    render();
+  });
+  document.addEventListener('click', function(){ bulkStatusPanel.hidden = true; });
+
+  function bulkStubAction(label){
+    var n = getSelectedNumbers().length;
+    if(!n){ alert('Select at least one order first.'); return; }
+    alert(label + ' for ' + n + ' selected order(s) — not wired to a backend in this prototype.');
+  }
+  document.getElementById('bulkInvoiceBtn').addEventListener('click', function(){ bulkStubAction('Generate invoice'); });
+  document.getElementById('bulkPackingLabelBtn').addEventListener('click', function(){ bulkStubAction('Generate packing label'); });
+  document.getElementById('bulkAlertWeekBtn').addEventListener('click', function(){ bulkStubAction('Alert delivery week change'); });
+  document.getElementById('bulkStickerBtn').addEventListener('click', function(){ bulkStubAction('Generate sticker'); });
+  document.getElementById('bulkExportDeliveryBtn').addEventListener('click', function(){ bulkStubAction('Export delivery'); });
+  document.getElementById('bulkClearBtn').addEventListener('click', function(){
+    document.querySelectorAll('.row-checkbox').forEach(function(cb){ cb.checked = false; });
+    document.getElementById('selectAllCheckbox').checked = false;
+    updateBulkBar();
   });
 
   ['sendEmailBtn', 'exportBtn'].forEach(function(id){
