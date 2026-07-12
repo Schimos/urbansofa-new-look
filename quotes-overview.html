@@ -1525,11 +1525,11 @@
       '<td>' + q.reference + '</td>' +
       '<td class="dt-amount">' + fmtCurrency(q.total) + '</td>' +
       '<td><span class="status-badge ' + remaining.cls + '">' + remaining.label + '</span></td>' +
-      '<td class="row-actions">' +
+      '<td><div class="row-actions">' +
         '<button type="button" class="row-action-btn" data-action="assign" title="Assign"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 11 2 2 4-4"/></svg></button>' +
         '<a class="row-action-btn" href="detail-view.html?type=quote&id=' + encodeURIComponent(q.number) + '" title="View ex"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></a>' +
         '<button type="button" class="row-action-btn" data-action="cancel" data-number="' + q.number + '" title="Cancel"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
-      '</td>' +
+      '</div></td>' +
     '</tr>';
   }
 

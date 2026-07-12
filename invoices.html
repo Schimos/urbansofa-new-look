@@ -725,18 +725,79 @@
   .drp-apply{background:var(--primary);color:#fff;}
   .drp-apply:hover{background:var(--primary-dark);}
 
-  .dt-filters-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
-  .dt-check-filter{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-dark);cursor:pointer;white-space:nowrap;}
-  .dt-check-filter input[type="checkbox"]{width:16px;height:16px;accent-color:var(--green);cursor:pointer;}
-  .dt-filter-select .select{width:170px;height:34px;padding:0 10px 0 12px;}
-
-  .dt-bulk{display:flex;align-items:center;gap:0;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
-  .dt-bulk .select{width:150px;height:34px;border:none;border-radius:0;box-shadow:none;padding:0 8px 0 12px;}
-  .dt-bulk-apply-btn{
-    height:34px;padding:0 16px;border:none;background:var(--green);color:#fff;
-    font-size:13px;font-weight:600;cursor:pointer;border-left:1px solid rgba(255,255,255,.2);white-space:nowrap;
+  .dt-secondary-btn{
+    display:flex;align-items:center;gap:8px;
+    background:#fff;color:var(--text-dark);border:1px solid var(--border);border-radius:8px;
+    padding:9px 16px;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;
+    text-decoration:none;
   }
-  .dt-bulk-apply-btn:hover{background:var(--green-dark);}
+  .dt-secondary-btn:hover{background:var(--sidebar-bg);border-color:var(--primary);color:var(--primary);}
+  .dt-secondary-btn .icon{width:15px;height:15px;}
+
+  /* ---------------- Filters button + panel (same component as Orders overview) ---------------- */
+  .filters-wrap{position:relative;}
+  .filters-btn{
+    height:36px;padding:0 16px;border:1px solid var(--border);border-radius:7px;background:#fff;
+    color:var(--text-dark);font-weight:500;font-size:14px;cursor:pointer;display:inline-flex;
+    align-items:center;gap:8px;
+  }
+  .filters-btn:hover{background:var(--sidebar-bg);border-color:var(--primary);color:var(--primary);}
+  .filters-btn .icon{width:16px;height:16px;}
+  .filters-panel{
+    position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1px solid var(--border);
+    border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.14);padding:18px;width:340px;z-index:25;
+  }
+  .filters-panel[hidden]{display:none;}
+  .filters-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;margin-bottom:14px;}
+  .filters-grid .field label.field-label{font-size:12.5px;margin-bottom:5px;display:block;color:var(--text-muted);}
+  .filters-grid .select{height:36px;}
+  .filters-check-row{
+    grid-column:1 / -1;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-dark);
+    cursor:pointer;user-select:none;
+  }
+  .filters-check-row input{width:15px;height:15px;accent-color:var(--primary);cursor:pointer;}
+  .filters-actions{display:flex;justify-content:flex-end;gap:10px;}
+  .filters-actions button{
+    height:36px;padding:0 16px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;border:none;
+  }
+  .filters-actions .clear-btn{background:none;color:var(--text-muted);}
+  .filters-actions .clear-btn:hover{color:var(--red);}
+  .filters-actions .apply-filters-btn{background:var(--primary);color:#fff;}
+  .filters-actions .apply-filters-btn:hover{background:var(--primary-dark);}
+
+  /* ---------------- Bulk action bar (same component as Orders overview) ---------------- */
+  .bulk-action-bar{
+    display:none;align-items:center;gap:10px;flex-wrap:wrap;
+    background:var(--primary-pale-bg);border:1px solid var(--tan-line);border-radius:10px;
+    padding:10px 14px;margin-bottom:14px;
+  }
+  .bulk-action-bar.visible{display:flex;}
+  .bulk-count{font-size:13px;font-weight:700;color:var(--text-dark);white-space:nowrap;}
+  .bulk-divider{width:1px;height:22px;background:var(--tan-line);flex:0 0 1px;}
+  .bulk-btn{
+    display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:7px;
+    border:1px solid var(--tan-line);background:#fff;color:var(--text-dark);font-size:12.5px;font-weight:600;
+    cursor:pointer;white-space:nowrap;position:relative;font-family:inherit;
+  }
+  .bulk-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .bulk-btn .icon{width:14px;height:14px;}
+  .bulk-status-wrap{position:relative;}
+  .bulk-clear-btn{
+    margin-left:auto;width:28px;height:28px;border-radius:50%;border:none;background:none;
+    color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 28px;
+  }
+  .bulk-clear-btn:hover{background:#fff;color:var(--red);}
+  .bulk-clear-btn .icon{width:14px;height:14px;}
+  .status-edit-panel{
+    position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--border);
+    border-radius:10px;box-shadow:0 12px 28px rgba(41,50,36,.14);padding:6px;min-width:180px;z-index:40;
+  }
+  .status-edit-panel[hidden]{display:none;}
+  .status-option{
+    display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border:none;background:none;
+    border-radius:7px;cursor:pointer;font-size:13px;color:var(--text-dark);text-align:left;font-family:inherit;
+  }
+  .status-option:hover{background:var(--sidebar-bg);}
 
   .dt-table-wrap{overflow-x:auto;}
   table.dt-table{width:100%;border-collapse:collapse;font-size:13.5px;}
@@ -810,7 +871,7 @@
   .row-action-btn{position:relative;}
 
   @media (max-width:1000px){
-    .dt-toolbar, .dt-filters-row{flex-direction:column;align-items:stretch;}
+    .dt-toolbar, .bulk-action-bar{flex-direction:column;align-items:stretch;}
     .dt-search input{width:100%;}
   }
 </style>
@@ -876,7 +937,19 @@
         <h1 class="dt-page-title">Invoices</h1>
 
         <div class="dt-card">
-          <div class="dt-card-header"><h2>Overview</h2></div>
+          <div class="dt-card-header">
+            <h2>Overview</h2>
+            <div style="display:flex;gap:10px;">
+              <button type="button" class="dt-secondary-btn" id="generateBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                Generate
+              </button>
+              <button type="button" class="dt-add-btn" id="exportBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/></svg>
+                Export
+              </button>
+            </div>
+          </div>
 
           <div class="dt-toolbar">
             <div class="search-toggle" id="searchToggle">
@@ -885,24 +958,41 @@
               </button>
               <input type="text" id="searchInput" placeholder="Search invoices&hellip;">
             </div>
-            <label class="dt-check-filter"><input type="checkbox" id="creditCheck"> Show credit invoices</label>
-            <div class="dt-spacer"></div>
-          </div>
 
-          <div class="dt-filters-row">
-            <div class="dt-bulk">
-              <div class="select">
-                <select class="field-select" id="bulkActionSelect">
-                  <option value="">Actions</option>
-                  <option value="download">Download</option>
-                  <option value="sync">Sync with Exact</option>
-                  <option value="markpaid">Mark as paid</option>
-                </select>
-                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <div class="filters-wrap">
+              <button type="button" class="filters-btn" id="filtersBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+                Filters
+              </button>
+              <div class="filters-panel" id="filtersPanel" hidden>
+                <div class="filters-grid">
+                  <div class="field"><label class="field-label">Dealer</label>
+                    <div class="select"><select class="field-select" id="dealerFilter">
+                      <option value="">All</option>
+                      <option>WoontrendsXL</option>
+                      <option>UrbanSofa test account</option>
+                      <option>Wooden Planet</option>
+                      <option>Tiger Touch</option>
+                    </select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+                  </div>
+                  <div class="field"><label class="field-label">Status</label>
+                    <div class="select"><select class="field-select" id="statusFilter">
+                      <option value="">All</option>
+                      <option>Open</option>
+                      <option>Partial paid</option>
+                      <option>Paid</option>
+                      <option>Credit</option>
+                    </select><svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+                  </div>
+                  <label class="filters-check-row"><input type="checkbox" id="creditCheck"> Show credit invoices</label>
+                </div>
+                <div class="filters-actions">
+                  <button type="button" class="clear-btn" id="filtersClearBtn">Clear</button>
+                  <button type="button" class="apply-filters-btn" id="filtersApplyBtn">Apply filters</button>
+                </div>
               </div>
-              <button type="button" class="dt-bulk-apply-btn" id="bulkApplyBtn">Apply</button>
             </div>
-            <div class="dt-spacer"></div>
+
             <div class="date-picker-wrap" style="position:relative;">
               <button type="button" class="icon-only-btn" id="dateRangeBtn" title="Filter by invoice date range">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
@@ -945,30 +1035,32 @@
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
               </button>
             </div>
-            <div class="dt-filter-select">
-              <div class="select">
-                <select class="field-select" id="dealerFilter">
-                  <option value="">All</option>
-                  <option>WoontrendsXL</option>
-                  <option>UrbanSofa test account</option>
-                  <option>Wooden Planet</option>
-                  <option>Tiger Touch</option>
-                </select>
-                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-              </div>
+
+            <div class="dt-spacer"></div>
+          </div>
+
+          <div class="bulk-action-bar" id="bulkActionBar">
+            <span class="bulk-count" id="bulkCount">0 selected</span>
+            <div class="bulk-divider"></div>
+            <div class="bulk-status-wrap">
+              <button type="button" class="bulk-btn" id="bulkStatusBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2.3"/></svg>
+                Change status
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="status-edit-panel" id="bulkStatusPanel" hidden></div>
             </div>
-            <div class="dt-filter-select">
-              <div class="select">
-                <select class="field-select" id="statusFilter">
-                  <option value="">All</option>
-                  <option>Open</option>
-                  <option>Partial paid</option>
-                  <option>Paid</option>
-                  <option>Credit</option>
-                </select>
-                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-              </div>
-            </div>
+            <button type="button" class="bulk-btn" id="bulkDownloadBtn" title="Download">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+              Download
+            </button>
+            <button type="button" class="bulk-btn" id="bulkSyncBtn" title="Sync with Exact">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg>
+              Sync with Exact
+            </button>
+            <button type="button" class="bulk-clear-btn" id="bulkClearBtn" title="Clear selection">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
           </div>
 
           <div class="dt-table-wrap">
@@ -1532,11 +1624,11 @@
       '<td class="dt-amount">' + fmtCurrency(inv.amountEx) + '</td>' +
       '<td><span class="status-badge ' + STATUS_CLASS[inv.status] + '">' + inv.status + '</span></td>' +
       '<td>' + inv.type + '</td>' +
-      '<td class="row-actions">' +
+      '<td><div class="row-actions">' +
         '<button type="button" class="row-action-btn" title="Download"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></button>' +
         '<button type="button" class="row-action-btn dt-sync-btn" title="Sync with Exact"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></button>' +
         '<button type="button" class="row-action-btn" title="' + inv.status + '"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>' +
-      '</td>' +
+      '</div></td>' +
     '</tr>';
   }
 
@@ -1547,6 +1639,22 @@
   var dealerFilter = document.getElementById('dealerFilter');
   var statusFilter = document.getElementById('statusFilter');
   var selectAllCheck = document.getElementById('selectAllCheck');
+  var bulkActionBar = document.getElementById('bulkActionBar');
+  var bulkCount = document.getElementById('bulkCount');
+  var bulkStatusBtn = document.getElementById('bulkStatusBtn');
+  var bulkStatusPanel = document.getElementById('bulkStatusPanel');
+
+  function getSelectedNumbers(){
+    return Array.prototype.slice.call(invoicesTbody.querySelectorAll('.row-select:checked')).map(function(cb){
+      return cb.closest('tr').dataset.number;
+    });
+  }
+  function updateBulkBar(){
+    var n = getSelectedNumbers().length;
+    bulkActionBar.classList.toggle('visible', n > 0);
+    bulkCount.textContent = n + (n === 1 ? ' selected' : ' selected');
+    if(!n) bulkStatusPanel.hidden = true;
+  }
 
   function parseISODate(dateStr){
     var parts = dateStr.split('-');
@@ -1580,6 +1688,7 @@
     renderRow: function(inv){ return invoiceRowHTML(inv); },
     afterRender: function(){
       selectAllCheck.checked = false;
+      updateBulkBar();
       Array.prototype.slice.call(invoicesTbody.querySelectorAll('.dt-sync-btn')).forEach(function(btn){
         btn.addEventListener('click', function(){
           var icon = btn.querySelector('.icon');
@@ -1595,22 +1704,80 @@
       cb.checked = selectAllCheck.checked;
       cb.closest('tr').classList.toggle('selected', selectAllCheck.checked);
     });
+    updateBulkBar();
   });
   invoicesTbody.addEventListener('change', function(e){
-    if(e.target.classList.contains('row-select')) e.target.closest('tr').classList.toggle('selected', e.target.checked);
+    if(e.target.classList.contains('row-select')){
+      e.target.closest('tr').classList.toggle('selected', e.target.checked);
+      updateBulkBar();
+    }
   });
 
-  creditCheck.addEventListener('change', function(){ invoicesDT.render(); });
-  dealerFilter.addEventListener('change', function(){ invoicesDT.render(); });
-  statusFilter.addEventListener('change', function(){ invoicesDT.render(); });
+  /* ---------------- Filters panel ---------------- */
+  var filtersBtn = document.getElementById('filtersBtn');
+  var filtersPanel = document.getElementById('filtersPanel');
+  filtersBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    filtersPanel.hidden = !filtersPanel.hidden;
+  });
+  filtersPanel.addEventListener('click', function(e){ e.stopPropagation(); });
+  document.addEventListener('click', function(){ filtersPanel.hidden = true; });
+  document.getElementById('filtersClearBtn').addEventListener('click', function(){
+    filtersPanel.querySelectorAll('select.field-select').forEach(function(s){ s.selectedIndex = 0; syncSelectDisplay(s); });
+    creditCheck.checked = false;
+  });
+  document.getElementById('filtersApplyBtn').addEventListener('click', function(){
+    filtersPanel.hidden = true;
+    invoicesDT.render();
+  });
 
-  document.getElementById('bulkApplyBtn').addEventListener('click', function(){
-    var selected = invoicesTbody.querySelectorAll('.row-select:checked').length;
-    var action = document.getElementById('bulkActionSelect').value;
-    if(!action || !selected) return;
-    this.textContent = 'Applied ✓';
-    var self = this;
-    setTimeout(function(){ self.textContent = 'Apply'; }, 1200);
+  /* ---------------- Bulk action bar ---------------- */
+  function renderBulkStatusPanel(){
+    var statuses = ['Open', 'Partial paid', 'Paid', 'Credit'];
+    bulkStatusPanel.innerHTML = statuses.map(function(s){
+      return '<button type="button" class="status-option" data-status="' + s + '">' +
+        '<span class="status-badge ' + STATUS_CLASS[s] + '">' + s + '</span>' +
+      '</button>';
+    }).join('');
+  }
+  bulkStatusBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var willOpen = bulkStatusPanel.hidden;
+    bulkStatusPanel.hidden = !willOpen;
+    if(willOpen) renderBulkStatusPanel();
+  });
+  bulkStatusPanel.addEventListener('click', function(e){
+    e.stopPropagation();
+    var opt = e.target.closest('.status-option');
+    if(!opt) return;
+    var status = opt.getAttribute('data-status');
+    var numbers = getSelectedNumbers();
+    INVOICES.forEach(function(inv){
+      if(numbers.indexOf(inv.number) !== -1) inv.status = status;
+    });
+    bulkStatusPanel.hidden = true;
+    invoicesDT.render();
+  });
+  document.addEventListener('click', function(){ bulkStatusPanel.hidden = true; });
+
+  function bulkStubAction(label){
+    var n = getSelectedNumbers().length;
+    if(!n){ alert('Select at least one invoice first.'); return; }
+    alert(label + ' for ' + n + ' selected invoice(s) — not wired to a backend in this prototype.');
+  }
+  document.getElementById('bulkDownloadBtn').addEventListener('click', function(){ bulkStubAction('Download'); });
+  document.getElementById('bulkSyncBtn').addEventListener('click', function(){ bulkStubAction('Sync with Exact'); });
+  document.getElementById('bulkClearBtn').addEventListener('click', function(){
+    invoicesTbody.querySelectorAll('.row-select').forEach(function(cb){ cb.checked = false; cb.closest('tr').classList.remove('selected'); });
+    selectAllCheck.checked = false;
+    updateBulkBar();
+  });
+
+  ['generateBtn', 'exportBtn'].forEach(function(id){
+    document.getElementById(id).addEventListener('click', function(){
+      var labels = { generateBtn: 'Generate', exportBtn: 'Export' };
+      alert(labels[id] + ' — not wired to a backend in this prototype.');
+    });
   });
 
   /* Search: collapse/expand toggle (same component as Orders overview) */
