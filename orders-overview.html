@@ -19,9 +19,9 @@
     --tan:#b08a3e;
     --tan-pale-bg:#f2e9d3;
     --tan-line:#c9a860;
-    --primary:#b08a3e;
-    --primary-dark:#8f6f30;
-    --primary-pale-bg:#f2e9d3;
+    --primary:#866E52;
+    --primary-dark:#6b5741;
+    --primary-pale-bg:#f0ece6;
     --red:#e2544c;
     --yellow-badge:#eab445;
     --border:#e3e0d8;
@@ -1250,26 +1250,28 @@
   .bulk-apply-btn:hover{background:var(--primary-dark);}
   .bulk-apply-btn .icon{width:16px;height:16px;}
 
-  /* Search: collapses to a green icon button, expands into an input on click */
+  /* Search: secondary icon button, expands into an input on click */
   .search-toggle{
     display:flex;
     align-items:center;
     height:36px;
     border-radius:7px;
-    background:var(--primary);
+    background:#fff;
+    border:1px solid var(--border);
     overflow:hidden;
-    transition:width .2s ease, background .15s ease;
+    transition:width .2s ease, border-color .15s ease;
     width:36px;
     flex:0 0 auto;
   }
-  .search-toggle.expanded{width:240px;background:#fff;border:1px solid #e5e5e5;}
+  .search-toggle:hover{border-color:var(--primary);}
+  .search-toggle.expanded{width:240px;}
   .search-toggle-btn{
     width:36px;
     height:36px;
     flex:0 0 36px;
     border:none;
     background:none;
-    color:#fff;
+    color:var(--text-muted);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -1297,10 +1299,10 @@
   .filters-btn{
     height:36px;
     padding:0 16px;
-    border:none;
+    border:1px solid var(--border);
     border-radius:7px;
-    background:var(--primary);
-    color:#fff;
+    background:#fff;
+    color:var(--text-dark);
     font-weight:500;
     font-size:14px;
     cursor:pointer;
@@ -1308,7 +1310,7 @@
     align-items:center;
     gap:8px;
   }
-  .filters-btn:hover{background:var(--primary-dark);}
+  .filters-btn:hover{background:var(--sidebar-bg);border-color:var(--primary);color:var(--primary);}
   .filters-btn .icon{width:16px;height:16px;}
   .filters-panel{
     position:absolute;
@@ -1358,16 +1360,16 @@
     width:36px;
     height:36px;
     border-radius:7px;
-    border:none;
-    background:var(--primary);
-    color:#fff;
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text-muted);
     display:flex;
     align-items:center;
     justify-content:center;
     cursor:pointer;
     flex:0 0 36px;
   }
-  .icon-only-btn:hover{background:var(--primary-dark);}
+  .icon-only-btn:hover{background:var(--sidebar-bg);color:var(--primary);border-color:var(--primary);}
   .icon-only-btn .icon{width:16px;height:16px;}
   .icon-only-btn .active-dot{
     position:absolute;
@@ -1415,7 +1417,7 @@
   .date-range-popover{
     position:absolute;
     top:calc(100% + 8px);
-    right:0;
+    left:0;
     background:#fff;
     border:1px solid var(--border);
     border-radius:12px;
@@ -1572,19 +1574,13 @@
     color:var(--text-muted);
   }
   .pagination-size{display:flex;align-items:center;gap:4px;}
-  .pagination-size select{
-    border:none;
-    background:none;
-    font-family:inherit;
-    font-size:13px;
-    font-weight:600;
-    color:var(--text-dark);
-    cursor:pointer;
-    appearance:none;
-    -webkit-appearance:none;
-    padding-right:2px;
+  .pagination-size .select{
+    width:auto;height:auto;border:none;box-shadow:none;background:none;padding:0;gap:4px;
   }
-  .pagination-size .icon{width:12px;height:12px;color:var(--text-muted);}
+  .pagination-size .select-trigger{font-weight:700;font-size:13px;color:var(--text-dark);}
+  .pagination-size .select-clear{display:none !important;}
+  .pagination-size .chevron{width:12px;height:12px;color:var(--text-muted);}
+  .pagination-size .select-options-panel{left:0;right:auto;min-width:70px;}
   .pagination-divider{width:1px;height:20px;background:var(--border);flex:0 0 1px;}
   .page-nav{display:flex;align-items:center;gap:8px;}
   .page-nav button{
@@ -1680,6 +1676,8 @@
   .drp-day.in-week.week-end{border-radius:0 6px 6px 0;}
   .drp-day.week-selected{background:var(--primary);color:#fff;font-weight:700;}
   .mwp-trigger{width:100%;cursor:pointer;font:inherit;color:#4a473c;text-align:left;}
+  .mwp-trigger .chevron{width:14px;height:14px;color:#8c8878;flex:0 0 14px;}
+  #mwpTriggerLabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 </style>
 </head>
 <body>
@@ -1744,6 +1742,10 @@
 
         <div class="overview-header-row">
           <div class="overview-title">Orders Overview</div>
+          <a class="add-new-order-btn" href="select-template.html">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            Add new order
+          </a>
         </div>
 
         <div class="overview-toolbar">
@@ -1861,9 +1863,6 @@
           <button type="button" class="icon-only-btn" id="sendEmailBtn" title="Send email">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
           </button>
-          <a class="icon-only-btn" href="select-template.html" title="Add new order">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-          </a>
         </div>
 
         <div class="bulk-action-bar" id="bulkActionBar">
@@ -1926,12 +1925,14 @@
 
         <div class="pagination-bar">
           <div class="pagination-size">
-            <select id="pageSizeSelect">
-              <option value="10">10</option>
-              <option value="25" selected>25</option>
-              <option value="50">50</option>
-            </select>
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <div class="select">
+              <select class="field-select" id="pageSizeSelect">
+                <option value="10">10</option>
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+              </select>
+              <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
           </div>
           <div class="pagination-divider"></div>
           <span>Page</span>
