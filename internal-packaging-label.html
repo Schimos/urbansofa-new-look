@@ -200,9 +200,10 @@
     gap:1px;
     max-height:0;
     overflow:hidden;
+    transition:max-height .22s ease;
   }
   .nav-group.open > .nav-sublist{
-    max-height:none;
+    max-height:800px;
     padding:2px 0 4px;
   }
   .nav-item.sub{
@@ -218,9 +219,31 @@
     letter-spacing:.05em;
     text-transform:uppercase;
     color:var(--text-light-muted);
-    cursor:default;
+    cursor:pointer;
     user-select:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
   }
+  .nav-subgroup-label:hover{color:var(--text-dark);}
+  .nav-subgroup-label .chevron-mini2{
+    width:11px;
+    height:11px;
+    flex:0 0 11px;
+    color:var(--text-light-muted);
+    transition:transform .15s ease;
+  }
+  .nav-subgroup.open > .nav-subgroup-label .chevron-mini2{transform:rotate(180deg);}
+  .nav-subgroup-list{
+    display:flex;
+    flex-direction:column;
+    gap:1px;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .18s ease;
+  }
+  .nav-subgroup.open > .nav-subgroup-list{max-height:400px;}
   .badge.small{
     min-width:15px;
     height:15px;
@@ -1064,10 +1087,23 @@
       '</a>';
   }
 
+  function containsActive(children){
+    return children.some(function(c){
+      if(c.group) return containsActive(c.children);
+      return !!c.active;
+    });
+  }
+
   function childrenHTML(children, depth){
     return children.map(function(c){
       if(c.group){
-        return '<div class="nav-subgroup-label">' + c.group + '</div>' + childrenHTML(c.children, 2);
+        var isOpen = containsActive(c.children);
+        return '<div class="nav-subgroup' + (isOpen ? ' open' : '') + '">' +
+          '<div class="nav-subgroup-label" data-subgroup-toggle="1">' +
+            '<span>' + c.group + '</span>' + svgIcon('chevron', 'chevron-mini2') +
+          '</div>' +
+          '<div class="nav-subgroup-list">' + childrenHTML(c.children, 2) + '</div>' +
+        '</div>';
       }
       return leafHTML(c, depth);
     }).join('');
@@ -1081,7 +1117,8 @@
         svgIcon(item.icon) + '<span class="label">' + item.label + '</span>' + badgeHTML(item.badge) +
         '</a>';
     }
-    return '<div class="nav-group' + (item.open ? ' open' : '') + '" data-nav-idx="' + idx + '">' +
+    var isOpen = item.open || containsActive(item.children);
+    return '<div class="nav-group' + (isOpen ? ' open' : '') + '" data-nav-idx="' + idx + '">' +
       '<a class="nav-item group-header' + badgeCls + '" href="#" data-nav-idx="' + idx + '" title="' + item.label + '">' +
         svgIcon(item.icon) + '<span class="label">' + item.label + '</span>' + badgeHTML(item.badge) +
         svgIcon('chevron', 'chevron-mini') +
@@ -1122,6 +1159,16 @@
   renderNav();
 
   var navList = document.getElementById('navList');
+  function toggleSubgroup(subgroupToggle){
+    var subgroup = subgroupToggle.closest('.nav-subgroup');
+    var parentList = subgroup.parentElement;
+    var wasOpen = subgroup.classList.contains('open');
+    Array.prototype.forEach.call(parentList.children, function(sib){
+      if(sib.classList && sib.classList.contains('nav-subgroup')) sib.classList.remove('open');
+    });
+    if(!wasOpen) subgroup.classList.add('open');
+  }
+
   navList.addEventListener('click', function(e){
     var header = e.target.closest('.group-header');
     if(header){
@@ -1131,8 +1178,18 @@
         if(flyout.classList.contains('show') && flyout.dataset.forIdx === String(idx)){ hideFlyout(); }
         else { flyout.dataset.forIdx = String(idx); showFlyoutFor(header, idx); }
       } else {
-        header.closest('.nav-group').classList.toggle('open');
+        var thisGroup = header.closest('.nav-group');
+        var wasOpen = thisGroup.classList.contains('open');
+        Array.prototype.slice.call(navList.children).forEach(function(g){
+          if(g.classList.contains('nav-group')) g.classList.remove('open');
+        });
+        if(!wasOpen) thisGroup.classList.add('open');
       }
+      return;
+    }
+    var subgroupToggle = e.target.closest('[data-subgroup-toggle]');
+    if(subgroupToggle){
+      toggleSubgroup(subgroupToggle);
       return;
     }
     var leaf = e.target.closest('[data-nav-leaf]');
@@ -1160,6 +1217,11 @@
     scheduleHideFlyout();
   });
   flyout.addEventListener('click', function(e){
+    var flyoutSubgroupToggle = e.target.closest('[data-subgroup-toggle]');
+    if(flyoutSubgroupToggle){
+      toggleSubgroup(flyoutSubgroupToggle);
+      return;
+    }
     var flyoutLeaf = e.target.closest('[data-nav-leaf]');
     if(flyoutLeaf && (!flyoutLeaf.getAttribute('href') || flyoutLeaf.getAttribute('href') === '#')) e.preventDefault();
   });
