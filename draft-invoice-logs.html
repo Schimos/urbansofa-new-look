@@ -19,6 +19,9 @@
     --tan:#b08a3e;
     --tan-pale-bg:#f2e9d3;
     --tan-line:#c9a860;
+    --primary:#866E52;
+    --primary-dark:#6b5741;
+    --primary-pale-bg:#f0ece6;
     --red:#e2544c;
     --yellow-badge:#eab445;
     --border:#e3e0d8;
@@ -638,40 +641,104 @@
   .dt-card-header h2{font-size:15px;font-weight:700;color:var(--text-dark);margin:0;}
   .dt-add-btn{
     display:flex;align-items:center;gap:8px;
-    background:var(--green);color:#fff;border:none;border-radius:8px;
+    background:var(--primary);color:#fff;border:none;border-radius:8px;
     padding:9px 16px;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;
     text-decoration:none;
   }
-  .dt-add-btn:hover{background:var(--green-dark);}
+  .dt-add-btn:hover{background:var(--primary-dark);}
   .dt-add-btn .icon{width:15px;height:15px;}
 
   .dt-toolbar{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
-  .dt-show{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-muted);white-space:nowrap;}
-  .dt-show .select{width:72px;height:34px;padding:0 8px 0 12px;}
-  .dt-refresh-btn{
-    width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:#fff;
-    color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 30px;
-  }
-  .dt-refresh-btn:hover{background:var(--sidebar-bg);color:var(--green);}
-  .dt-refresh-btn .icon{width:15px;height:15px;}
-  .dt-refresh-btn.spinning .icon{animation:spin .7s linear;}
   .dt-spacer{flex:1;}
-  .dt-search{display:flex;align-items:center;gap:8px;}
-  .dt-search label{font-size:13.5px;color:var(--text-muted);white-space:nowrap;}
-  .dt-search input{
-    height:34px;border:1px solid var(--border);border-radius:8px;padding:0 12px;
-    font-size:13.5px;font-family:inherit;width:220px;color:var(--text-dark);
+
+  /* Search: secondary icon button, expands into an input on click */
+  .search-toggle{
+    display:flex;align-items:center;height:36px;border-radius:7px;background:#fff;
+    border:1px solid var(--border);overflow:hidden;transition:width .2s ease, border-color .15s ease;
+    width:36px;flex:0 0 auto;
   }
-  .dt-search input:focus{outline:none;border-color:var(--green);}
+  .search-toggle:hover{border-color:var(--primary);}
+  .search-toggle.expanded{width:240px;}
+  .search-toggle-btn{
+    width:36px;height:36px;flex:0 0 36px;border:none;background:none;color:var(--text-muted);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .search-toggle.expanded .search-toggle-btn{color:var(--primary);}
+  .search-toggle-btn .icon{width:16px;height:16px;}
+  .search-toggle input{
+    flex:1;min-width:0;border:none;outline:none;font-size:13px;font-family:inherit;
+    color:var(--text-dark);background:none;padding:0;width:0;opacity:0;transition:opacity .15s ease;
+  }
+  .search-toggle.expanded input{width:auto;opacity:1;padding-right:12px;}
+
+  .icon-only-btn{
+    position:relative;width:36px;height:36px;border-radius:7px;border:1px solid var(--border);
+    background:#fff;color:var(--text-muted);display:flex;align-items:center;justify-content:center;
+    cursor:pointer;flex:0 0 36px;
+  }
+  .icon-only-btn:hover{background:var(--sidebar-bg);color:var(--primary);border-color:var(--primary);}
+  .icon-only-btn .icon{width:16px;height:16px;}
+  .date-range-chip{
+    display:none;align-items:center;gap:6px;height:36px;padding:0 6px 0 12px;
+    border:1px solid var(--primary);border-radius:7px;background:var(--primary-pale-bg);
+    color:var(--primary);font-size:12.5px;font-weight:600;white-space:nowrap;
+  }
+  .date-range-chip.visible{display:flex;}
+  .date-range-chip button{
+    width:20px;height:20px;border:none;background:none;color:var(--primary);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;border-radius:50%;
+  }
+  .date-range-chip button:hover{background:rgba(134,110,82,.15);}
+  .date-range-chip .icon{width:11px;height:11px;}
+
+  /* ---------------- Date range picker popover (same component as Orders overview) ---------------- */
+  .date-range-popover{
+    position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1px solid var(--border);
+    border-radius:12px;box-shadow:0 16px 40px rgba(41,50,36,.16);z-index:50;display:flex;
+  }
+  .date-range-popover[hidden]{display:none;}
+  .drp-presets{
+    display:flex;flex-direction:column;gap:2px;padding:12px;border-right:1px solid var(--border);
+    background:var(--sidebar-bg);min-width:140px;border-radius:12px 0 0 12px;
+  }
+  .drp-presets button{
+    text-align:left;border:none;background:none;padding:9px 10px;border-radius:7px;font-size:13px;
+    color:var(--text-dark);cursor:pointer;font-family:inherit;white-space:nowrap;
+  }
+  .drp-presets button:hover{background:#fff;}
+  .drp-calendar{padding:16px;width:280px;}
+  .drp-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .drp-cal-header span{font-size:14px;font-weight:700;color:var(--text-dark);}
+  .drp-nav{width:26px;height:26px;border-radius:6px;border:none;background:none;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .drp-nav:hover{background:var(--sidebar-bg);color:var(--primary);}
+  .drp-nav .icon{width:14px;height:14px;}
+  .drp-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--text-muted);margin-bottom:4px;}
+  .drp-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+  .drp-day{
+    height:32px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text-dark);
+    cursor:pointer;border-radius:6px;background:none;border:none;font-family:inherit;position:relative;
+  }
+  .drp-day.other-month{color:var(--text-light-muted);}
+  .drp-day:hover{background:var(--sidebar-bg);}
+  .drp-day.today{font-weight:700;box-shadow:inset 0 0 0 1.5px var(--primary);}
+  .drp-day.in-range{background:var(--primary-pale-bg);border-radius:0;}
+  .drp-day.range-start, .drp-day.range-end{background:var(--primary);color:#fff;font-weight:700;}
+  .drp-day.range-start:hover, .drp-day.range-end:hover{background:var(--primary-dark);}
+  .drp-day.range-start{border-radius:6px 0 0 6px;}
+  .drp-day.range-end{border-radius:0 6px 6px 0;}
+  .drp-day.range-start.range-end{border-radius:6px;}
+  .drp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);gap:10px;}
+  .drp-range-label{font-size:12px;color:var(--text-muted);}
+  .drp-footer-actions{display:flex;gap:8px;flex:0 0 auto;}
+  .drp-footer-actions button{height:32px;padding:0 14px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;border:none;font-family:inherit;}
+  .drp-cancel{background:none;color:var(--text-muted);}
+  .drp-cancel:hover{color:var(--red);}
+  .drp-apply{background:var(--primary);color:#fff;}
+  .drp-apply:hover{background:var(--primary-dark);}
 
   .dt-filters-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
   .dt-check-filter{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-dark);cursor:pointer;white-space:nowrap;}
   .dt-check-filter input[type="checkbox"]{width:16px;height:16px;accent-color:var(--green);cursor:pointer;}
-  .dt-date-range{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-muted);white-space:nowrap;}
-  .dt-date-range input[type="date"]{
-    height:34px;border:1px solid var(--border);border-radius:8px;padding:0 10px;
-    font-size:13px;font-family:inherit;color:var(--text-dark);
-  }
   .dt-filter-select .select{width:170px;height:34px;padding:0 10px 0 12px;}
 
   .dt-bulk{display:flex;align-items:center;gap:0;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
@@ -720,18 +787,31 @@
   }
   .dt-inline-edit:focus{outline:none;border-color:var(--green);}
 
-  .dt-pagination{display:flex;align-items:center;justify-content:space-between;margin-top:16px;font-size:13px;color:var(--text-muted);flex-wrap:wrap;gap:10px;}
-  .dt-pagination .page-nav{display:flex;align-items:center;gap:8px;}
-  .dt-pagination .page-nav button{
-    width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:#fff;
-    color:var(--text-dark);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  /* ---------------- Pagination bar (same component as Orders overview) ---------------- */
+  .pagination-bar{display:flex;align-items:center;justify-content:flex-end;gap:14px;margin-top:18px;font-size:13px;color:var(--text-muted);}
+  .pagination-size{display:flex;align-items:center;gap:4px;}
+  .pagination-size .select{width:auto;height:auto;border:none;box-shadow:none;background:none;padding:0;gap:4px;}
+  .pagination-size .select-trigger{font-weight:700;font-size:13px;color:var(--text-dark);}
+  .pagination-size .select-clear{display:none !important;}
+  .pagination-size .chevron{width:12px;height:12px;color:var(--text-muted);}
+  .pagination-size .select-options-panel{left:0;right:auto;min-width:70px;}
+  .pagination-divider{width:1px;height:20px;background:var(--border);flex:0 0 1px;}
+  .page-nav{display:flex;align-items:center;gap:8px;}
+  .page-nav button{
+    width:24px;height:24px;border-radius:50%;border:none;background:none;color:var(--text-muted);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
   }
-  .dt-pagination .page-nav button:hover{background:var(--sidebar-bg);}
-  .dt-pagination .page-nav button:disabled{opacity:.4;cursor:not-allowed;}
-  .dt-pagination .page-nav button .icon{width:12px;height:12px;}
+  .page-nav button:hover{color:var(--primary);}
+  .page-nav button:disabled{opacity:.35;cursor:not-allowed;}
+  .page-nav button .icon{width:12px;height:12px;}
+  .page-number-bubble{
+    width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;
+  }
   .dt-no-results td{text-align:center;color:var(--text-muted);padding:30px !important;}
 
   .tooltip-wrap{position:relative;}
+  .icon-only-btn[title]:hover::after,
   .row-action-btn[title]:hover::after{
     content:attr(title);
     position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
@@ -812,26 +892,13 @@
           <div class="dt-card-header"><h2>Overview</h2></div>
 
           <div class="dt-toolbar">
-            <div class="dt-show">
-              <span>Show</span>
-              <div class="select">
-                <select class="field-select" id="pageSizeSelect">
-                  <option value="10">10</option>
-                  <option value="25" selected>25</option>
-                  <option value="50">50</option>
-                </select>
-                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-              </div>
-              <span>Entries</span>
-              <button type="button" class="dt-refresh-btn" id="refreshBtn" title="Refresh">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg>
+            <div class="search-toggle" id="searchToggle">
+              <button type="button" class="search-toggle-btn" id="searchToggleBtn" aria-label="Search draft invoice logs">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
               </button>
-            </div>
-            <div class="dt-spacer"></div>
-            <div class="dt-search">
-              <label for="searchInput">Search:</label>
               <input type="text" id="searchInput" placeholder="Search logs&hellip;">
             </div>
+            <div class="dt-spacer"></div>
           </div>
 
           <div class="dt-table-wrap">
@@ -851,16 +918,29 @@
             </table>
           </div>
 
-          <div class="dt-pagination">
-            <span><strong id="fromCount">1</strong> To <strong id="toCount">20</strong> - <strong id="totalCount">20</strong> Total items</span>
+          <div class="pagination-bar">
+            <div class="pagination-size">
+              <div class="select">
+                <select class="field-select" id="pageSizeSelect">
+                  <option value="10">10</option>
+                  <option value="25" selected>25</option>
+                  <option value="50">50</option>
+                </select>
+                <svg class="icon chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+            <div class="pagination-divider"></div>
+            <span>Page</span>
             <div class="page-nav">
               <button type="button" id="prevPageBtn" aria-label="Previous page">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
               </button>
+              <span class="page-number-bubble" id="pageNumberBubble">1</span>
               <button type="button" id="nextPageBtn" aria-label="Next page">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
               </button>
             </div>
+            <span id="pageOfTotal">of 1</span>
           </div>
         </div>
 
@@ -1294,10 +1374,8 @@
       opts.tbody.innerHTML = pageRows.length
         ? pageRows.map(function(item, i){ return opts.renderRow(item, startIdx + i); }).join('')
         : '<tr class="dt-no-results"><td colspan="' + opts.colCount + '">No results found.</td></tr>';
-      var toIdx = total === 0 ? 0 : Math.min(startIdx + state.pageSize, total);
-      opts.fromEl.textContent = total === 0 ? 0 : startIdx + 1;
-      opts.toEl.textContent = toIdx;
-      opts.totalEl.textContent = total;
+      opts.pageNumberEl.textContent = state.page;
+      opts.pageOfTotalEl.textContent = 'of ' + pages;
       opts.prevBtn.disabled = state.page <= 1;
       opts.nextBtn.disabled = state.page >= pages;
       if(opts.afterRender) opts.afterRender(pageRows);
@@ -1315,13 +1393,6 @@
     });
     opts.prevBtn.addEventListener('click', function(){ if(state.page > 1){ state.page--; render(); } });
     opts.nextBtn.addEventListener('click', function(){ state.page++; render(); });
-    if(opts.refreshBtn){
-      opts.refreshBtn.addEventListener('click', function(){
-        var btn = this;
-        btn.classList.add('spinning');
-        setTimeout(function(){ btn.classList.remove('spinning'); render(); }, 450);
-      });
-    }
     opts.headerEls.forEach(function(th){
       th.addEventListener('click', function(){
         var key = th.getAttribute('data-sort');
@@ -1396,12 +1467,10 @@
     tbody: logsTbody,
     searchInput: document.getElementById('searchInput'),
     pageSizeSelect: document.getElementById('pageSizeSelect'),
-    refreshBtn: document.getElementById('refreshBtn'),
     prevBtn: document.getElementById('prevPageBtn'),
     nextBtn: document.getElementById('nextPageBtn'),
-    fromEl: document.getElementById('fromCount'),
-    toEl: document.getElementById('toCount'),
-    totalEl: document.getElementById('totalCount'),
+    pageNumberEl: document.getElementById('pageNumberBubble'),
+    pageOfTotalEl: document.getElementById('pageOfTotal'),
     headerEls: Array.prototype.slice.call(document.querySelectorAll('#logsTable thead th.sortable')),
     filterFn: function(row, query){
       if(!query) return true;
@@ -1413,6 +1482,27 @@
     },
     renderRow: function(row){ return logRowHTML(row); }
   });
+
+  /* Search: collapse/expand toggle (same component as Orders overview) */
+  var searchToggle = document.getElementById('searchToggle');
+  var searchToggleBtn = document.getElementById('searchToggleBtn');
+  var searchInputEl = document.getElementById('searchInput');
+  searchToggleBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(!searchToggle.classList.contains('expanded')){
+      searchToggle.classList.add('expanded');
+      searchInputEl.focus();
+    } else if(!searchInputEl.value){
+      searchToggle.classList.remove('expanded');
+    }
+  });
+  document.addEventListener('click', function(e){
+    if(!searchToggle.contains(e.target) && !searchInputEl.value){
+      searchToggle.classList.remove('expanded');
+    }
+  });
+
+  enhanceSelects();
 })();
 </script>
 </body>
