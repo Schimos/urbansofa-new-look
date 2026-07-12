@@ -477,6 +477,7 @@
   .dv-card.open .dv-card-toggle .icon{transform:rotate(180deg);}
   .dv-card-body{max-height:0;overflow:hidden;opacity:0;transition:max-height .28s ease, opacity .2s ease;}
   .dv-card.open .dv-card-body{max-height:640px;opacity:1;}
+  .dv-card.open.settled .dv-card-body{overflow:visible;}
   .view-row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px;}
   .view-row:last-child{border-bottom:none;}
   .view-row .lbl{color:var(--text-muted);white-space:nowrap;}
@@ -1253,10 +1254,24 @@
   document.getElementById('companyCardSummary').textContent = detail.dealer.companyName;
   document.getElementById('deliveryCardSummary').textContent = detail.delivery.city + ', ' + detail.delivery.country;
 
-  /* Accordion: cards collapsed by default, independently toggled */
+  /* Accordion: cards collapsed by default, independently toggled.
+     overflow stays hidden during the expand/collapse transition (needed for the
+     max-height animation) then switches to visible once open so dropdown/calendar
+     popovers inside the card aren't clipped at the card's edge. */
   document.querySelectorAll('.dv-card').forEach(function(card){
+    var body = card.querySelector('.dv-card-body');
     card.querySelector('.dv-card-header').addEventListener('click', function(){
-      card.classList.toggle('open');
+      if(card.classList.contains('open')){
+        card.classList.remove('settled');
+        card.classList.remove('open');
+      } else {
+        card.classList.add('open');
+        body.addEventListener('transitionend', function handler(e){
+          if(e.propertyName !== 'max-height') return;
+          body.removeEventListener('transitionend', handler);
+          if(card.classList.contains('open')) card.classList.add('settled');
+        });
+      }
     });
   });
 
