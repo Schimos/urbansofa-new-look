@@ -1,0 +1,1 @@
+var e=new Intl.NumberFormat("nl-NL",{minimumFractionDigits:2,maximumFractionDigits:2});function a(t){return`\u20AC ${e.format(t)}`}function s(t){let n=t.split("-");if(n.length!==3)return t;let[r,i,o]=n;return`${o}-${i}-${r}`}function m(t,n){return[...new Set(t.map(n))].sort((r,i)=>r.localeCompare(i))}export{a,s as b,m as c};
